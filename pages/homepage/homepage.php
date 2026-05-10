@@ -6,13 +6,11 @@ $page_title  = 'Beranda';
 $page_css    = ['homepage.css'];
 $page_js     = ['homepage.js'];
 $current_page = 'home';
-
-// Data Organisasi (bisa diganti dari database nantinya)
 $organisasi = [
     [
         'nama'        => 'Badan Eksekutif Mahasiswa (BEM) – ITH',
         'deskripsi'   => 'Organisasi mahasiswa yang menjadi wadah aspirasi, koordinasi kegiatan kampus, serta pengembangan kepemimpinan mahasiswa ITH.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-bem.png',
+        'logo'        => BASE_URL . 'assets/img/logo/logo-bem.jpeg',
         'slug'        => 'bem',
         'logo_alt'    => 'Logo BEM ITH',
     ],
