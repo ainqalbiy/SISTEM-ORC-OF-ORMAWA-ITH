@@ -1,39 +1,11 @@
-<<<<<<< HEAD
-<?php
-// pages/organisasi/bem.php
-require_once '../../config/connection.php';
-
-$page_title   = 'BEM ITH';
-$page_css     = ['bem.css'];
-$page_js      = ['bem.js'];
-$current_page = 'bem';
-
-require_once '../../components/header.php';
-require_once '../../components/navbar.php';
-=======
 <?php 
 include '../../components/header.php'; 
->>>>>>> 0ed97d5 (update konten halaman BEM.php)
 ?>
 
   <section class="hero" id="home">
     <div class="hero-bg-overlay"></div>
     <div class="hero-particles" id="particles"></div>
     <div class="hero-content">
-<<<<<<< HEAD
-        <div class="hero-badge">
-            <i class="bi bi-flower1"></i>
-            Badan Eksekutif Mahasiswa
-        </div>
-        <h1 class="hero-title">BEM<br><span>ITH</span></h1>
-        <p class="hero-subtitle">
-            Badan Eksekutif Mahasiswa<br>Institut Teknologi Habibie
-        </p>
-        <div class="hero-actions">
-            <a href="#about" class="btn-primary">View Our Pages</a>
-            <a href="#programs" class="btn-ghost">Program Kami</a>
-        </div>
-=======
       <div class="hero-badge">Filosoft &bull; #FA8943 &bull; #925630</div>
       <h1 class="hero-title">BEM<br/><span>ITH</span></h1>
       <p class="hero-subtitle">Badan Eksekutif Mahasiswa<br/>Institut Teknologi Habibie</p>
@@ -41,7 +13,6 @@ include '../../components/header.php';
         <a href="#about" class="btn-primary">View Our Pages</a>
         <a href="#programs" class="btn-ghost">Program Kami</a>
       </div>
->>>>>>> 0ed97d5 (update konten halaman BEM.php)
     </div>
     <div class="hero-scroll-hint">
       <span>Scroll</span>
@@ -131,19 +102,6 @@ include '../../components/header.php';
     </div>
   </section>
 
-<<<<<<< HEAD
-<!-- Konten BEM bisa ditambahkan di sini -->
-<section id="about" style="padding:60px 24px;max-width:1200px;margin:0 auto;">
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:16px;">Tentang BEM ITH</h2>
-    <p style="color:#5a3e28;line-height:1.8;">
-        Badan Eksekutif Mahasiswa (BEM) Institut Teknologi Habibie merupakan organisasi mahasiswa
-        yang menjadi wadah aspirasi, koordinasi kegiatan kampus, serta pengembangan kepemimpinan mahasiswa ITH.
-    </p>
-</section>
-
-<?php require_once '../../components/footer.php'; ?>
-=======
 <?php 
 include '../../components/footer.php'; 
 ?>
->>>>>>> 0ed97d5 (update konten halaman BEM.php)
