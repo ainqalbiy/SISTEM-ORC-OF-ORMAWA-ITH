@@ -16,7 +16,7 @@
 .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('../../assets/img/banner/hero-bg.jpg');
+    background-image: url('../img/banner/hero-bg.jpeg');
     background-size: cover;
     background-position: center top;
     opacity: 0.55;

@@ -11,7 +11,7 @@ $page_css   = $page_css ?? [];
     <title><?= htmlspecialchars($page_title) ?> — Institut Teknologi B.J Habibie</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= BASE_URL ?>assets/img/logo/favicon.png">
+    <link rel="icon" type="image/png" href="<?= BASE_URL ?>assets/img/logo/header-logo.jpeg">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
