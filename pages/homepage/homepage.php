@@ -4,30 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ORC ORMAWA ITH - Organization Resource Center</title>
-  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="assets/css/dashboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Merriweather:wght@700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 <body>
 
   <!-- ===== NAVBAR ===== -->
-  <header class="navbar">
+    <header class="navbar">
     <div class="nav-brand">
       <div class="nav-logo">
         <img src="https://img.icons8.com/color/48/open-book--v1.png" alt="logo" width="36"/>
       </div>
       <span class="nav-title">Organization Resource Center</span>
     </div>
+
     <nav class="nav-links">
-      <a href="#" class="nav-link active">HOME</a>
-      <a href="#" class="nav-link">ABOUT US</a>
-      <a href="#" class="nav-link">BEM</a>
-      <a href="#" class="nav-link">HERO</a>
-      <a href="#" class="nav-link">HCC</a>
-      <a href="#" class="nav-link">ARATTA</a>
-      <a href="#" class="nav-link">WIRAUSAHA</a>
+      <a href="#home" class="nav-link active">HOME</a>
+      <a href="#about" class="nav-link">ABOUT US</a>
+      <a href="#bem" class="nav-link">BEM</a>
+      <a href="#organisasi" class="nav-link">ORGANISASI</a>
+      <a href="#hero" class="nav-link">TESTIMONI</a>
+      <a href="#contact" class="nav-link">CONTACT</a>
     </nav>
-    <a href="#" class="btn-daftar">DAFTAR SEKARANG</a>
+
+    <a href="pages/login/login.php" class="btn-daftar">DAFTAR SEKARANG</a>
+
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -35,14 +37,16 @@
 
   <!-- Mobile nav -->
   <div class="mobile-nav" id="mobileNav">
-    <a href="#">HOME</a>
-    <a href="#">ABOUT US</a>
-    <a href="#">BEM</a>
-    <a href="#">HERO</a>
-    <a href="#">HCC</a>
-    <a href="#">ARATTA</a>
-    <a href="#">WIRAUSAHA</a>
-    <a href="#" class="btn-daftar" style="margin-top:12px;display:inline-block;">DAFTAR SEKARANG</a>
+    <a href="#home">HOME</a>
+    <a href="#about">ABOUT US</a>
+    <a href="#bem">BEM</a>
+    <a href="#organisasi">ORGANISASI</a>
+    <a href="#hero">TESTIMONI</a>
+    <a href="#contact">CONTACT</a>
+
+    <a href="pages/login/login.php" class="btn-daftar" style="margin-top:12px;display:inline-block;">
+      DAFTAR SEKARANG
+    </a>
   </div>
 
   <!-- ===== HERO SECTION ===== -->
