@@ -1,4 +1,11 @@
 <?php
+// config/connection.php — Konfigurasi Database & BASE_URL
+
+// Mulai session jika belum dimulai
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
@@ -12,6 +19,13 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-// Base URL helper
-define('BASE_URL', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . rtrim(dirname(dirname(dirname($_SERVER['SCRIPT_NAME']))), '/\\') . '/');
-?>
+// BASE_URL otomatis dari posisi file ini (/config/)
+if (!defined('BASE_URL')) {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host     = $_SERVER['HTTP_HOST'];
+    $docRoot  = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
+    $rootDir  = str_replace('\\', '/', realpath(__DIR__ . '/..'));
+    $basePath = '/' . ltrim(str_replace($docRoot, '', $rootDir), '/');
+    $basePath = rtrim($basePath, '/') . '/';
+    define('BASE_URL', $protocol . '://' . $host . $basePath);
+}

@@ -1,9 +1,11 @@
 <?php
-// navbar.php - Top navigation bar component
+// components/navbar.php — Topbar + Navigasi utama
+// Set $current_page sebelum include untuk highlight menu aktif.
 $current_page = $current_page ?? '';
 ?>
 <header class="site-header">
-    <!-- Top Bar -->
+
+    <!-- ── TOP BAR ── -->
     <div class="top-bar">
         <div class="top-bar-inner">
             <div class="brand">
@@ -18,42 +20,45 @@ $current_page = $current_page ?? '';
         </div>
     </div>
 
-    <!-- Main Navigation -->
+    <!-- ── MAIN NAV ── -->
     <nav class="main-nav">
         <div class="nav-inner">
-            <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+            <!-- Hamburger (mobile) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
+
             <ul class="nav-links" id="navLinks">
                 <li>
                     <a href="<?= BASE_URL ?>pages/homepage/homepage.php"
                        class="<?= $current_page === 'home' ? 'active' : '' ?>">HOME</a>
                 </li>
                 <li>
-                    <a href="#about"
+                    <a href="<?= BASE_URL ?>pages/homepage/homepage.php#about"
                        class="<?= $current_page === 'about' ? 'active' : '' ?>">ABOUT US</a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=bem"
+                    <a href="<?= BASE_URL ?>pages/organisasi/bem.php"
                        class="<?= $current_page === 'bem' ? 'active' : '' ?>">BEM</a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=hero"
+                    <a href="<?= BASE_URL ?>pages/organisasi/hero.php"
                        class="<?= $current_page === 'hero' ? 'active' : '' ?>">HERO</a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=hcc"
+                    <a href="<?= BASE_URL ?>pages/organisasi/hcc.php"
                        class="<?= $current_page === 'hcc' ? 'active' : '' ?>">HCC</a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=aratta"
+                    <a href="<?= BASE_URL ?>pages/organisasi/aratta.php"
                        class="<?= $current_page === 'aratta' ? 'active' : '' ?>">ARATTA</a>
                 </li>
                 <li>
-                    <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=wirausaha"
+                    <a href="<?= BASE_URL ?>pages/organisasi/wirausaha.php"
                        class="<?= $current_page === 'wirausaha' ? 'active' : '' ?>">WIRAUSAHA</a>
                 </li>
             </ul>
         </div>
     </nav>
+
 </header>
