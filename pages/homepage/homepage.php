@@ -74,51 +74,74 @@ require_once '../../components/navbar.php';
      HERO
 ════════════════════════════════════ -->
 <section class="hero">
+
+    <!-- Foto background penuh -->
     <div class="hero-bg"></div>
+
+    <!-- Overlay: gelap di kiri → transparan di kanan -->
     <div class="hero-overlay"></div>
+
+    <!-- Blob organik oranye coklat (sesuai desain) -->
+    <svg class="hero-blob" viewBox="0 0 480 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M75,35 C20,8 -38,78 -48,168 C-58,258 -20,335 46,400
+                 C112,465 210,502 305,488 C400,474 468,412 486,328
+                 C504,244 478,148 418,82 C358,16 272,-20 182,6
+                 C143,16 108,52 75,35 Z"
+              fill="rgba(200,92,26,0.50)"/>
+    </svg>
+
+    <!-- Konten teks -->
     <div class="hero-content">
         <div class="hero-badge">
-            <i class="bi bi-house-fill"></i>
+            <span class="hero-badge-icon"><i class="bi bi-house-fill"></i></span>
             ORMAWA ITH — Parepare
         </div>
         <h1 class="hero-title">
             Kelola Sumber Daya<br>Organisasi dengan Mudah
         </h1>
         <p class="hero-subtitle">
-            Satu platform terpusat untuk menyimpan, mengelola, dan mengakses seluruh dokumen dan arsip ORMAWA ITH.
+            Satu platform terpusat untuk menyimpan, mengelola, dan mengakses
+            seluruh dokumen dan arsip ORMAWA ITH.
         </p>
         <div class="hero-actions">
             <a href="#orgs-section" class="btn btn-hero-primary">
-                Jelajahi Organisasi <i class="bi bi-arrow-right"></i>
+                Jelajahi Organisasi <i class="bi bi-play-fill"></i>
             </a>
             <a href="#contact" class="btn btn-hero-outline">
-                Hubungi Kami <i class="bi bi-arrow-right"></i>
+                Hubungi Kami <i class="bi bi-play-fill"></i>
             </a>
         </div>
     </div>
+
 </section>
 
 <!-- ════════════════════════════════════
      SEARCH
 ════════════════════════════════════ -->
 <section class="search-section">
-    <form class="search-bar" id="searchForm" role="search" action="<?= BASE_URL ?>pages/organisasi/organisasi.php" method="GET">
-        <i class="bi bi-search"></i>
-        <input
-            type="text"
-            id="searchInput"
-            name="q"
-            class="search-input"
-            placeholder="Cari Organisasi"
-            aria-label="Cari organisasi"
-        >
+    <form class="search-bar" id="searchForm" role="search"
+          action="<?= BASE_URL ?>pages/organisasi/organisasi.php" method="GET">
+        <div class="search-left">
+            <i class="bi bi-search search-icon"></i>
+            <input
+                type="text"
+                id="searchInput"
+                name="q"
+                class="search-input"
+                placeholder="Cari Organisasi"
+                aria-label="Cari organisasi"
+            >
+        </div>
         <div class="search-divider"></div>
-        <select name="kategori" id="categorySelect" class="search-select" aria-label="Pilih kategori">
-            <option value="">Pilih Kategori Organisasi</option>
-            <option value="bem">BEM</option>
-            <option value="ukm">UKM</option>
-            <option value="himpunan">Himpunan Mahasiswa</option>
-        </select>
+        <div class="search-middle">
+            <select name="kategori" id="categorySelect" class="search-select" aria-label="Pilih kategori">
+                <option value="">Pilih Kategori Organisasi</option>
+                <option value="bem">BEM</option>
+                <option value="ukm">UKM</option>
+                <option value="himpunan">Himpunan Mahasiswa</option>
+            </select>
+            <i class="bi bi-chevron-down select-arrow"></i>
+        </div>
         <button type="submit" class="btn-search">Explore</button>
     </form>
 </section>
