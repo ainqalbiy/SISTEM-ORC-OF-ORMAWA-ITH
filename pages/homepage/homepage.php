@@ -2,65 +2,64 @@
 // pages/homepage/homepage.php
 require_once '../../config/connection.php';
 
-$page_title  = 'Beranda';
-$page_css    = ['homepage.css'];
-$page_js     = ['homepage.js'];
+$page_title   = 'Beranda';
+$page_css     = ['homepage.css'];
+$page_js      = ['homepage.js'];
 $current_page = 'home';
+
 $organisasi = [
     [
-        'nama'        => 'Badan Eksekutif Mahasiswa (BEM) – ITH',
-        'deskripsi'   => 'Organisasi mahasiswa yang menjadi wadah aspirasi, koordinasi kegiatan kampus, serta pengembangan kepemimpinan mahasiswa ITH.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-bem.jpeg',
-        'slug'        => 'bem',
-        'logo_alt'    => 'Logo BEM ITH',
+        'nama'     => 'Badan Eksekutif Mahasiswa (BEM) – ITH',
+        'deskripsi'=> 'Organisasi mahasiswa yang menjadi wadah aspirasi, koordinasi kegiatan kampus, serta pengembangan kepemimpinan mahasiswa ITH.',
+        'logo'     => BASE_URL . 'assets/img/logo/logo-bem.jpeg',
+        'slug'     => 'bem',
+        'logo_alt' => 'Logo BEM ITH',
     ],
     [
-        'nama'        => 'Habibie Engineering Robotic of Organization (HERO) – ITH',
-        'deskripsi'   => 'Organisasi mahasiswa yang berfokus pada pengembangan teknologi robotika, IoT, dan inovasi di bidang engineering.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-hero.png',
-        'slug'        => 'hero',
-        'logo_alt'    => 'Logo HERO ITH',
+        'nama'     => 'Habibie Engineering Robotic of Organization (HERO) – ITH',
+        'deskripsi'=> 'Organisasi mahasiswa yang berfokus pada pengembangan teknologi robotika, IoT, dan inovasi di bidang engineering.',
+        'logo'     => BASE_URL . 'assets/img/logo/logo-hero.png',
+        'slug'     => 'hero',
+        'logo_alt' => 'Logo HERO ITH',
     ],
     [
-        'nama'        => 'Habibie Coding Club (HCC) – ITH',
-        'deskripsi'   => 'Organisasi mahasiswa di bidang pemrograman dan teknologi yang mendukung pengembangan skill coding, software, dan digital creativity.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-hcc.png',
-        'slug'        => 'hcc',
-        'logo_alt'    => 'Logo HCC ITH',
+        'nama'     => 'Habibie Coding Club (HCC) – ITH',
+        'deskripsi'=> 'Organisasi mahasiswa di bidang pemrograman dan teknologi yang mendukung pengembangan skill coding, software, dan digital creativity.',
+        'logo'     => BASE_URL . 'assets/img/logo/logo-hcc.png',
+        'slug'     => 'hcc',
+        'logo_alt' => 'Logo HCC ITH',
     ],
     [
-        'nama'        => 'UKM Seni Art & Talent (ARATTA) – ITH',
-        'deskripsi'   => 'Unit kegiatan mahasiswa yang menjadi wadah pengembangan minat, kreativitas, dan bakat mahasiswa di bidang seni dan hiburan.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-aratta.png',
-        'slug'        => 'aratta',
-        'logo_alt'    => 'Logo ARATTA ITH',
+        'nama'     => 'UKM Seni Art & Talent (ARATTA) – ITH',
+        'deskripsi'=> 'Unit kegiatan mahasiswa yang menjadi wadah pengembangan minat, kreativitas, dan bakat mahasiswa di bidang seni dan hiburan.',
+        'logo'     => BASE_URL . 'assets/img/logo/logo-aratta.png',
+        'slug'     => 'aratta',
+        'logo_alt' => 'Logo ARATTA ITH',
     ],
     [
-        'nama'        => 'Wirausaha (WITH) – ITH',
-        'deskripsi'   => 'Organisasi mahasiswa yang berfokus pada pengembangan jiwa kewirausahaan, kreativitas bisnis, dan inovasi usaha mahasiswa.',
-        'logo'        => BASE_URL . 'assets/img/logo/logo-with.png',
-        'slug'        => 'wirausaha',
-        'logo_alt'    => 'Logo WITH ITH',
+        'nama'     => 'Wirausaha (WITH) – ITH',
+        'deskripsi'=> 'Organisasi mahasiswa yang berfokus pada pengembangan jiwa kewirausahaan, kreativitas bisnis, dan inovasi usaha mahasiswa.',
+        'logo'     => BASE_URL . 'assets/img/logo/logo-with.png',
+        'slug'     => 'wirausaha',
+        'logo_alt' => 'Logo WITH ITH',
     ],
 ];
 
-// Testimoni
 $testimoni = [
     [
-        'isi'    => '"Selama 1,5 periode di organisasi HERO dan kepanitiaan Habibie Robotic Competition (HRC), saya berpartisipasi dalam pengelolaan keuangan, administrasi, logistik, dan registrasi sehingga mengasah kemampuan manajemen waktu, ketelitian, serta komunikasi."',
-        'nama'   => 'Nurkhofifah',
-        'jabatan'=> 'Pengurus HERO',
+        'isi'       => '"Selama 1,5 periode di organisasi HERO dan kepanitiaan Habibie Robotic Competition (HRC), saya berpartisipasi dalam pengelolaan keuangan, administrasi, logistik, dan registrasi sehingga mengasah kemampuan manajemen waktu, ketelitian, serta komunikasi."',
+        'nama'      => 'Nurkhofifah',
+        'jabatan'   => 'Pengurus HERO',
         'highlight' => true,
     ],
     [
-        'isi'    => '"Dari anggota ke ITH, selama jadi member banyak kudapat ilmu yang tidak di dapatkan di kelas atau kuliah. Di organisasi di ITH, bru di ajari di kelas, tdk cuma belajar tapi naik ke jadi pengurus, selama jadi pengurus banyak experience bru ku dapat, maka harus ki terus menyesuaikan waktu, belajar bekerja sama dengan tim, saling support tak demi kemajuan."',
-        'nama'   => 'Muhammad Farid Ramadhan',
-        'jabatan'=> 'Pengurus HCC',
+        'isi'       => '"Dari anggota ke ITH, selama jadi member banyak kudapat ilmu yang tidak di dapatkan di kelas. Iak kami berselang naik ke jadi pengurus, selama jadi pengurus banyak experience bru ku dapat, mulai harus ki bisa menyesuaikan waktu, belajar bekerja sama dengan tim, saling support demi kemajuan."',
+        'nama'      => 'Muhammad Farid Ramadhan',
+        'jabatan'   => 'Pengurus HCC',
         'highlight' => false,
     ],
 ];
 
-// Stats
 $stats = [
     ['angka' => '5',  'suffix' => '+', 'label' => 'Organisasi Mahasiswa Aktif'],
     ['angka' => '20', 'suffix' => '+', 'label' => 'Program Kerja & Kegiatan Terlaksana dengan Baik'],
@@ -71,9 +70,9 @@ require_once '../../components/header.php';
 require_once '../../components/navbar.php';
 ?>
 
-<!-- ========================================
-     HERO SECTION
-======================================== -->
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
 <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
@@ -89,7 +88,7 @@ require_once '../../components/navbar.php';
             Satu platform terpusat untuk menyimpan, mengelola, dan mengakses seluruh dokumen dan arsip ORMAWA ITH.
         </p>
         <div class="hero-actions">
-            <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php" class="btn btn-hero-primary">
+            <a href="#orgs-section" class="btn btn-hero-primary">
                 Jelajahi Organisasi <i class="bi bi-arrow-right"></i>
             </a>
             <a href="#contact" class="btn btn-hero-outline">
@@ -99,21 +98,22 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ========================================
-     SEARCH SECTION
-======================================== -->
+<!-- ════════════════════════════════════
+     SEARCH
+════════════════════════════════════ -->
 <section class="search-section">
-    <form class="search-bar" id="searchForm" role="search">
+    <form class="search-bar" id="searchForm" role="search" action="<?= BASE_URL ?>pages/organisasi/organisasi.php" method="GET">
         <i class="bi bi-search"></i>
         <input
             type="text"
             id="searchInput"
+            name="q"
             class="search-input"
             placeholder="Cari Organisasi"
             aria-label="Cari organisasi"
         >
         <div class="search-divider"></div>
-        <select id="categorySelect" class="search-select" aria-label="Pilih kategori organisasi">
+        <select name="kategori" id="categorySelect" class="search-select" aria-label="Pilih kategori">
             <option value="">Pilih Kategori Organisasi</option>
             <option value="bem">BEM</option>
             <option value="ukm">UKM</option>
@@ -123,16 +123,18 @@ require_once '../../components/navbar.php';
     </form>
 </section>
 
-<!-- ========================================
-     DISCOVER / TEMUKAN ORGANISASI SECTION
-======================================== -->
+<!-- ════════════════════════════════════
+     TEMUKAN ORGANISASI
+════════════════════════════════════ -->
 <section class="discover-section" id="about">
     <div class="discover-inner">
         <div class="discover-image" data-reveal>
+            <!-- Gunakan hero-bg.jpeg sebagai fallback jika discover-org.jpg belum ada -->
             <img
-                src="<?= BASE_URL ?>assets/img/banner/discover-org.jpg"
+                src="<?= BASE_URL ?>assets/img/banner/hero-bg.jpeg"
                 alt="Kegiatan organisasi kampus ITH"
                 loading="lazy"
+                onerror="this.style.background='#e8956d';this.alt=''"
             >
         </div>
         <div class="discover-text" data-reveal>
@@ -148,21 +150,21 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ========================================
-     ORGANISASI CARDS SECTION (Horizontal Scroll)
-======================================== -->
-<section class="orgs-section">
+<!-- ════════════════════════════════════
+     KARTU ORGANISASI (Horizontal Scroll)
+════════════════════════════════════ -->
+<section class="orgs-section" id="orgs-section">
     <div class="orgs-section-header" data-reveal>
-        <h2>Mulai Perjalanan Organisasimu di- ITH</h2>
+        <h2>Mulai Perjalanan Organisasimu di ITH</h2>
     </div>
 
     <div class="orgs-scroll-wrapper">
-        <!-- Scroll Left Button -->
-        <button class="scroll-btn left" aria-label="Geser ke kiri" disabled>
+        <!-- Tombol Kiri -->
+        <button class="scroll-btn left" id="scrollBtnLeft" aria-label="Geser ke kiri" disabled>
             <i class="bi bi-chevron-left"></i>
         </button>
 
-        <!-- Cards Container -->
+        <!-- Container scroll -->
         <div class="orgs-scroll-container" id="orgsScroll">
             <?php foreach ($organisasi as $org): ?>
             <div class="org-card">
@@ -171,31 +173,29 @@ require_once '../../components/navbar.php';
                         src="<?= htmlspecialchars($org['logo']) ?>"
                         alt="<?= htmlspecialchars($org['logo_alt']) ?>"
                         loading="lazy"
-                        onerror="this.src='<?= BASE_URL ?>assets/img/logo/default-org.png'"
+                        onerror="this.src='<?= BASE_URL ?>assets/img/logo/header-logo.jpeg'"
                     >
                 </div>
                 <div class="org-card-body">
                     <h3><?= htmlspecialchars($org['nama']) ?></h3>
                     <p><?= htmlspecialchars($org['deskripsi']) ?></p>
                 </div>
-                <a
-                    href="<?= BASE_URL ?>pages/organisasi/organisasi.php?org=<?= urlencode($org['slug']) ?>"
-                    class="btn-explore"
-                >
+                <a href="<?= BASE_URL ?>pages/organisasi/<?= urlencode($org['slug']) ?>.php"
+                   class="btn-explore">
                     Explore Organisasi
                 </a>
             </div>
             <?php endforeach; ?>
         </div>
 
-        <!-- Scroll Right Button -->
-        <button class="scroll-btn right" aria-label="Geser ke kanan">
+        <!-- Tombol Kanan -->
+        <button class="scroll-btn right" id="scrollBtnRight" aria-label="Geser ke kanan">
             <i class="bi bi-chevron-right"></i>
         </button>
     </div>
 
-    <!-- Scroll Dots -->
-    <div class="scroll-dots" role="tablist">
+    <!-- Dots indikator -->
+    <div class="scroll-dots" id="scrollDots" role="tablist">
         <?php foreach ($organisasi as $i => $org): ?>
         <button
             class="scroll-dot <?= $i === 0 ? 'active' : '' ?>"
@@ -206,13 +206,13 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ========================================
-     TESTIMONI + STATS SECTION
-======================================== -->
+<!-- ════════════════════════════════════
+     TESTIMONI + STATS
+════════════════════════════════════ -->
 <section class="testimoni-section" id="testimoni">
     <div class="testimoni-inner">
 
-        <!-- Left: Testimoni -->
+        <!-- Kiri: Testimoni -->
         <div class="testimoni-left" data-reveal>
             <h2>Apa Kata Mahasiswa(i) ITH ?</h2>
             <p>Pengalaman mereka bersama organisasi kampus</p>
@@ -228,7 +228,7 @@ require_once '../../components/navbar.php';
             </div>
         </div>
 
-        <!-- Right: Stats -->
+        <!-- Kanan: Stats -->
         <div class="stats-right" data-reveal>
             <?php foreach ($stats as $stat): ?>
             <div class="stat-card">
@@ -236,9 +236,7 @@ require_once '../../components/navbar.php';
                     class="stat-number"
                     data-count="<?= htmlspecialchars($stat['angka']) ?>"
                     data-suffix="<?= htmlspecialchars($stat['suffix']) ?>"
-                >
-                    0<?= htmlspecialchars($stat['suffix']) ?>
-                </div>
+                >0<?= htmlspecialchars($stat['suffix']) ?></div>
                 <div class="stat-label"><?= htmlspecialchars($stat['label']) ?></div>
             </div>
             <?php endforeach; ?>
@@ -246,10 +244,5 @@ require_once '../../components/navbar.php';
 
     </div>
 </section>
-
-<!-- ========================================
-     CONTACT SECTION (anchor #contact)
-======================================== -->
-<div id="contact"></div>
 
 <?php require_once '../../components/footer.php'; ?>

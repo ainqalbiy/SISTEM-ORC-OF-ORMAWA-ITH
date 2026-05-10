@@ -8,12 +8,10 @@ menus.forEach(menu => {
 
     menu.addEventListener('click', () => {
 
-        // hapus active sebelumnya
         menus.forEach(item => {
             item.classList.remove('active');
         });
 
-        // tambahkan active baru
         menu.classList.add('active');
 
     });
@@ -78,7 +76,7 @@ cards.forEach(card => {
 const searchInput = document.querySelector('.card-header input');
 const tableRows = document.querySelectorAll('tbody tr');
 
-if(searchInput){
+if (searchInput) {
 
     searchInput.addEventListener('keyup', () => {
 
@@ -88,11 +86,7 @@ if(searchInput){
 
             let text = row.innerText.toLowerCase();
 
-            if(text.includes(value)){
-                row.style.display = '';
-            }else{
-                row.style.display = 'none';
-            }
+            row.style.display = text.includes(value) ? '' : 'none';
 
         });
 
@@ -110,27 +104,35 @@ window.addEventListener('load', () => {
     const profileCard = document.querySelector('.profile-card');
     const grid = document.querySelector('.grid');
 
-    profileCard.style.opacity = '0';
-    profileCard.style.transform = 'translateY(30px)';
+    if (profileCard) {
 
-    grid.style.opacity = '0';
-    grid.style.transform = 'translateY(30px)';
+        profileCard.style.opacity = '0';
+        profileCard.style.transform = 'translateY(30px)';
 
-    setTimeout(() => {
+        setTimeout(() => {
 
-        profileCard.style.transition = '0.6s ease';
-        profileCard.style.opacity = '1';
-        profileCard.style.transform = 'translateY(0)';
+            profileCard.style.transition = '0.6s ease';
+            profileCard.style.opacity = '1';
+            profileCard.style.transform = 'translateY(0)';
 
-    }, 200);
+        }, 200);
 
-    setTimeout(() => {
+    }
 
-        grid.style.transition = '0.8s ease';
-        grid.style.opacity = '1';
-        grid.style.transform = 'translateY(0)';
+    if (grid) {
 
-    }, 400);
+        grid.style.opacity = '0';
+        grid.style.transform = 'translateY(30px)';
+
+        setTimeout(() => {
+
+            grid.style.transition = '0.8s ease';
+            grid.style.opacity = '1';
+            grid.style.transform = 'translateY(0)';
+
+        }, 400);
+
+    }
 
 });
 
@@ -162,18 +164,22 @@ settingItems.forEach(item => {
 
 const logoutBtn = document.querySelector('.logout-btn');
 
-logoutBtn.addEventListener('mouseenter', () => {
+if (logoutBtn) {
 
-    logoutBtn.style.transform = 'translateX(-50%) scale(1.03)';
-    logoutBtn.style.transition = '0.3s';
+    logoutBtn.addEventListener('mouseenter', () => {
 
-});
+        logoutBtn.style.transform = 'translateX(-50%) scale(1.03)';
+        logoutBtn.style.transition = '0.3s';
 
-logoutBtn.addEventListener('mouseleave', () => {
+    });
 
-    logoutBtn.style.transform = 'translateX(-50%) scale(1)';
+    logoutBtn.addEventListener('mouseleave', () => {
 
-});
+        logoutBtn.style.transform = 'translateX(-50%) scale(1)';
+
+    });
+
+}
 
 
 // ================================
@@ -182,18 +188,22 @@ logoutBtn.addEventListener('mouseleave', () => {
 
 const miniProfile = document.querySelector('.mini-profile');
 
-miniProfile.addEventListener('mouseenter', () => {
+if (miniProfile) {
 
-    miniProfile.style.opacity = '0.8';
-    miniProfile.style.transition = '0.3s';
+    miniProfile.addEventListener('mouseenter', () => {
 
-});
+        miniProfile.style.opacity = '0.8';
+        miniProfile.style.transition = '0.3s';
 
-miniProfile.addEventListener('mouseleave', () => {
+    });
 
-    miniProfile.style.opacity = '1';
+    miniProfile.addEventListener('mouseleave', () => {
 
-});
+        miniProfile.style.opacity = '1';
+
+    });
+
+}
 
 
 // ================================
@@ -222,11 +232,13 @@ tableRows.forEach(row => {
 // RESPONSIVE SIDEBAR AUTO CLOSE
 // ================================
 
-function checkScreen(){
+function checkScreen() {
 
-    if(window.innerWidth < 768){
+    const sidebar = document.querySelector('.sidebar');
 
-        document.querySelector('.sidebar').style.width = '100%';
+    if (sidebar && window.innerWidth < 768) {
+
+        sidebar.style.width = '100%';
 
     }
 
