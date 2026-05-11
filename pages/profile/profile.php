@@ -38,7 +38,7 @@ $kegiatan = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile ORC</title>
 
-    <link rel="stylesheet" href="./profile.css">
+    <link rel="stylesheet" href="../../css/profile.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -357,7 +357,7 @@ $kegiatan = [
 
 </div>
 
-<script src="./profile.js"></script>
+<script src="../../js/profile.js"></script>
 
 </body>
 </html>
