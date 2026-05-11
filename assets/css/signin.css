@@ -1,0 +1,208 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-orange: #d47200;
+    --dark-orange: #b35d00;
+    --bg-cream: #fff5eb;
+    --text-gray: #666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Mengubah body menjadi warna krem netral agar fokus ke kontainer */
+body {
+    background-color: #ffffff; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container Utama */
+.container {
+    display: flex;
+    width: 1000px;
+    max-width: 95%;
+    height: 650px;
+    background: white;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12); /* Shadow lebih lembut dan dalam */
+}
+
+/* Panel Kiri (Oranye) */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(145deg, #e67e22, #d35400);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 40px;
+    text-align: center;
+}
+
+.illustration {
+    width: 220px;
+    margin-bottom: 20px;
+}
+
+.left-panel h1 {
+    font-size: 3.5rem;
+    letter-spacing: 12px;
+    font-weight: 400;
+}
+
+.left-panel .subtitle {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    font-weight: 300;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.quote-container {
+    margin-top: 60px;
+    max-width: 280px;
+}
+
+.quote-container p {
+    font-weight: 400;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+/* Panel Kanan (Form) */
+.right-panel {
+    flex: 1.2;
+    background-color: var(--bg-cream);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+}
+
+.login-box h2 {
+    color: var(--primary-orange);
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.divider-line {
+    width: 60px;
+    height: 1.5px;
+    background-color: #aaa;
+    margin: 10px auto 40px;
+}
+
+/* Input Styles - Dibuat Lonjong (Pill) */
+.input-field {
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 14px 25px;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.input-field:focus-within {
+    border-color: var(--primary-orange);
+}
+
+.input-field i {
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.input-field input {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding-left: 15px;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+/* Custom Checkbox */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 15px 0 25px 5px;
+    font-size: 0.85rem;
+    color: #444;
+    cursor: pointer;
+}
+
+/* Tombol Sign In */
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-orange);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(212, 114, 0, 0.25);
+}
+
+/* "Or continue with" */
+.social-divider {
+    display: flex;
+    align-items: center;
+    margin: 40px 0;
+    color: #777;
+    font-size: 0.75rem;
+    text-transform: lowercase;
+}
+
+.social-divider::before, .social-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #ccc;
+    margin: 0 15px;
+}
+
+.google-icon-btn {
+    background: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+
+.google-icon-btn img {
+    width: 28px;
+    display: block;
+}
+
+.signup-text {
+    margin-top: 40px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.signup-text a {
+    color: var(--primary-orange);
+    text-decoration: none;
+    font-weight: 700;
+}
