@@ -1,220 +1,363 @@
 <?php
-// pages/profile/profile.php
-require_once '../../config/connection.php';
+session_start();
 
-// Data user (nantinya dari session/database)
-$nama       = $_SESSION['nama']      ?? 'MBPP';
-$jabatan    = $_SESSION['jabatan']   ?? 'Pengurus';
-$kampus     = 'Institut Teknologi Bacharuddin Jusuf Habibie';
-$nim        = $_SESSION['nim']       ?? '241011005';
-$email      = $_SESSION['email']     ?? 'user@gmail.com';
-$nohp       = '08123456789';
-$organisasi = 'HIMAKOM';
-$angkatan   = '2024';
-$status     = 'Aktif';
+// Data user sementara
+$user = [
+    "nama" => "MPBB",
+    "role" => "Pengurus",
+    "kampus" => "Institut Teknologi Bacharuddin Jusuf Habibie",
+    "nim" => "241011005",
+    "email" => "aprilianti.saputri@gmail.com",
+    "hp" => "0812 3456 7890",
+    "jabatan" => "Sekretaris",
+    "organisasi" => "HIMAKOM",
+    "angkatan" => "2024",
+    "status" => "Aktif",
+    "foto" => "https://i.pravatar.cc/300"
+];
 
 $dokumen = [
-    ['nama' => 'Proposal Seminar', 'kategori' => 'Proposal', 'tanggal' => '12 Mei 2025'],
-    ['nama' => 'LPJ Kegiatan',    'kategori' => 'LPJ',      'tanggal' => '10 Mei 2025'],
-    ['nama' => 'Materi Workshop',  'kategori' => 'Materi',   'tanggal' => '08 Mei 2025'],
+    ["Proposal Seminar Nasional","Proposal","12 MEI 2025"],
+    ["LPJ Kegiatan Pelatihan","LPJ","10 MEI 2025"],
+    ["Materi Rapat Kerja","Materi","8 MEI 2025"],
+    ["Tor Workshop","Dokumen","5 MEI 2025"]
 ];
 
 $kegiatan = [
-    ['nama' => 'Seminar Nasional', 'peran' => 'Panitia',  'status' => 'Selesai'],
-    ['nama' => 'Workshop',         'peran' => 'Peserta',  'status' => 'Terjadwal'],
-    ['nama' => 'Pelatihan',        'peran' => 'Panitia',  'status' => 'Selesai'],
+    ["Seminar Nasional","Panitia","12 MEI 2025","Selesai"],
+    ["Pelatihan","Panitia","10 MEI 2025","Selesai"],
+    ["Rapat Kerja","Peserta","8 MEI 2025","Selesai"],
+    ["Workshop","Panitia","5 MEI 2025","Terjadwal"]
 ];
-
-$sidebar_active = 'profil';
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya — ORC ORMAWA ITH</title>
+    <title>Profile ORC</title>
 
-    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="profile.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/profile.css">
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 </head>
 <body>
 
 <div class="container">
 
-    <!-- ═══════════════════════
-         SIDEBAR
-    ═══════════════════════ -->
-    <?php require_once '../../components/sidebar.php'; ?>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <!-- ═══════════════════════
-         MAIN CONTENT
-    ═══════════════════════ -->
-    <main class="main">
-
-        <!-- TOPBAR -->
-        <div class="topbar">
-            <h2>Profil Saya</h2>
-            <div class="top-right">
-                <i class="fa-solid fa-bell"></i>
-                <div class="mini-profile">
-                    <img
-                        src="<?= BASE_URL ?>assets/img/profile/default.png"
-                        alt="Foto profil"
-                        onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($nama) ?>&background=C85C1A&color=fff&size=60'"
-                    >
-                    <div>
-                        <h4><?= htmlspecialchars($nama) ?></h4>
-                        <span><?= htmlspecialchars($jabatan) ?></span>
-                    </div>
-                </div>
-            </div>
+        <div class="logo">
+            <h1>ORC</h1>
+            <p>Organization Resource Center<br>of ORMAWA ITH</p>
         </div>
 
+        <ul class="menu">
+
+            <li class="active">
+                <i class="fa-regular fa-circle-user"></i>
+                <span>Profil Saya</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-users"></i>
+                <span>Organisasi</span>
+            </li>
+
+            <li>
+                <i class="fa-regular fa-clipboard"></i>
+                <span>Kegiatan</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-user-group"></i>
+                <span>Anggota</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-folder"></i>
+                <span>Dokumen</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-bullhorn"></i>
+                <span>Pengumuman</span>
+            </li>
+
+            <li>
+                <i class="fa-solid fa-gear"></i>
+                <span>Pengaturan</span>
+            </li>
+
+        </ul>
+
+        <button class="logout-btn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="topbar">
+
+            <h2>Profil Saya</h2>
+
+            <div class="top-right">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <div class="profile-mini">
+                    <img src="<?= $user['foto']; ?>" alt="">
+                    <div>
+                        <h4><?= $user['nama']; ?></h4>
+                        <p><?= $user['role']; ?></p>
+                    </div>
+                </div>
+
+                <i class="fa-solid fa-angle-down"></i>
+
+            </div>
+
+        </header>
+
         <!-- PROFILE CARD -->
-        <div class="profile-card">
+        <section class="profile-card">
+
             <div class="profile-left">
-                <div class="profile-image">
-                    <img
-                        src="<?= BASE_URL ?>assets/img/profile/default.png"
-                        alt="Foto profil"
-                        onerror="this.src='https://ui-avatars.com/api/?name=<?= urlencode($nama) ?>&background=C85C1A&color=fff&size=180'"
-                    >
-                    <div class="camera-icon">
+
+                <div class="img-box">
+                    <img src="<?= $user['foto']; ?>" alt="">
+                    <div class="camera">
                         <i class="fa-solid fa-camera"></i>
                     </div>
                 </div>
+
                 <div class="profile-info">
-                    <h1><?= htmlspecialchars($nama) ?></h1>
-                    <h3><?= htmlspecialchars($jabatan) ?></h3>
-                    <p><i class="fa-solid fa-graduation-cap"></i> <?= htmlspecialchars($kampus) ?></p>
+                    <h1><?= $user['nama']; ?></h1>
+                    <h2><?= $user['role']; ?></h2>
+
+                    <p>
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <?= $user['kampus']; ?>
+                    </p>
                 </div>
-            </div>
-            <div class="button-group">
-                <button class="btn"><i class="fa-regular fa-pen-to-square"></i> Edit Profil</button>
-                <button class="btn"><i class="fa-solid fa-lock"></i> Ganti Password</button>
-            </div>
-        </div>
 
-        <!-- GRID 4 KARTU -->
-        <div class="grid">
+            </div>
 
-            <!-- Informasi Pribadi -->
+            <div class="profile-actions">
+
+                <button class="edit-btn">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Edit Profil
+                </button>
+
+                <button class="pass-btn">
+                    <i class="fa-solid fa-lock"></i>
+                    Ganti Password
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- GRID -->
+        <section class="grid-layout">
+
+            <!-- INFORMASI -->
             <div class="card">
+
                 <div class="card-header">
-                    <div class="title">
+                    <h3>
                         <i class="fa-regular fa-circle-user"></i>
-                        <h3>Informasi Pribadi</h3>
-                    </div>
+                        Informasi Pribadi
+                    </h3>
                 </div>
+
                 <div class="info-list">
-                    <?php
-                    $info = [
-                        'Nama Lengkap' => $nama,
-                        'NIM'          => $nim,
-                        'Email'        => $email,
-                        'No HP'        => $nohp,
-                        'Jabatan'      => $jabatan,
-                        'Organisasi'   => $organisasi,
-                        'Angkatan'     => $angkatan,
-                    ];
-                    foreach ($info as $label => $val): ?>
+
                     <div class="info-item">
-                        <span><?= $label ?></span>
-                        <p><?= htmlspecialchars($val) ?></p>
+                        <span>Nama Lengkap</span>
+                        <p><?= $user['nama']; ?></p>
                     </div>
-                    <?php endforeach; ?>
+
+                    <div class="info-item">
+                        <span>NIM</span>
+                        <p><?= $user['nim']; ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Email</span>
+                        <p><?= $user['email']; ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span>No. HP</span>
+                        <p><?= $user['hp']; ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Jabatan</span>
+                        <p><?= $user['jabatan']; ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Organisasi</span>
+                        <p><?= $user['organisasi']; ?></p>
+                    </div>
+
+                    <div class="info-item">
+                        <span>Angkatan</span>
+                        <p><?= $user['angkatan']; ?></p>
+                    </div>
+
                     <div class="info-item">
                         <span>Status</span>
-                        <p class="status-active"><?= htmlspecialchars($status) ?></p>
+                        <p class="aktif"><?= $user['status']; ?></p>
                     </div>
+
                 </div>
+
             </div>
 
-            <!-- Dokumen -->
+            <!-- DOKUMEN -->
             <div class="card">
-                <div class="card-header">
-                    <div class="title">
-                        <i class="fa-solid fa-folder"></i>
-                        <h3>Dokumen Saya</h3>
-                    </div>
-                    <input type="text" placeholder="Cari Dokumen" id="searchDokumen">
+
+                <div class="card-header between">
+                    <h3>
+                        <i class="fa-solid fa-folder-open"></i>
+                        Dokumen Saya
+                    </h3>
+
+                    <input type="text" placeholder="Cari Dokumen...">
                 </div>
+
                 <table>
-                    <thead>
-                        <tr><th>Dokumen</th><th>Kategori</th><th>Tanggal</th></tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($dokumen as $item): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($item['nama']) ?></td>
-                            <td><span class="badge"><?= htmlspecialchars($item['kategori']) ?></span></td>
-                            <td><?= htmlspecialchars($item['tanggal']) ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+
+                    <tr>
+                        <th>Nama Dokumen</th>
+                        <th>Kategori</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+
+                    <?php foreach($dokumen as $d): ?>
+
+                    <tr>
+                        <td><?= $d[0]; ?></td>
+                        <td><span class="badge"><?= $d[1]; ?></span></td>
+                        <td><?= $d[2]; ?></td>
+                        <td>
+                            <i class="fa-solid fa-download"></i>
+                        </td>
+                    </tr>
+
+                    <?php endforeach; ?>
+
                 </table>
+
+                <div class="lihat">
+                    Lihat Semua Dokumen
+                </div>
+
             </div>
 
-            <!-- Kegiatan -->
+            <!-- KEGIATAN -->
             <div class="card">
-                <div class="card-header">
-                    <div class="title">
+
+                <div class="card-header between">
+                    <h3>
                         <i class="fa-regular fa-clipboard"></i>
-                        <h3>Kegiatan Saya</h3>
-                    </div>
-                    <span class="lihat">Lihat Semua</span>
+                        Kegiatan Saya
+                    </h3>
+
+                    <a href="#">Lihat Semua</a>
                 </div>
+
                 <table>
-                    <thead>
-                        <tr><th>Kegiatan</th><th>Peran</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($kegiatan as $item): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($item['nama']) ?></td>
-                            <td><?= htmlspecialchars($item['peran']) ?></td>
-                            <td>
-                                <span class="<?= $item['status'] === 'Selesai' ? 'done' : 'schedule' ?>">
-                                    <?= htmlspecialchars($item['status']) ?>
-                                </span>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+
+                    <tr>
+                        <th>Nama Kegiatan</th>
+                        <th>Peran</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                    </tr>
+
+                    <?php foreach($kegiatan as $k): ?>
+
+                    <tr>
+                        <td><?= $k[0]; ?></td>
+                        <td><?= $k[1]; ?></td>
+                        <td><?= $k[2]; ?></td>
+                        <td>
+                            <span class="status">
+                                <?= $k[3]; ?>
+                            </span>
+                        </td>
+                    </tr>
+
+                    <?php endforeach; ?>
+
                 </table>
+
             </div>
 
-            <!-- Pengaturan -->
-            <div class="card">
+            <!-- PENGATURAN -->
+            <div class="card setting-card">
+
                 <div class="card-header">
-                    <div class="title">
+                    <h3>
                         <i class="fa-solid fa-gear"></i>
-                        <h3>Pengaturan Akun</h3>
+                        Pengaturan Akun
+                    </h3>
+                </div>
+
+                <div class="setting-item">
+                    <div>
+                        <h4>Ubah Profil</h4>
+                        <p>Perbarui informasi profil Anda</p>
                     </div>
+                    <i class="fa-solid fa-angle-right"></i>
                 </div>
+
                 <div class="setting-item">
-                    <div><h4>Ubah Profil</h4><p>Perbarui informasi profil</p></div>
-                    <i class="fa-solid fa-chevron-right"></i>
+                    <div>
+                        <h4>Ubah Password</h4>
+                        <p>Ganti password akun Anda</p>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
                 </div>
-                <div class="setting-item">
-                    <div><h4>Ubah Password</h4><p>Ganti password akun</p></div>
-                    <i class="fa-solid fa-chevron-right"></i>
+
+                <div class="setting-item logout-text">
+                    <div>
+                        <h4>Keluar Akun</h4>
+                        <p>Logout dari sistem</p>
+                    </div>
+                    <i class="fa-solid fa-angle-right"></i>
                 </div>
-                <a href="<?= BASE_URL ?>proccess/logout.php" class="setting-item logout-setting" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;padding:22px;border-top:1px solid #eee;">
-                    <div><h4>Keluar Akun</h4><p>Logout dari sistem</p></div>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
+
             </div>
 
-        </div><!-- /.grid -->
+        </section>
 
     </main>
+
 </div>
 
-<script src="<?= BASE_URL ?>assets/js/profile.js"></script>
+<script src="profile.js"></script>
+
 </body>
 </html>
