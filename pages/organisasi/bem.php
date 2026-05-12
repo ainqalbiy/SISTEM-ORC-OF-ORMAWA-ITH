@@ -1,5 +1,14 @@
-<?php 
-include '../../components/header.php'; 
+<?php
+// pages/organisasi/bem.php
+require_once '../../config/connection.php';
+
+$page_title   = 'BEM ITH';
+$page_css     = ['bem.css'];
+$page_js      = ['bem.js'];
+$current_page = 'bem';
+
+require_once '../../components/header.php';
+require_once '../../components/navbar.php';
 ?>
 
   <section class="hero" id="home">
@@ -10,8 +19,8 @@ include '../../components/header.php';
       <h1 class="hero-title">BEM<br/><span>ITH</span></h1>
       <p class="hero-subtitle">Badan Eksekutif Mahasiswa<br/>Institut Teknologi Habibie</p>
       <div class="hero-actions">
-        <a href="#about" class="btn-primary">View Our Pages</a>
-        <a href="#programs" class="btn-ghost">Program Kami</a>
+        <a href="#about" class="btn-primary">Tentang BEM</a>
+        <a href="<?= BASE_URL ?>pages/homepage/homepage.php" class="btn-ghost">← Beranda</a>
       </div>
     </div>
     <div class="hero-scroll-hint">
@@ -26,7 +35,7 @@ include '../../components/header.php';
         <div class="about-left" data-animate="fade-left">
           <div class="section-eyebrow">BEM ITH 2026</div>
           <h2 class="about-title">Tentang BEM ITH</h2>
-          <p class="about-text">Badan Eksekutif Mahasiswa (BEM) adalah organisasi intra-kampus tertinggi yang menjalankan fungsi eksekutif di dalam Universitas atau Fakultas.</p>
+          <p class="about-text">Badan Eksekutif Mahasiswa (BEM) adalah organisasi intra-kampus tertinggi yang menjalankan fungsi eksekutif di dalam Universitas. BEM ITH berkomitmen menjadi wadah aspirasi, koordinasi kegiatan kampus, serta pengembangan kepemimpinan mahasiswa.</p>
           <div class="about-tags">
             <span class="tag">Aspirasi</span>
             <span class="tag">Perubahan</span>
@@ -87,21 +96,4 @@ include '../../components/header.php';
     </div>
   </section>
 
-  <section class="contact-section" id="contact">
-    <div class="container">
-      <div class="contact-box" data-animate="fade-up">
-        <div class="contact-header">
-          <h2>Write a Message</h2>
-        </div>
-        <div class="contact-form">
-            <input type="text" placeholder="Full Name" class="form-input"/>
-            <textarea placeholder="Write a message..." class="form-textarea" rows="5"></textarea>
-            <button class="btn-send">SEND A MESSAGE</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-<?php 
-include '../../components/footer.php'; 
-?>
+<?php require_once '../../components/footer.php'; ?>
