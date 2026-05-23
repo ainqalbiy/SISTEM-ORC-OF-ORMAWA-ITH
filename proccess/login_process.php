@@ -1,6 +1,5 @@
 <?php
 // proccess/login_process.php
-session_start();
 require_once '../config/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -12,7 +11,7 @@ $email    = trim($_POST['email']    ?? '');
 $password = trim($_POST['password'] ?? '');
 
 if (empty($email) || empty($password)) {
-    header('Location: ' . BASE_URL . 'pages/login/login.php?error=invalid');
+    header('Location: ' . BASE_URL . 'pages/login/login.php?error=empty');
     exit;
 }
 
@@ -25,11 +24,16 @@ $user   = $result->fetch_assoc();
 $stmt->close();
 
 if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['user_id'] = $user['id'];
-    $_SESSION['nama']    = $user['nama'];
-    $_SESSION['email']   = $user['email'];
-    $_SESSION['nim']     = $user['nim'];
-    $_SESSION['jabatan'] = $user['jabatan'] ?? 'Anggota';
+    $_SESSION['user_id']  = $user['id'];
+    $_SESSION['nama']     = $user['nama'];
+    $_SESSION['email']    = $user['email'];
+    $_SESSION['nim']      = $user['nim'];
+    $_SESSION['jabatan']  = $user['jabatan']  ?? 'Anggota';
+    $_SESSION['no_hp']    = $user['no_hp']    ?? '';
+    $_SESSION['organisasi'] = $user['organisasi'] ?? '';
+    $_SESSION['angkatan'] = $user['angkatan'] ?? '';
+    $_SESSION['status']   = $user['status']   ?? 'Aktif';
+    $_SESSION['foto']     = $user['foto']      ?? '';
 
     header('Location: ' . BASE_URL . 'pages/profile/profile.php');
     exit;

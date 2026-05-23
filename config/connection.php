@@ -22,10 +22,28 @@ $conn->set_charset("utf8mb4");
 // BASE_URL otomatis dari posisi file ini (/config/)
 if (!defined('BASE_URL')) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host     = $_SERVER['HTTP_HOST'];
-    $docRoot  = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
+    $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $docRoot  = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? '/'));
     $rootDir  = str_replace('\\', '/', realpath(__DIR__ . '/..'));
     $basePath = '/' . ltrim(str_replace($docRoot, '', $rootDir), '/');
     $basePath = rtrim($basePath, '/') . '/';
     define('BASE_URL', $protocol . '://' . $host . $basePath);
+}
+
+/**
+ * Helper: cek apakah user sudah login.
+ * Jika belum, redirect ke halaman login.
+ */
+function require_login(): void {
+    if (empty($_SESSION['user_id'])) {
+        header('Location: ' . BASE_URL . 'pages/login/login.php');
+        exit;
+    }
+}
+
+/**
+ * Helper: escape output HTML
+ */
+function e(string $str): string {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }

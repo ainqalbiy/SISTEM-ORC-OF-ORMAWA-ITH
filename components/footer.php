@@ -1,6 +1,4 @@
 <?php
-// components/footer.php
-// Variabel opsional: $page_js (array) — nama file JS di assets/js/
 $page_js = $page_js ?? [];
 ?>
 <footer class="footer" id="contact">

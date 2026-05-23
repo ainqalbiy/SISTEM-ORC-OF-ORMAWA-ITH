@@ -1,152 +1,95 @@
-/* ========================================
-   homepage.js — Homepage JavaScript
-   ORC ORMAWA ITH
-======================================== */
+// homepage.js — ORC ORMAWA ITH
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
 
-    /* ----------------------------------------
-       HORIZONTAL CARD SCROLL (Drag + Buttons)
-    ---------------------------------------- */
-    const scrollContainer = document.querySelector('.orgs-scroll-container');
-    const btnLeft  = document.querySelector('.scroll-btn.left');
-    const btnRight = document.querySelector('.scroll-btn.right');
-    const dots     = document.querySelectorAll('.scroll-dot');
-
-    if (scrollContainer) {
-        const CARD_WIDTH = 300 + 20; // card min-width + gap
-
-        // Arrow button scroll
-        if (btnLeft) {
-            btnLeft.addEventListener('click', function () {
-                scrollContainer.scrollBy({ left: -CARD_WIDTH, behavior: 'smooth' });
-            });
-        }
-        if (btnRight) {
-            btnRight.addEventListener('click', function () {
-                scrollContainer.scrollBy({ left: CARD_WIDTH, behavior: 'smooth' });
-            });
-        }
-
-        // Update dots & button state on scroll
-        function updateScrollState() {
-            const scrollLeft = scrollContainer.scrollLeft;
-            const maxScroll  = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            const progress   = maxScroll > 0 ? scrollLeft / maxScroll : 0;
-
-            if (btnLeft)  btnLeft.disabled  = scrollLeft <= 4;
-            if (btnRight) btnRight.disabled = scrollLeft >= maxScroll - 4;
-
-            if (dots.length > 0) {
-                const activeIndex = Math.round(progress * (dots.length - 1));
-                dots.forEach(function (dot, i) {
-                    dot.classList.toggle('active', i === activeIndex);
-                });
+    // ── 1. SCROLL REVEAL ──────────────────────────────────────
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => entry.target.classList.add('revealed'), i * 120);
+                observer.unobserve(entry.target);
             }
-        }
-
-        scrollContainer.addEventListener('scroll', updateScrollState, { passive: true });
-        updateScrollState(); // init
-
-        // Dot click scroll
-        dots.forEach(function (dot, i) {
-            dot.addEventListener('click', function () {
-                const totalCards = scrollContainer.querySelectorAll('.org-card').length;
-                const maxScroll  = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-                const target     = (i / (dots.length - 1)) * maxScroll;
-                scrollContainer.scrollTo({ left: target, behavior: 'smooth' });
-            });
         });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
 
-        /* ---- DRAG TO SCROLL ---- */
-        let isDragging = false;
-        let startX;
-        let startScrollLeft;
+    // ── 2. CAROUSEL SCROLL ────────────────────────────────────
+    const scroll    = document.getElementById('orgsScroll');
+    const btnLeft   = document.getElementById('scrollBtnLeft');
+    const btnRight  = document.getElementById('scrollBtnRight');
+    const dots      = document.querySelectorAll('.scroll-dot');
+    const STEP      = 284;
 
-        scrollContainer.addEventListener('mousedown', function (e) {
-            isDragging     = true;
-            startX         = e.pageX - scrollContainer.offsetLeft;
-            startScrollLeft = scrollContainer.scrollLeft;
-            scrollContainer.style.userSelect = 'none';
-        });
-
-        document.addEventListener('mouseup', function () {
-            isDragging = false;
-            scrollContainer.style.userSelect = '';
-        });
-
-        scrollContainer.addEventListener('mousemove', function (e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x    = e.pageX - scrollContainer.offsetLeft;
-            const walk = (x - startX) * 1.4;
-            scrollContainer.scrollLeft = startScrollLeft - walk;
-        });
-
-        /* ---- TOUCH SWIPE ---- */
-        let touchStartX    = 0;
-        let touchScrollLeft = 0;
-
-        scrollContainer.addEventListener('touchstart', function (e) {
-            touchStartX     = e.touches[0].clientX;
-            touchScrollLeft = scrollContainer.scrollLeft;
-        }, { passive: true });
-
-        scrollContainer.addEventListener('touchmove', function (e) {
-            const dx = touchStartX - e.touches[0].clientX;
-            scrollContainer.scrollLeft = touchScrollLeft + dx;
-        }, { passive: true });
+    function updateButtons() {
+        if (!scroll) return;
+        btnLeft.disabled  = scroll.scrollLeft < 10;
+        btnRight.disabled = scroll.scrollLeft + scroll.clientWidth >= scroll.scrollWidth - 10;
     }
 
-    /* ----------------------------------------
-       COUNTER ANIMATION (Stats)
-    ---------------------------------------- */
-    function animateCounter(el, target, suffix) {
-        const duration = 1400;
-        const start    = performance.now();
-        const from     = 0;
+    function updateDots() {
+        if (!scroll || !dots.length) return;
+        const idx = Math.round(scroll.scrollLeft / STEP);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
 
-        function step(now) {
+    if (btnLeft)  btnLeft.addEventListener('click', () => { scroll.scrollBy({ left: -STEP, behavior: 'smooth' }); });
+    if (btnRight) btnRight.addEventListener('click', () => { scroll.scrollBy({ left: STEP,  behavior: 'smooth' }); });
+    if (scroll)   scroll.addEventListener('scroll', () => { updateButtons(); updateDots(); });
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            scroll.scrollTo({ left: i * STEP, behavior: 'smooth' });
+        });
+    });
+
+    updateButtons();
+
+    // ── 3. HAMBURGER ──────────────────────────────────────────
+    const ham = document.getElementById('hamburgerBtn');
+    const nav = document.getElementById('navLinks');
+    if (ham && nav) {
+        ham.addEventListener('click', () => {
+            const open = nav.classList.toggle('open');
+            ham.setAttribute('aria-expanded', open);
+        });
+    }
+
+    // ── 4. COUNTER ANIMATION ──────────────────────────────────
+    function animateCount(el) {
+        const target = parseInt(el.dataset.count, 10);
+        const suffix = el.dataset.suffix || '';
+        const duration = 1200;
+        const start = performance.now();
+        const update = (now) => {
             const progress = Math.min((now - start) / duration, 1);
-            const eased    = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-            const value    = Math.round(from + (target - from) * eased);
-            el.textContent = value + suffix;
-            if (progress < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(ease * target) + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
     }
 
-    const statNumbers = document.querySelectorAll('.stat-number[data-count]');
-    if (statNumbers.length && 'IntersectionObserver' in window) {
-        const counterObserver = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    const el     = entry.target;
-                    const target = parseInt(el.dataset.count, 10);
-                    const suffix = el.dataset.suffix || '+';
-                    animateCounter(el, target, suffix);
-                    counterObserver.unobserve(el);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        statNumbers.forEach(function (el) { counterObserver.observe(el); });
-    }
-
-    /* ----------------------------------------
-       SEARCH FORM
-    ---------------------------------------- */
-    const searchForm = document.getElementById('searchForm');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const query    = document.getElementById('searchInput').value.trim();
-            const category = document.getElementById('categorySelect').value;
-            const params   = new URLSearchParams();
-            if (query)    params.set('q', query);
-            if (category) params.set('kategori', category);
-            window.location.href = 'pages/organisasi/organisasi.php?' + params.toString();
+    const statNums = document.querySelectorAll('.stat-number[data-count]');
+    const statsObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCount(entry.target);
+                statsObs.unobserve(entry.target);
+            }
         });
-    }
+    }, { threshold: 0.5 });
+    statNums.forEach(n => statsObs.observe(n));
 
+    // ── 5. SMOOTH ANCHOR SCROLL ───────────────────────────────
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const id = a.getAttribute('href').slice(1);
+            const target = document.getElementById(id);
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
 });

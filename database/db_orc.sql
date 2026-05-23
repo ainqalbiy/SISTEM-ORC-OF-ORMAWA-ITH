@@ -1,250 +1,141 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Waktu pembuatan: 04 Bulan Mei 2026 pada 18.32
--- Versi server: 10.4.32-MariaDB
--- Versi PHP: 8.0.30
-
+-- ============================================================
+-- ORC ORMAWA ITH — Database (Fixed & Completed)
+-- ============================================================
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+SET NAMES utf8mb4;
 
+-- Drop jika sudah ada
+DROP DATABASE IF EXISTS `db_orc`;
+CREATE DATABASE `db_orc` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `db_orc`;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `db_orc`
---
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `anggota`
---
-
-CREATE TABLE `anggota` (
-  `id_anggota` int(11) NOT NULL,
-  `nama` varchar(100) NOT NULL,
-  `alamat` varchar(255) NOT NULL,
-  `no_hp` varchar(15) NOT NULL,
-  `tanggal_daftar` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `dokumen`
---
-
-CREATE TABLE `dokumen` (
-  `id_dokumen` int(11) NOT NULL,
-  `judul` varchar(255) NOT NULL,
-  `jenis` varchar(100) NOT NULL,
-  `file` varchar(255) NOT NULL,
-  `tanggal_upload` datetime NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `dokumentasi`
---
-
-CREATE TABLE `dokumentasi` (
-  `dokumentasi_id` int(11) NOT NULL,
-  `kegiatan_id` int(11) NOT NULL,
-  `file_path` varchar(255) NOT NULL,
-  `tipe_file` enum('foto','video','file') NOT NULL,
-  `keterangan` varchar(255) DEFAULT NULL,
-  `tanggal` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `kegiatan`
---
-
-CREATE TABLE `kegiatan` (
-  `id_kegiatan` int(11) NOT NULL,
-  `nama_kegiatan` varchar(150) NOT NULL,
-  `jenis_kegiatan` varchar(50) NOT NULL,
-  `tanggal` date NOT NULL,
-  `waktu` time NOT NULL,
-  `tempat` varchar(150) NOT NULL,
-  `penanggung_jawab` varchar(100) NOT NULL,
-  `deskripsi` text DEFAULT NULL,
-  `status` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `materi_rapat`
---
-
-CREATE TABLE `materi_rapat` (
-  `materi_id` int(11) NOT NULL,
-  `kegiatan_id` int(11) NOT NULL,
-  `file_path` varchar(255) NOT NULL,
-  `tanggal` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `pengumuman`
---
-
-CREATE TABLE `pengumuman` (
-  `pengumuman_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `judul` varchar(200) NOT NULL,
-  `konten` text NOT NULL,
-  `target_role` enum('semua','anggota','pengurus','pembina') DEFAULT 'semua',
-  `tanggal` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `users`
---
-
+-- ============================================================
+-- Tabel: users
+-- ============================================================
 CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `nama` varchar(100) NOT NULL,
-  `email` varchar(150) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('admin','pengurus','anggota','pembina') NOT NULL DEFAULT 'anggota',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `id`         int(11)      NOT NULL AUTO_INCREMENT,
+  `nama`       varchar(100) NOT NULL,
+  `nim`        varchar(20)  NOT NULL,
+  `email`      varchar(150) NOT NULL,
+  `no_hp`      varchar(20)  DEFAULT NULL,
+  `password`   varchar(255) NOT NULL,
+  `jabatan`    varchar(100) NOT NULL DEFAULT 'Anggota',
+  `organisasi` varchar(100) DEFAULT NULL,
+  `angkatan`   varchar(10)  DEFAULT NULL,
+  `status`     enum('Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif',
+  `foto`       varchar(255) DEFAULT NULL,
+  `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `nim`   (`nim`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indexes for dumped tables
---
+-- Akun demo (password: Admin123!)
+INSERT INTO `users` (`nama`,`nim`,`email`,`no_hp`,`password`,`jabatan`,`organisasi`,`angkatan`,`status`) VALUES
+('Administrator ORC','000000000','admin@orc.ith.ac.id','081200000000',
+ '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ 'Admin','BEM','2022','Aktif'),
+('Demo Mahasiswa','241011001','demo@orc.ith.ac.id','081200000001',
+ '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ 'Anggota','HCC','2024','Aktif');
 
---
--- Indeks untuk tabel `anggota`
---
-ALTER TABLE `anggota`
-  ADD PRIMARY KEY (`id_anggota`);
+-- ============================================================
+-- Tabel: anggota
+-- ============================================================
+CREATE TABLE `anggota` (
+  `id_anggota`     int(11)      NOT NULL AUTO_INCREMENT,
+  `user_id`        int(11)      DEFAULT NULL,
+  `nama`           varchar(100) NOT NULL,
+  `alamat`         varchar(255) NOT NULL,
+  `no_hp`          varchar(15)  NOT NULL,
+  `tanggal_daftar` date         NOT NULL,
+  PRIMARY KEY (`id_anggota`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indeks untuk tabel `dokumen`
---
-ALTER TABLE `dokumen`
-  ADD PRIMARY KEY (`id_dokumen`);
+-- ============================================================
+-- Tabel: kegiatan
+-- ============================================================
+CREATE TABLE `kegiatan` (
+  `id_kegiatan`      int(11)      NOT NULL AUTO_INCREMENT,
+  `nama_kegiatan`    varchar(150) NOT NULL,
+  `jenis_kegiatan`   varchar(50)  NOT NULL,
+  `tanggal`          date         NOT NULL,
+  `waktu`            time         NOT NULL,
+  `tempat`           varchar(150) NOT NULL,
+  `penanggung_jawab` varchar(100) NOT NULL,
+  `deskripsi`        text         DEFAULT NULL,
+  `status`           varchar(50)  NOT NULL DEFAULT 'Terjadwal',
+  PRIMARY KEY (`id_kegiatan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Indeks untuk tabel `dokumentasi`
---
+-- ============================================================
+-- Tabel: dokumen
+-- ============================================================
+CREATE TABLE `dokumen` (
+  `id_dokumen`     int(11)      NOT NULL AUTO_INCREMENT,
+  `judul`          varchar(255) NOT NULL,
+  `jenis`          varchar(100) NOT NULL,
+  `file`           varchar(255) NOT NULL,
+  `tanggal_upload` datetime     NOT NULL DEFAULT current_timestamp(),
+  `user_id`        int(11)      NOT NULL,
+  PRIMARY KEY (`id_dokumen`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ============================================================
+-- Tabel: dokumentasi
+-- ============================================================
+CREATE TABLE `dokumentasi` (
+  `dokumentasi_id` int(11)                       NOT NULL AUTO_INCREMENT,
+  `kegiatan_id`    int(11)                       NOT NULL,
+  `file_path`      varchar(255)                  NOT NULL,
+  `tipe_file`      enum('foto','video','file')   NOT NULL,
+  `keterangan`     varchar(255)                  DEFAULT NULL,
+  `tanggal`        date                          NOT NULL,
+  PRIMARY KEY (`dokumentasi_id`),
+  KEY `kegiatan_id` (`kegiatan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ============================================================
+-- Tabel: materi_rapat
+-- ============================================================
+CREATE TABLE `materi_rapat` (
+  `materi_id`   int(11)      NOT NULL AUTO_INCREMENT,
+  `kegiatan_id` int(11)      NOT NULL,
+  `file_path`   varchar(255) NOT NULL,
+  `tanggal`     date         NOT NULL,
+  PRIMARY KEY (`materi_id`),
+  KEY `kegiatan_id` (`kegiatan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ============================================================
+-- Tabel: pengumuman
+-- ============================================================
+CREATE TABLE `pengumuman` (
+  `pengumuman_id` int(11)                                         NOT NULL AUTO_INCREMENT,
+  `user_id`       int(11)                                         NOT NULL,
+  `judul`         varchar(200)                                    NOT NULL,
+  `konten`        text                                            NOT NULL,
+  `target_role`   enum('semua','anggota','pengurus','pembina')    DEFAULT 'semua',
+  `tanggal`       timestamp                                       NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`pengumuman_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Foreign Keys
 ALTER TABLE `dokumentasi`
-  ADD PRIMARY KEY (`dokumentasi_id`),
-  ADD KEY `kegiatan_id` (`kegiatan_id`);
+  ADD CONSTRAINT `dokumentasi_ibfk_1` FOREIGN KEY (`kegiatan_id`) REFERENCES `kegiatan` (`id_kegiatan`) ON DELETE CASCADE;
 
---
--- Indeks untuk tabel `kegiatan`
---
-ALTER TABLE `kegiatan`
-  ADD PRIMARY KEY (`id_kegiatan`);
-
---
--- Indeks untuk tabel `materi_rapat`
---
-ALTER TABLE `materi_rapat`
-  ADD PRIMARY KEY (`materi_id`),
-  ADD KEY `kegiatan_id` (`kegiatan_id`);
-
---
--- Indeks untuk tabel `pengumuman`
---
-ALTER TABLE `pengumuman`
-  ADD PRIMARY KEY (`pengumuman_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indeks untuk tabel `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- AUTO_INCREMENT untuk tabel yang dibuang
---
-
---
--- AUTO_INCREMENT untuk tabel `anggota`
---
-ALTER TABLE `anggota`
-  MODIFY `id_anggota` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `dokumen`
---
-ALTER TABLE `dokumen`
-  MODIFY `id_dokumen` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `dokumentasi`
---
-ALTER TABLE `dokumentasi`
-  MODIFY `dokumentasi_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `kegiatan`
---
-ALTER TABLE `kegiatan`
-  MODIFY `id_kegiatan` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `materi_rapat`
---
-ALTER TABLE `materi_rapat`
-  MODIFY `materi_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `pengumuman`
---
-ALTER TABLE `pengumuman`
-  MODIFY `pengumuman_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT untuk tabel `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
---
-
---
--- Ketidakleluasaan untuk tabel `dokumentasi`
---
-ALTER TABLE `dokumentasi`
-  ADD CONSTRAINT `dokumentasi_ibfk_1` FOREIGN KEY (`kegiatan_id`) REFERENCES `kegiatan` (`id_kegiatan`);
-
---
--- Ketidakleluasaan untuk tabel `materi_rapat`
---
 ALTER TABLE `materi_rapat`
   ADD CONSTRAINT `materi_rapat_ibfk_1` FOREIGN KEY (`kegiatan_id`) REFERENCES `kegiatan` (`id_kegiatan`) ON UPDATE CASCADE;
 
---
--- Ketidakleluasaan untuk tabel `pengumuman`
---
 ALTER TABLE `pengumuman`
-  ADD CONSTRAINT `pengumuman_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-COMMIT;
+  ADD CONSTRAINT `pengumuman_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+ALTER TABLE `dokumen`
+  ADD CONSTRAINT `dokumen_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+COMMIT;
