@@ -1,7 +1,8 @@
 <?php
+// components/footer_scripts.php — selalu menutup </body></html>
 $page_js = $page_js ?? [];
+foreach ($page_js as $js):
 ?>
-<?php foreach ($page_js as $js): ?>
 <script src="<?= BASE_URL ?>assets/js/<?= e($js) ?>"></script>
 <?php endforeach; ?>
 </body>

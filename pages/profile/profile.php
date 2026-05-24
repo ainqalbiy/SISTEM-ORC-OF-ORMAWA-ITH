@@ -5,7 +5,8 @@ require_login(); // Redirect ke login jika belum masuk
 
 // Ambil data user terbaru dari database
 $uid  = (int)$_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
+$pk_col = get_user_pk($conn);
+$stmt = $conn->prepare("SELECT * FROM users WHERE `$pk_col` = ? LIMIT 1");
 $stmt->bind_param('i', $uid);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
