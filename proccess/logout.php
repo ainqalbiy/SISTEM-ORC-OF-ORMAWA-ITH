@@ -1,8 +1,8 @@
 <?php
-// proccess/logout.php
-session_start();
 require_once '../config/connection.php';
-
+// Hapus semua session data
+session_unset();
 session_destroy();
-header('Location: ' . BASE_URL . 'pages/login/login.php');
+// Redirect ke login page
+header('Location: ' . BASE_URL . 'pages/login/login.php?msg=logout');
 exit;

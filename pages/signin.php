@@ -4,7 +4,7 @@ require_once '../config/connection.php';
 
 // Jika sudah login, langsung ke profile
 if (!empty($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . 'pages/profile/profile.php');
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php');
     exit;
 }
 

@@ -24,18 +24,20 @@ $user   = $result->fetch_assoc();
 $stmt->close();
 
 if ($user && password_verify($password, $user['password'])) {
-    $_SESSION['user_id']  = $user['id'];
-    $_SESSION['nama']     = $user['nama'];
-    $_SESSION['email']    = $user['email'];
-    $_SESSION['nim']      = $user['nim'];
-    $_SESSION['jabatan']  = $user['jabatan']  ?? 'Anggota';
-    $_SESSION['no_hp']    = $user['no_hp']    ?? '';
+    // Set session lengkap
+    $_SESSION['user_id']    = $user['id'];
+    $_SESSION['nama']       = $user['nama'];
+    $_SESSION['email']      = $user['email'];
+    $_SESSION['nim']        = $user['nim'];
+    $_SESSION['jabatan']    = $user['jabatan']   ?? 'Anggota';
+    $_SESSION['no_hp']      = $user['no_hp']     ?? '';
     $_SESSION['organisasi'] = $user['organisasi'] ?? '';
-    $_SESSION['angkatan'] = $user['angkatan'] ?? '';
-    $_SESSION['status']   = $user['status']   ?? 'Aktif';
-    $_SESSION['foto']     = $user['foto']      ?? '';
+    $_SESSION['angkatan']   = $user['angkatan']  ?? '';
+    $_SESSION['status']     = $user['status']    ?? 'Aktif';
+    $_SESSION['foto']       = $user['foto']      ?? '';
 
-    header('Location: ' . BASE_URL . 'pages/profile/profile.php');
+    // Redirect ke dashboard dengan flag "login kembali"
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?from=login');
     exit;
 } else {
     header('Location: ' . BASE_URL . 'pages/login/login.php?error=invalid');
