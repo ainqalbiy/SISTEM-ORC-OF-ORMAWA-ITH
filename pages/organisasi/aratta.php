@@ -1,24 +1,46 @@
 <?php
-require_once '../../config/connection.php';
-$page_title   = 'UKM Seni Art & Talent (ARATTA) – ITH';
-$page_css     = ['bem.css'];
-$current_page = 'aratta';
-require_once '../../components/header.php';
-require_once '../../components/navbar.php';
-?>
-<section class="hero" id="home" style="background:linear-gradient(135deg,#3d1a08,#9c4415);min-height:420px;display:flex;align-items:center;">
-    <div class="hero-overlay"></div>
-    <div class="hero-content" style="position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:60px 24px;">
-        <div class="hero-badge"><i class="bi bi-stars"></i> Organisasi ITH</div>
-        <h1 class="hero-title" style="font-family:'Playfair Display',serif;font-size:3rem;color:#fff;">ARATTA<br><span style="color:#F4A55A;">ITH</span></h1>
-        <p class="hero-subtitle" style="color:rgba(255,255,255,0.82);">UKM Seni Art & Talent (ARATTA)<br>Institut Teknologi Habibie</p>
-        <div class="hero-actions" style="margin-top:24px;display:flex;gap:12px;">
-            <a href="<?= BASE_URL ?>pages/homepage/homepage.php" class="btn-primary" style="background:#C85C1A;color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;">← Kembali</a>
-        </div>
-    </div>
-</section>
-<section id="about" style="padding:60px 24px;max-width:1200px;margin:0 auto;">
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:16px;">Tentang UKM Seni Art & Talent (ARATTA)</h2>
-    <p style="color:#5a3e28;line-height:1.8;">Konten halaman ini sedang dalam pengembangan. Hubungi admin untuk informasi lebih lanjut.</p>
-</section>
-<?php require_once '../../components/footer.php'; ?>
+// pages/organisasi/aratta.php — ARATTA ITH
+$current_page  = 'aratta';
+$page_title    = 'ARATTA ITH — UKM Seni Art & Talent';
+
+$org_slug      = 'ARATTA';
+$org_name      = 'ARATTA ITH';
+$org_full      = 'UKM Seni Art & Talent';
+$org_year      = '2026';
+$org_tagline   = 'Seni, Bakat &<br>Kreativitas ITH';
+$org_about_1   = 'UKM Seni Art & Talent (ARATTA) adalah unit kegiatan mahasiswa yang menjadi wadah pengembangan minat, kreativitas, dan bakat mahasiswa Institut Teknologi Habibie di bidang seni dan hiburan.';
+$org_about_2   = 'ARATTA hadir untuk memfasilitasi ekspresi kreatif mahasiswa — dari teater, musik, tari, hingga seni visual — menciptakan ruang berkarya yang menginspirasi dan mempererat persatuan kampus.';
+$org_tags      = ['Seni Pertunjukan','Musik','Tari','Teater','Seni Visual','Kreativitas'];
+
+$org_vision    = '"ARATTA ITH adalah <em>panggung kreativitas</em> mahasiswa — tempat di mana bakat diasah, karya dilahirkan, dan jiwa seni tumbuh bersama semangat kolaborasi yang hangat.\"';
+$org_logo_fallback = 'ARATTA';
+
+$hero_grad_l   = '#3E1A47';
+$hero_grad_r   = '#C96511';
+
+$poster_l_grad = 'linear-gradient(160deg,#3E1A47,#7B2D8B)';
+$poster_l_label = 'FESTIVAL SENI<br>ITH 2026';
+$poster_r_grad = 'linear-gradient(160deg,#C96511,#5C2E0A)';
+$poster_r_label = 'ARATTA ITH 2026';
+
+$org_collage = [
+    ['class'=>'tall','grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','label'=>'Festival Seni'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','label'=>'Pentas Musik'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#7B2D8B,#3E1A47)','icon'=>'🎨','label'=>'Pameran Karya'],
+];
+
+$org_posters = [
+    ['grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','title'=>'FESTIVAL SENI ITH 2026','tag'=>'Festival Seni','subtitle'=>'Festival Seni Tahunan ARATTA ITH'],
+    ['grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','title'=>'PENTAS SENI & MUSIK','tag'=>'Pertunjukan','subtitle'=>'Pentas Seni & Musik Kampus ITH'],
+    ['grad'=>'linear-gradient(160deg,#7B2D8B,#C96511)','icon'=>'🎯','title'=>'OPEN RECRUITMENT ARATTA','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment ARATTA ITH 2026'],
+];
+
+$programs = [
+    ['cat'=>'Festival Tahunan','title'=>'Festival Seni ITH','desc'=>'Festival seni tahunan yang menampilkan pertunjukan teater, musik, tari tradisional dan modern, serta pameran karya visual mahasiswa.','icon'=>'🎭','color'=>'linear-gradient(135deg,#3E1A47,#7B2D8B)'],
+    ['cat'=>'Pertunjukan Musik','title'=>'Pentas Musik Kampus','desc'=>'Konser dan pentas musik rutin yang memberikan panggung bagi mahasiswa berbakat untuk tampil dan berkolaborasi bersama.','icon'=>'🎵','color'=>'linear-gradient(135deg,#C96511,#5C2E0A)'],
+    ['cat'=>'Seni Visual','title'=>'Pameran Karya Visual','desc'=>'Pameran karya seni visual mahasiswa — fotografi, ilustrasi, desain grafis, dan instalasi seni yang dipamerkan untuk civitas kampus.','icon'=>'🎨','color'=>'linear-gradient(135deg,#7B2D8B,#3E1A47)'],
+];
+
+$contact_email = 'aratta@ith.ac.id';
+
+require '_org_template.php';

@@ -7,24 +7,39 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
 // ── TAMBAH ──────────────────────────────────────────────────
 if ($action === 'tambah' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nama   = trim($_POST['nama_kegiatan']  ?? '');
-    $jenis  = trim($_POST['jenis_kegiatan'] ?? '');
-    $tgl    = trim($_POST['tanggal']        ?? '');
-    $waktu  = trim($_POST['waktu']          ?? '00:00');
-    $tempat = trim($_POST['tempat']         ?? '');
-    $pj     = trim($_POST['penanggung_jawab'] ?? $_SESSION['nama']);
-    $desk   = trim($_POST['deskripsi']      ?? '');
-    $status = 'Terjadwal';
+    $nama       = trim($_POST['nama_kegiatan']    ?? '');
+    $jenis      = trim($_POST['jenis_kegiatan']   ?? '');
+    $tgl        = trim($_POST['tanggal']          ?? '');
+    $waktu      = trim($_POST['waktu']            ?? '00:00');
+    $tempat     = trim($_POST['tempat']           ?? '');
+    $pj         = trim($_POST['penanggung_jawab'] ?? $_SESSION['nama'] ?? '');
+    $desk       = trim($_POST['deskripsi']        ?? '');
+    $organisasi = trim($_POST['organisasi']       ?? $_SESSION['organisasi'] ?? 'Umum');
+    $status     = 'Terjadwal';
 
     if (!$nama || !$jenis || !$tgl || !$tempat) {
         redirect_back('kegiatan', 'error', 'Field wajib tidak boleh kosong!');
     }
 
-    $stmt = $conn->prepare(
-        "INSERT INTO kegiatan (nama_kegiatan,jenis_kegiatan,tanggal,waktu,tempat,penanggung_jawab,deskripsi,status)
-         VALUES (?,?,?,?,?,?,?,?)"
-    );
-    $stmt->bind_param('ssssssss', $nama, $jenis, $tgl, $waktu, $tempat, $pj, $desk, $status);
+    // Cek apakah kolom organisasi ada di tabel kegiatan
+    $has_org = $conn->query("SELECT COUNT(*) AS n FROM information_schema.COLUMNS
+                             WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='kegiatan' AND COLUMN_NAME='organisasi'")
+                    ->fetch_assoc()['n'] > 0;
+
+    if ($has_org) {
+        $stmt = $conn->prepare(
+            "INSERT INTO kegiatan (nama_kegiatan,organisasi,jenis_kegiatan,tanggal,waktu,tempat,penanggung_jawab,deskripsi,status)
+             VALUES (?,?,?,?,?,?,?,?,?)"
+        );
+        $stmt->bind_param('sssssssss', $nama, $organisasi, $jenis, $tgl, $waktu, $tempat, $pj, $desk, $status);
+    } else {
+        $stmt = $conn->prepare(
+            "INSERT INTO kegiatan (nama_kegiatan,jenis_kegiatan,tanggal,waktu,tempat,penanggung_jawab,deskripsi,status)
+             VALUES (?,?,?,?,?,?,?,?)"
+        );
+        $stmt->bind_param('ssssssss', $nama, $jenis, $tgl, $waktu, $tempat, $pj, $desk, $status);
+    }
+
     $ok = $stmt->execute();
     $stmt->close();
 

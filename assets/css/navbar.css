@@ -1,0 +1,181 @@
+/* ================================================================
+   navbar.css — Shared Navbar/Header styles for ALL pages
+   Loaded automatically via header.php on every page
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap');
+
+/* ── CSS vars (fallback for pages that don't load homepage.css) ── */
+:root {
+  --nav-cream:      #F5ECE3;
+  --nav-orange:     #B85C00;
+  --nav-brown:      #8C4B1F;
+  --nav-text-mid:   #6B3E1A;
+  --nav-text-muted: #A07050;
+  --nav-border:     rgba(184,92,0,.10);
+  --nav-font:       'Poppins', sans-serif;
+  --nav-font-body:  'Nunito', sans-serif;
+}
+
+/* ── SITE HEADER wrapper ─────────────────────────────── */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: var(--nav-cream, #F5ECE3);
+  box-shadow: 0 2px 20px rgba(140,75,31,.10);
+}
+
+/* ── TOP BAR ─────────────────────────────────────────── */
+.top-bar {
+  background: var(--nav-cream, #F5ECE3);
+  border-bottom: 1px solid var(--nav-border);
+}
+.top-bar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-icon {
+  width: 44px; height: 44px;
+  background: var(--nav-orange, #B85C00);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(184,92,0,.32);
+}
+.brand-name {
+  font-family: var(--nav-font-body, 'Nunito', sans-serif);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--nav-orange, #B85C00);
+  line-height: 1.2;
+  letter-spacing: -.2px;
+}
+
+/* CTA Buttons */
+.btn-daftar {
+  background: var(--nav-orange, #B85C00);
+  color: #fff;
+  font-family: var(--nav-font, 'Poppins', sans-serif);
+  font-weight: 700;
+  font-size: .78rem;
+  letter-spacing: .07em;
+  padding: 9px 20px;
+  border-radius: 999px;
+  transition: background .22s, transform .2s, box-shadow .22s;
+  box-shadow: 0 3px 14px rgba(184,92,0,.28);
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-daftar:hover {
+  background: var(--nav-brown, #8C4B1F);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 20px rgba(184,92,0,.38);
+  color: #fff;
+}
+.btn-daftar.outline {
+  background: transparent;
+  color: var(--nav-orange, #B85C00);
+  border: 2px solid var(--nav-orange, #B85C00);
+  box-shadow: none;
+}
+.btn-daftar.outline:hover {
+  background: var(--nav-orange, #B85C00);
+  color: #fff;
+}
+
+/* ── MAIN NAV BAR ────────────────────────────────────── */
+.main-nav {
+  background: var(--nav-orange, #B85C00);
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0;
+  width: 100%;
+  margin: 0; padding: 0;
+}
+.nav-links li a {
+  display: block;
+  padding: 13px 18px;
+  color: rgba(255,255,255,.80);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .10em;
+  transition: color .2s, background .2s;
+  text-decoration: none;
+  position: relative;
+  font-family: var(--nav-font, 'Poppins', sans-serif);
+}
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: #fff;
+  background: rgba(0,0,0,.14);
+}
+.nav-links li a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 18px; right: 18px;
+  height: 2.5px;
+  background: #fff;
+  border-radius: 2px 2px 0 0;
+}
+
+/* ── HAMBURGER (mobile) ──────────────────────────────── */
+.hamburger {
+  display: none;
+  background: none; border: none; cursor: pointer;
+  padding: 8px; gap: 5px;
+  flex-direction: column; align-items: center;
+  margin-left: auto;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: #fff; border-radius: 2px;
+  transition: .3s;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .top-bar-inner { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+  .nav-inner { padding: 0 16px; }
+  .hamburger { display: flex; }
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background: var(--nav-orange, #B85C00);
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    z-index: 100;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li a { padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .main-nav { position: relative; }
+  .brand-name { font-size: .88rem; }
+}
+@media (max-width: 480px) {
+  .btn-daftar { padding: 7px 14px; font-size: .72rem; }
+}

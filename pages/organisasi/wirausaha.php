@@ -1,24 +1,46 @@
 <?php
-require_once '../../config/connection.php';
-$page_title   = 'Wirausaha (WITH) – ITH';
-$page_css     = ['bem.css'];
-$current_page = 'wirausaha';
-require_once '../../components/header.php';
-require_once '../../components/navbar.php';
-?>
-<section class="hero" id="home" style="background:linear-gradient(135deg,#3d1a08,#9c4415);min-height:420px;display:flex;align-items:center;">
-    <div class="hero-overlay"></div>
-    <div class="hero-content" style="position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:60px 24px;">
-        <div class="hero-badge"><i class="bi bi-stars"></i> Organisasi ITH</div>
-        <h1 class="hero-title" style="font-family:'Playfair Display',serif;font-size:3rem;color:#fff;">WIRAUSAHA<br><span style="color:#F4A55A;">ITH</span></h1>
-        <p class="hero-subtitle" style="color:rgba(255,255,255,0.82);">Wirausaha (WITH)<br>Institut Teknologi Habibie</p>
-        <div class="hero-actions" style="margin-top:24px;display:flex;gap:12px;">
-            <a href="<?= BASE_URL ?>pages/homepage/homepage.php" class="btn-primary" style="background:#C85C1A;color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;">← Kembali</a>
-        </div>
-    </div>
-</section>
-<section id="about" style="padding:60px 24px;max-width:1200px;margin:0 auto;">
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:16px;">Tentang Wirausaha (WITH)</h2>
-    <p style="color:#5a3e28;line-height:1.8;">Konten halaman ini sedang dalam pengembangan. Hubungi admin untuk informasi lebih lanjut.</p>
-</section>
-<?php require_once '../../components/footer.php'; ?>
+// pages/organisasi/wirausaha.php — Wirausaha (WITH) ITH
+$current_page  = 'wirausaha';
+$page_title    = 'Wirausaha ITH — WITH (Wirausaha Institut Teknologi Habibie)';
+
+$org_slug      = 'Wirausaha';
+$org_name      = 'WITH ITH';
+$org_full      = 'Wirausaha Institut Teknologi Habibie';
+$org_year      = '2026';
+$org_tagline   = 'Jiwa Wirausaha &<br>Inovasi Bisnis';
+$org_about_1   = 'Wirausaha Institut Teknologi Habibie (WITH) adalah organisasi mahasiswa yang berfokus pada pengembangan jiwa kewirausahaan, kreativitas bisnis, dan inovasi usaha mahasiswa di lingkungan kampus ITH.';
+$org_about_2   = 'WITH hadir sebagai ekosistem wirausaha kampus — memfasilitasi mahasiswa untuk memulai dan mengembangkan usaha, menghubungkan dengan mentor bisnis, dan menciptakan peluang kolaborasi antar pengusaha muda ITH.';
+$org_tags      = ['Kewirausahaan','Bisnis Startup','Inovasi Usaha','Mentorship','Networking','Business Plan'];
+
+$org_vision    = '"WITH ITH adalah <em>inkubator wirausaha</em> yang melahirkan pengusaha muda berkarakter — berani bermimpi besar, berani memulai, dan berani menciptakan dampak nyata bagi masyarakat.\"';
+$org_logo_fallback = 'WITH';
+
+$hero_grad_l   = '#1B3A1F';
+$hero_grad_r   = '#C96511';
+
+$poster_l_grad = 'linear-gradient(160deg,#1B3A1F,#2E7D32)';
+$poster_l_label = 'BUSINESS PLAN<br>COMPETITION';
+$poster_r_grad = 'linear-gradient(160deg,#C96511,#5C2E0A)';
+$poster_r_label = 'WITH ITH 2026';
+
+$org_collage = [
+    ['class'=>'tall','grad'=>'linear-gradient(160deg,#1B3A1F,#2E7D32)','icon'=>'💼','label'=>'Business Plan'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🚀','label'=>'Startup Pitching'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#2E7D32,#1B3A1F)','icon'=>'🤝','label'=>'Networking Event'],
+];
+
+$org_posters = [
+    ['grad'=>'linear-gradient(160deg,#1B3A1F,#2E7D32)','icon'=>'💼','title'=>'BUSINESS PLAN COMPETITION','tag'=>'Kompetisi Bisnis','subtitle'=>'Business Plan Competition WITH ITH'],
+    ['grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🚀','title'=>'STARTUP PITCHING DAY','tag'=>'Pitching Event','subtitle'=>'Startup Pitching Day WITH ITH 2026'],
+    ['grad'=>'linear-gradient(160deg,#2E7D32,#C96511)','icon'=>'🎯','title'=>'OPEN RECRUITMENT WITH','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment WITH ITH 2026'],
+];
+
+$programs = [
+    ['cat'=>'Kompetisi Bisnis','title'=>'Business Plan Competition','desc'=>'Kompetisi business plan antar mahasiswa — mempresentasikan ide bisnis inovatif di hadapan juri dari kalangan pengusaha dan investor.','icon'=>'💼','color'=>'linear-gradient(135deg,#1B3A1F,#2E7D32)'],
+    ['cat'=>'Inkubasi Usaha','title'=>'Startup Incubator WITH','desc'=>'Program inkubasi usaha mahasiswa — pendampingan intensif dari ideasi hingga produk yang siap dipasarkan ke masyarakat luas.','icon'=>'🚀','color'=>'linear-gradient(135deg,#C96511,#5C2E0A)'],
+    ['cat'=>'Networking & Mentorship','title'=>'Wirausaha Networking Day','desc'=>'Event networking dan mentorship bersama pengusaha sukses alumni ITH — membangun koneksi dan mendapat insight dunia bisnis nyata.','icon'=>'🤝','color'=>'linear-gradient(135deg,#2E7D32,#1B3A1F)'],
+];
+
+$contact_email = 'wirausaha@ith.ac.id';
+
+require '_org_template.php';

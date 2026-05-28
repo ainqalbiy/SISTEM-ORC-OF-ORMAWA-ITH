@@ -1,24 +1,46 @@
 <?php
-require_once '../../config/connection.php';
-$page_title   = 'Habibie Coding Club (HCC) – ITH';
-$page_css     = ['bem.css'];
-$current_page = 'hcc';
-require_once '../../components/header.php';
-require_once '../../components/navbar.php';
-?>
-<section class="hero" id="home" style="background:linear-gradient(135deg,#3d1a08,#9c4415);min-height:420px;display:flex;align-items:center;">
-    <div class="hero-overlay"></div>
-    <div class="hero-content" style="position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:60px 24px;">
-        <div class="hero-badge"><i class="bi bi-stars"></i> Organisasi ITH</div>
-        <h1 class="hero-title" style="font-family:'Playfair Display',serif;font-size:3rem;color:#fff;">HCC<br><span style="color:#F4A55A;">ITH</span></h1>
-        <p class="hero-subtitle" style="color:rgba(255,255,255,0.82);">Habibie Coding Club (HCC)<br>Institut Teknologi Habibie</p>
-        <div class="hero-actions" style="margin-top:24px;display:flex;gap:12px;">
-            <a href="<?= BASE_URL ?>pages/homepage/homepage.php" class="btn-primary" style="background:#C85C1A;color:#fff;padding:12px 24px;border-radius:50px;font-weight:700;">← Kembali</a>
-        </div>
-    </div>
-</section>
-<section id="about" style="padding:60px 24px;max-width:1200px;margin:0 auto;">
-    <h2 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:16px;">Tentang Habibie Coding Club (HCC)</h2>
-    <p style="color:#5a3e28;line-height:1.8;">Konten halaman ini sedang dalam pengembangan. Hubungi admin untuk informasi lebih lanjut.</p>
-</section>
-<?php require_once '../../components/footer.php'; ?>
+// pages/organisasi/hcc.php — HCC ITH
+$current_page  = 'hcc';
+$page_title    = 'HCC ITH — Habibie Coding Club';
+
+$org_slug      = 'HCC';
+$org_name      = 'HCC ITH';
+$org_full      = 'Habibie Coding Club';
+$org_year      = '2026';
+$org_tagline   = 'Coding, Software &<br>Digital Creativity';
+$org_about_1   = 'Habibie Coding Club (HCC) adalah organisasi mahasiswa di bidang pemrograman dan teknologi yang mendukung pengembangan skill coding, software development, dan digital creativity di Institut Teknologi Habibie.';
+$org_about_2   = 'HCC hadir sebagai komunitas belajar yang aktif — mengadakan workshop, hackathon, dan project kolaboratif yang mempersiapkan mahasiswa untuk karir di dunia teknologi digital.';
+$org_tags      = ['Coding','Software Dev','Web Dev','Mobile Dev','Hackathon','Digital Creative'];
+
+$org_vision    = '"HCC ITH adalah <em>inkubator digital</em> yang melahirkan developer, designer, dan innovator berbakat — siap menghadapi tantangan era transformasi digital dengan skill dan kolaborasi.\"';
+$org_logo_fallback = 'HCC';
+
+$hero_grad_l   = '#0A1628';
+$hero_grad_r   = '#1565C0';
+
+$poster_l_grad = 'linear-gradient(160deg,#0A1628,#1565C0)';
+$poster_l_label = 'HACKATHON<br>ITH 2026';
+$poster_r_grad = 'linear-gradient(160deg,#1565C0,#0D47A1)';
+$poster_r_label = 'HCC ITH 2026';
+
+$org_collage = [
+    ['class'=>'tall','grad'=>'linear-gradient(160deg,#0A1628,#1565C0)','icon'=>'💻','label'=>'Hackathon ITH'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#1565C0,#0D47A1)','icon'=>'🌐','label'=>'Web Development'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#0D47A1,#0A1628)','icon'=>'📱','label'=>'Mobile Apps'],
+];
+
+$org_posters = [
+    ['grad'=>'linear-gradient(160deg,#0A1628,#1565C0)','icon'=>'💻','title'=>'HACKATHON ITH 2026','tag'=>'Kompetisi Coding','subtitle'=>'Hackathon ITH 2026 by HCC'],
+    ['grad'=>'linear-gradient(160deg,#1565C0,#0D47A1)','icon'=>'🌐','title'=>'WEB & MOBILE WORKSHOP','tag'=>'Workshop Coding','subtitle'=>'Workshop Web & Mobile Dev HCC'],
+    ['grad'=>'linear-gradient(160deg,#0D47A1,#1565C0)','icon'=>'🎯','title'=>'OPEN RECRUITMENT HCC','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment HCC ITH 2026'],
+];
+
+$programs = [
+    ['cat'=>'Kompetisi Coding','title'=>'Hackathon ITH','desc'=>'Kompetisi coding 24 jam antar mahasiswa ITH — membangun solusi digital inovatif dalam waktu terbatas bersama tim.','icon'=>'💻','color'=>'linear-gradient(135deg,#0A1628,#1565C0)'],
+    ['cat'=>'Pengembangan Skill','title'=>'Workshop Web & Mobile','desc'=>'Workshop intensif pengembangan skill web development, mobile apps, dan UI/UX design untuk mahasiswa semua jurusan.','icon'=>'🌐','color'=>'linear-gradient(135deg,#1565C0,#0D47A1)'],
+    ['cat'=>'Kolaborasi Project','title'=>'Open Source Project','desc'=>'Program kolaborasi membangun project open source bersama — portofolio nyata untuk persiapan karir di industri teknologi.','icon'=>'🚀','color'=>'linear-gradient(135deg,#0D47A1,#0A1628)'],
+];
+
+$contact_email = 'hcc@ith.ac.id';
+
+require '_org_template.php';

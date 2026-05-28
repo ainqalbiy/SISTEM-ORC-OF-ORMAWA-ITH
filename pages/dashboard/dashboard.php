@@ -557,7 +557,19 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
     <button class="modal-close" onclick="closeModal('modalKegiatan')"><i class="bi bi-x"></i></button>
     <form method="POST" action="<?=BASE_URL?>proccess/kegiatan_process.php">
         <input type="hidden" name="action" value="tambah">
-        <div class="form-group"><label>Nama Kegiatan *</label><input type="text" name="nama_kegiatan" required placeholder="Contoh: Rapat Bulanan BEM"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Nama Kegiatan *</label><input type="text" name="nama_kegiatan" required placeholder="Contoh: Rapat Bulanan BEM"></div>
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi" required>
+                    <option value="BEM" <?= ($_SESSION['organisasi']??'')==='BEM'?'selected':'' ?>>BEM</option>
+                    <option value="HERO" <?= ($_SESSION['organisasi']??'')==='HERO'?'selected':'' ?>>HERO</option>
+                    <option value="HCC" <?= ($_SESSION['organisasi']??'')==='HCC'?'selected':'' ?>>HCC</option>
+                    <option value="ARATTA" <?= ($_SESSION['organisasi']??'')==='ARATTA'?'selected':'' ?>>ARATTA</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                    <option value="Umum">Umum</option>
+                </select>
+            </div>
+        </div>
         <div class="form-row">
             <div class="form-group"><label>Jenis Kegiatan *</label>
                 <select name="jenis_kegiatan" required>
@@ -590,6 +602,28 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
     <form method="POST" action="<?=BASE_URL?>proccess/anggota_process.php">
         <input type="hidden" name="action" value="tambah">
         <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" required placeholder="Nama anggota"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi" required>
+                    <option value="BEM" <?= ($_SESSION['organisasi']??'')==='BEM'?'selected':'' ?>>BEM</option>
+                    <option value="HERO" <?= ($_SESSION['organisasi']??'')==='HERO'?'selected':'' ?>>HERO</option>
+                    <option value="HCC" <?= ($_SESSION['organisasi']??'')==='HCC'?'selected':'' ?>>HCC</option>
+                    <option value="ARATTA" <?= ($_SESSION['organisasi']??'')==='ARATTA'?'selected':'' ?>>ARATTA</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                    <option value="Umum">Umum</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Jabatan</label>
+                <select name="jabatan">
+                    <option value="Anggota">Anggota</option>
+                    <option value="Pengurus">Pengurus</option>
+                    <option value="Ketua">Ketua</option>
+                    <option value="Wakil Ketua">Wakil Ketua</option>
+                    <option value="Sekretaris">Sekretaris</option>
+                    <option value="Bendahara">Bendahara</option>
+                </select>
+            </div>
+        </div>
         <div class="form-group"><label>No. HP *</label><input type="text" name="no_hp" required placeholder="08xx-xxxx-xxxx"></div>
         <div class="form-group"><label>Alamat *</label><textarea name="alamat" required placeholder="Alamat lengkap anggota"></textarea></div>
         <div class="form-group"><label>Tanggal Daftar</label><input type="date" name="tanggal_daftar" value="<?=date('Y-m-d')?>"></div>
