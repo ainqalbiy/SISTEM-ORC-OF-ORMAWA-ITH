@@ -105,3 +105,4 @@ require_once '../../components/navbar.php';
 </section>
 
 <?php require_once '../../components/footer.php'; ?>
+<?php require_once '../../components/footer_scripts.php'; ?>
