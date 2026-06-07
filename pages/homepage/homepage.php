@@ -199,30 +199,40 @@ require_once '../../components/navbar.php';
 <section class="testimoni-section" id="testimoni">
     <div class="testimoni-inner">
 
+        <!-- KIRI: Bubble Chat Testimonial -->
         <div class="testimoni-left" data-reveal>
-            <h2>Apa Kata Mahasiswa(i) ITH ?</h2>
-            <p>Pengalaman mereka bersama organisasi kampus</p>
+            <h2 class="testimoni-heading">Apa Kata Mahasiswa(i) ITH ?</h2>
+            <p class="testimoni-sub">Pengalaman mereka bersama organisasi kampus</p>
 
-            <div class="testimoni-cards">
-                <?php foreach ($testimoni as $t): ?>
-                <div class="testimoni-card <?= $t['highlight'] ? 'highlight' : '' ?>">
-                    <blockquote>"<?= htmlspecialchars($t['isi']) ?>"</blockquote>
-                    <div class="testimoni-author"><?= htmlspecialchars($t['nama']) ?></div>
-                    <div class="testimoni-role">– <?= htmlspecialchars($t['jabatan']) ?></div>
+            <div class="testimoni-bubbles">
+                <?php foreach ($testimoni as $idx => $t): ?>
+                <div class="bubble-wrap">
+                    <div class="bubble <?= $idx === 0 ? 'bubble-sm' : 'bubble-lg' ?>">
+                        <p>"<?= htmlspecialchars($t['isi']) ?>"</p>
+                        <div class="bubble-tail"></div>
+                    </div>
+                    <div class="bubble-author">
+                        <span class="bubble-name"><?= htmlspecialchars($t['nama']) ?></span>
+                        <span class="bubble-role">–<?= htmlspecialchars($t['jabatan']) ?></span>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
         </div>
 
+        <!-- KANAN: Stat Cards -->
         <div class="stats-right" data-reveal>
             <?php foreach ($stats as $stat): ?>
-            <div class="stat-card">
-                <div class="stat-number"
-                     data-count="<?= htmlspecialchars($stat['angka']) ?>"
-                     data-suffix="<?= htmlspecialchars($stat['suffix']) ?>">
-                    0<?= htmlspecialchars($stat['suffix']) ?>
+            <div class="stat-ribbon-card">
+                <div class="stat-ribbon-accent"></div>
+                <div class="stat-num-box">
+                    <span class="stat-num"
+                          data-count="<?= htmlspecialchars($stat['angka']) ?>"
+                          data-suffix="<?= htmlspecialchars($stat['suffix']) ?>">
+                        0<?= htmlspecialchars($stat['suffix']) ?>
+                    </span>
                 </div>
-                <div class="stat-label"><?= htmlspecialchars($stat['label']) ?></div>
+                <div class="stat-ribbon-label"><?= htmlspecialchars($stat['label']) ?></div>
             </div>
             <?php endforeach; ?>
         </div>
@@ -230,58 +240,42 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════ FOOTER / CONTACT ═══════════ -->
-<footer class="footer" id="contact">
-    <div class="footer-inner">
+<!-- ═══════════ CONTACT SECTION ═══════════ -->
+<section class="contact-section-wrap" id="contact">
+    <div class="contact-container">
 
-        <div class="footer-contact-info" data-reveal>
-            <h3>Informasi Kontak</h3>
-            <div class="footer-contact-items">
-                <div class="footer-contact-item">
-                    <div class="icon-box"><i class="bi bi-geo-alt-fill"></i></div>
-                    <div class="detail">
-                        <label>Alamat</label>
-                        <p>Kampus Institut Teknologi B.J Habibie<br>Parepare, Sulawesi Selatan</p>
-                    </div>
+        <!-- KIRI + TENGAH: Contact Cards + Desc Box sejajar -->
+        <div class="contact-left-area">
+            <!-- Dua contact info card -->
+            <div class="contact-cards-area">
+                <div class="contact-info-card">
+                    <div class="cic-label">Alamat:</div>
+                    <div class="cic-val">Kampus Institut Teknologi B.J Habibie<br>Parepare, Sulawesi Selatan</div>
                 </div>
-                <div class="footer-contact-item">
-                    <div class="icon-box"><i class="bi bi-envelope-fill"></i></div>
-                    <div class="detail">
-                        <label>Email</label>
-                        <p>orcormawa@ith.ac.id</p>
-                    </div>
+                <div class="contact-info-card">
+                    <div class="cic-label">Email:</div>
+                    <a href="mailto:orcormawa@ith.ac.id" class="cic-val cic-link">orcormawa@ith.ac.id</a>
+                    <div class="cic-label" style="margin-top:12px">Telepon:</div>
+                    <div class="cic-val">+62 1234 5678 910</div>
                 </div>
-                <div class="footer-contact-item">
-                    <div class="icon-box"><i class="bi bi-telephone-fill"></i></div>
-                    <div class="detail">
-                        <label>Telepon</label>
-                        <p>+62 1234 5678 910</p>
-                    </div>
+                <!-- Box putih deskripsi — melebar dari tengah ke kanan card -->
+                <div class="contact-info-card contact-desc-card">
+                    <p class="contact-desc-text">Memiliki pertanyaan atau membutuhkan informasi terkait organisasi mahasiswa? Hubungi kami melalui kontak berikut.</p>
                 </div>
-            </div>
-
-            <div class="footer-socials">
-                <a href="#" class="social-btn" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-btn" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-btn" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                <a href="#" class="social-btn" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
 
-        <div class="footer-right" data-reveal>
-            <div class="footer-contacts-title">CONTACTS</div>
-            <p>Memiliki pertanyaan atau membutuhkan informasi terkait organisasi mahasiswa? Hubungi kami melalui kontak berikut.</p>
+        <!-- KANAN: CONTACTS heading -->
+        <div class="contact-text-area">
+            <div class="contacts-big-heading">C O N T A C T S</div>
         </div>
 
     </div>
+</section>
 
-    <div class="footer-divider">
-        <div class="footer-brand-mini">
-            <span class="footer-logo-badge">ORC</span>
-            <span class="footer-brand-text">Organization Resource Center · ORMAWA ITH</span>
-        </div>
-        <p class="footer-copy">© <?= date('Y') ?> ORC ORMAWA ITH — Institut Teknologi B.J Habibie</p>
-    </div>
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="orc-footer">
+    <p class="orc-footer-copy">© <?= date('Y') ?> ORC ORMAWA ITH — Institut Teknologi B.J Habibie</p>
 </footer>
 
 <?php require_once '../../components/footer_scripts.php'; ?>

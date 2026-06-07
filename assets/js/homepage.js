@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(update);
     }
 
-    const statNums = document.querySelectorAll('.stat-number[data-count]');
+    const statNums = document.querySelectorAll('.stat-number[data-count], .stat-num[data-count]');
     const statsObs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
