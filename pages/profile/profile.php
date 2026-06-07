@@ -293,5 +293,6 @@ if (isset($_GET['updated']) && $_GET['updated'] === '1') {
 </script>
 
 <script src="<?= BASE_URL ?>assets/js/profile.js"></script>
+<?php require_once '../../components/footer.php'; ?>
 </body>
 </html>
