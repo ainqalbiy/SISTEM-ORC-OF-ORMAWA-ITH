@@ -238,6 +238,7 @@ if (isset($_GET['updated']) && $_GET['updated'] === '1') {
   <div class="modal-box">
     <h3><i class="fas fa-user-edit" style="color:#f97316"></i> Edit Profil</h3>
     <form action="<?= BASE_URL ?>proccess/update_profile.php" method="POST">
+        <input type="hidden" name="from" value="profile">
       <label>Nama Lengkap</label>
       <input type="text" name="nama" value="<?= e($user['nama']) ?>" required>
       <label>No. HP</label>
@@ -261,6 +262,7 @@ if (isset($_GET['updated']) && $_GET['updated'] === '1') {
   <div class="modal-box">
     <h3><i class="fas fa-lock" style="color:#f97316"></i> Ubah Password</h3>
     <form action="<?= BASE_URL ?>proccess/update_password.php" method="POST">
+        <input type="hidden" name="from" value="profile">
       <label>Password Lama</label>
       <input type="password" name="old_password" required placeholder="Masukkan password lama">
       <label>Password Baru</label>
@@ -293,6 +295,5 @@ if (isset($_GET['updated']) && $_GET['updated'] === '1') {
 </script>
 
 <script src="<?= BASE_URL ?>assets/js/profile.js"></script>
-<?php require_once '../../components/footer.php'; ?>
 </body>
 </html>

@@ -26,37 +26,16 @@ if ($password !== $confirm_password) {
     exit;
 }
 
-// ── Deteksi nama kolom primary key tabel users ─────────────────────
-function get_pk_column(mysqli $conn): string {
-    $res = $conn->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
-                         WHERE TABLE_SCHEMA = DATABASE()
-                           AND TABLE_NAME   = 'users'
-                           AND CONSTRAINT_NAME = 'PRIMARY'
-                         LIMIT 1");
-    if ($res && $row = $res->fetch_assoc()) {
-        return $row['COLUMN_NAME'];
-    }
-    return 'id'; // fallback
-}
+// Gunakan helper dari connection.php
+$pk      = get_user_pk($conn);
+$has_nim = user_col_exists($conn, 'nim');
 
-// ── Deteksi kolom yang ada di tabel users ──────────────────────────
-function col_exists(mysqli $conn, string $col): bool {
-    $res = $conn->query("SELECT COUNT(*) AS c FROM information_schema.COLUMNS
-                         WHERE TABLE_SCHEMA = DATABASE()
-                           AND TABLE_NAME   = 'users'
-                           AND COLUMN_NAME  = '$col'");
-    return $res && $res->fetch_assoc()['c'] > 0;
-}
-
-$pk = get_pk_column($conn);
-
-// ── Cek apakah email/NIM sudah terdaftar ───────────────────────────
-$has_nim = col_exists($conn, 'nim');
+// Cek apakah email/NIM sudah terdaftar
 if ($has_nim) {
-    $stmt = $conn->prepare("SELECT $pk FROM users WHERE email = ? OR nim = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT `$pk` FROM users WHERE email = ? OR nim = ? LIMIT 1");
     $stmt->bind_param('ss', $email, $nim);
 } else {
-    $stmt = $conn->prepare("SELECT $pk FROM users WHERE email = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT `$pk` FROM users WHERE email = ? LIMIT 1");
     $stmt->bind_param('s', $email);
 }
 $stmt->execute();
@@ -68,24 +47,24 @@ if ($stmt->num_rows > 0) {
 }
 $stmt->close();
 
-// ── Build INSERT sesuai kolom yang tersedia ────────────────────────
+// Build INSERT sesuai kolom yang tersedia
 $hash = password_hash($password, PASSWORD_DEFAULT);
-$has_jabatan    = col_exists($conn, 'jabatan');
-$has_no_hp      = col_exists($conn, 'no_hp');
-$has_organisasi = col_exists($conn, 'organisasi');
-$has_angkatan   = col_exists($conn, 'angkatan');
-$has_status     = col_exists($conn, 'status');
-$has_created_at = col_exists($conn, 'created_at');
 
-// Bangun query dinamis
+$has_jabatan     = user_col_exists($conn, 'jabatan');
+$has_no_hp       = user_col_exists($conn, 'no_hp');
+$has_organisasi  = user_col_exists($conn, 'organisasi');
+$has_angkatan    = user_col_exists($conn, 'angkatan');
+$has_status      = user_col_exists($conn, 'status');
+$has_created_at  = user_col_exists($conn, 'created_at');
+
 $cols   = ['nama', 'email', 'password'];
-$pholds = ['?',    '?',     '?'];
+$pholds = ['?', '?', '?'];
 $types  = 'sss';
 $vals   = [$nama, $email, $hash];
 
-if ($has_nim)      { $cols[] = 'nim';        $pholds[] = '?'; $types .= 's'; $vals[] = $nim; }
-if ($has_jabatan)  { $cols[] = 'jabatan';    $pholds[] = "'Anggota'"; }
-if ($has_status)   { $cols[] = 'status';     $pholds[] = "'Aktif'"; }
+if ($has_nim)       { $cols[] = 'nim';        $pholds[] = '?'; $types .= 's'; $vals[] = $nim; }
+if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Anggota'"; }
+if ($has_status)    { $cols[] = 'status';     $pholds[] = "'Aktif'"; }
 if ($has_created_at){ $cols[] = 'created_at'; $pholds[] = 'NOW()'; }
 
 $sql = "INSERT INTO users (" . implode(',', $cols) . ") VALUES (" . implode(',', $pholds) . ")";

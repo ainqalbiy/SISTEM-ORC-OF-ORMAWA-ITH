@@ -15,28 +15,11 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-// ── Deteksi primary key dan kolom yang ada ─────────────────────────
-function get_pk_column(mysqli $conn): string {
-    $res = $conn->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
-                         WHERE TABLE_SCHEMA = DATABASE()
-                           AND TABLE_NAME   = 'users'
-                           AND CONSTRAINT_NAME = 'PRIMARY'
-                         LIMIT 1");
-    return ($res && $row = $res->fetch_assoc()) ? $row['COLUMN_NAME'] : 'id';
-}
+// Gunakan helper dari connection.php
+$pk      = get_user_pk($conn);
+$has_nim = user_col_exists($conn, 'nim');
 
-function col_exists(mysqli $conn, string $col): bool {
-    $res = $conn->query("SELECT COUNT(*) AS c FROM information_schema.COLUMNS
-                         WHERE TABLE_SCHEMA = DATABASE()
-                           AND TABLE_NAME   = 'users'
-                           AND COLUMN_NAME  = '$col'");
-    return $res && $res->fetch_assoc()['c'] > 0;
-}
-
-$pk      = get_pk_column($conn);
-$has_nim = col_exists($conn, 'nim');
-
-// ── Cari user berdasarkan email atau NIM ───────────────────────────
+// Cari user berdasarkan email atau NIM
 if ($has_nim) {
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR nim = ? LIMIT 1");
     $stmt->bind_param('ss', $email, $email);
@@ -49,7 +32,6 @@ $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if ($user && password_verify($password, $user['password'])) {
-    // Pakai PK yang terdeteksi (id / user_id / id_user)
     $_SESSION['user_id']    = $user[$pk];
     $_SESSION['nama']       = $user['nama']        ?? '';
     $_SESSION['email']      = $user['email']       ?? '';

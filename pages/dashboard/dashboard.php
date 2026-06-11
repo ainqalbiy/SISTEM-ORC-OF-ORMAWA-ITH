@@ -44,7 +44,8 @@ $rP = $conn->query("SELECT COUNT(*) AS c FROM pengumuman"); $nP = $rP ? $rP->fet
 $kegiatan_list   = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 $dokumen_list    = $conn->query("SELECT * FROM dokumen WHERE user_id=$uid ORDER BY tanggal_upload DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 $anggota_list    = $conn->query("SELECT * FROM anggota ORDER BY tanggal_daftar DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
-$pengumuman_list = $conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.id ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
+$_pk_col = get_user_pk($conn);
+$pengumuman_list = $conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.`$_pk_col` ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 
 $page_title = 'Dashboard';
 $page_css   = ['dashboard.css'];
@@ -393,6 +394,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                             <td><?=e($k['penanggung_jawab'])?></td>
                             <td><span class="badge-status <?=strtolower($k['status'])?>"><?=e($k['status'])?></span></td>
                             <td>
+                                <button class="btn-sm-outline" style="margin-right:4px" onclick="openEditKegiatan(<?=htmlspecialchars(json_encode($k),ENT_QUOTES)?>)"><i class="bi bi-pencil"></i></button>
                                 <form method="POST" action="<?=BASE_URL?>proccess/kegiatan_process.php" style="display:inline">
                                     <input type="hidden" name="action" value="hapus">
                                     <input type="hidden" name="id" value="<?=$k['id_kegiatan']?>">
@@ -437,6 +439,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                             <td><?=e($a['alamat'])?></td>
                             <td><?=date('d M Y',strtotime($a['tanggal_daftar']))?></td>
                             <td>
+                                <button class="btn-sm-outline" style="margin-right:4px" onclick="openEditAnggota(<?=htmlspecialchars(json_encode($a),ENT_QUOTES)?>)"><i class="bi bi-pencil"></i></button>
                                 <form method="POST" action="<?=BASE_URL?>proccess/anggota_process.php" style="display:inline">
                                     <input type="hidden" name="action" value="hapus">
                                     <input type="hidden" name="id" value="<?=$a['id_anggota']?>">
@@ -527,6 +530,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                             <td><?=date('d M Y',strtotime($p['tanggal']))?></td>
                             <td>
                                 <?php if((int)$p['user_id']===$uid):?>
+                                <button class="btn-sm-outline" style="margin-right:4px" onclick="openEditPengumuman(<?=htmlspecialchars(json_encode($p),ENT_QUOTES)?>)"><i class="bi bi-pencil"></i></button>
                                 <form method="POST" action="<?=BASE_URL?>proccess/pengumuman_process.php" style="display:inline">
                                     <input type="hidden" name="action" value="hapus">
                                     <input type="hidden" name="id" value="<?=$p['pengumuman_id']?>">
@@ -687,6 +691,132 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 </div>
 </div>
 
+<!-- Modal: Edit Kegiatan -->
+<div class="modal-backdrop" id="modalEditKegiatan">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-pencil-square"></i> Edit Kegiatan</div>
+    <button class="modal-close" onclick="closeModal('modalEditKegiatan')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/kegiatan_process.php">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="editKegId">
+        <div class="form-row">
+            <div class="form-group"><label>Nama Kegiatan *</label><input type="text" name="nama_kegiatan" id="editKegNama" required></div>
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi" id="editKegOrg" required>
+                    <option value="BEM">BEM</option>
+                    <option value="HERO">HERO</option>
+                    <option value="HCC">HCC</option>
+                    <option value="ARATTA">ARATTA</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                    <option value="Umum">Umum</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Jenis Kegiatan *</label>
+                <select name="jenis_kegiatan" id="editKegJenis" required>
+                    <option value="Rapat">Rapat</option>
+                    <option value="Lomba">Lomba</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Workshop">Workshop</option>
+                    <option value="Bakti Sosial">Bakti Sosial</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Tanggal *</label><input type="date" name="tanggal" id="editKegTgl" required></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Waktu</label><input type="time" name="waktu" id="editKegWaktu"></div>
+            <div class="form-group"><label>Tempat *</label><input type="text" name="tempat" id="editKegTempat" required></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Penanggung Jawab</label><input type="text" name="penanggung_jawab" id="editKegPj"></div>
+            <div class="form-group"><label>Status</label>
+                <select name="status" id="editKegStatus">
+                    <option value="Terjadwal">Terjadwal</option>
+                    <option value="Berlangsung">Berlangsung</option>
+                    <option value="Selesai">Selesai</option>
+                    <option value="Dibatalkan">Dibatalkan</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" id="editKegDesk"></textarea></div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEditKegiatan')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-floppy"></i> Simpan Perubahan</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Modal: Edit Anggota -->
+<div class="modal-backdrop" id="modalEditAnggota">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-person-gear"></i> Edit Anggota</div>
+    <button class="modal-close" onclick="closeModal('modalEditAnggota')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/anggota_process.php">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="editAngId">
+        <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" id="editAngNama" required></div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi" id="editAngOrg" required>
+                    <option value="BEM">BEM</option>
+                    <option value="HERO">HERO</option>
+                    <option value="HCC">HCC</option>
+                    <option value="ARATTA">ARATTA</option>
+                    <option value="Wirausaha">Wirausaha</option>
+                    <option value="Umum">Umum</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Jabatan</label>
+                <select name="jabatan" id="editAngJab">
+                    <option value="Anggota">Anggota</option>
+                    <option value="Pengurus">Pengurus</option>
+                    <option value="Ketua">Ketua</option>
+                    <option value="Wakil Ketua">Wakil Ketua</option>
+                    <option value="Sekretaris">Sekretaris</option>
+                    <option value="Bendahara">Bendahara</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>No. HP *</label><input type="text" name="no_hp" id="editAngHp" required></div>
+        <div class="form-group"><label>Alamat *</label><textarea name="alamat" id="editAngAlamat" required></textarea></div>
+        <div class="form-group"><label>Tanggal Daftar</label><input type="date" name="tanggal_daftar" id="editAngTgl"></div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEditAnggota')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-floppy"></i> Simpan Perubahan</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Modal: Edit Pengumuman -->
+<div class="modal-backdrop" id="modalEditPengumuman">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-megaphone-fill"></i> Edit Pengumuman</div>
+    <button class="modal-close" onclick="closeModal('modalEditPengumuman')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/pengumuman_process.php">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="editPngId">
+        <div class="form-group"><label>Judul *</label><input type="text" name="judul" id="editPngJudul" required></div>
+        <div class="form-group"><label>Konten Pengumuman *</label><textarea name="konten" id="editPngKonten" required style="min-height:120px"></textarea></div>
+        <div class="form-group"><label>Target Penerima</label>
+            <select name="target_role" id="editPngTarget">
+                <option value="semua">Semua</option>
+                <option value="anggota">Anggota</option>
+                <option value="pengurus">Pengurus</option>
+                <option value="pembina">Pembina</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEditPengumuman')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-send"></i> Perbarui</button>
+        </div>
+    </form>
+</div>
+</div>
+
 <!-- Modal: Ganti Password -->
 <div class="modal-backdrop" id="modalPassword">
 <div class="modal-box">
@@ -730,6 +860,42 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 document.querySelectorAll('.modal-backdrop').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
+// Edit Kegiatan
+function openEditKegiatan(k) {
+    document.getElementById('editKegId').value     = k.id_kegiatan;
+    document.getElementById('editKegNama').value   = k.nama_kegiatan || '';
+    document.getElementById('editKegJenis').value  = k.jenis_kegiatan || '';
+    document.getElementById('editKegTgl').value    = k.tanggal || '';
+    document.getElementById('editKegWaktu').value  = k.waktu || '';
+    document.getElementById('editKegTempat').value = k.tempat || '';
+    document.getElementById('editKegPj').value     = k.penanggung_jawab || '';
+    document.getElementById('editKegDesk').value   = k.deskripsi || '';
+    document.getElementById('editKegStatus').value = k.status || 'Terjadwal';
+    if (k.organisasi) document.getElementById('editKegOrg').value = k.organisasi;
+    document.getElementById('modalEditKegiatan').classList.add('open');
+}
+
+// Edit Anggota
+function openEditAnggota(a) {
+    document.getElementById('editAngId').value     = a.id_anggota;
+    document.getElementById('editAngNama').value   = a.nama || '';
+    document.getElementById('editAngHp').value     = a.no_hp || '';
+    document.getElementById('editAngAlamat').value = a.alamat || '';
+    document.getElementById('editAngTgl').value    = a.tanggal_daftar || '';
+    if (a.organisasi) document.getElementById('editAngOrg').value = a.organisasi;
+    if (a.jabatan)    document.getElementById('editAngJab').value  = a.jabatan;
+    document.getElementById('modalEditAnggota').classList.add('open');
+}
+
+// Edit Pengumuman
+function openEditPengumuman(p) {
+    document.getElementById('editPngId').value     = p.pengumuman_id;
+    document.getElementById('editPngJudul').value  = p.judul || '';
+    document.getElementById('editPngKonten').value = p.konten || '';
+    document.getElementById('editPngTarget').value = p.target_role || 'semua';
+    document.getElementById('modalEditPengumuman').classList.add('open');
+}
 
 // Toast
 const toast = document.getElementById('toastNotif');

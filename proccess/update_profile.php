@@ -17,9 +17,18 @@ $no_hp      = trim($_POST['no_hp']      ?? '');
 $jabatan    = trim($_POST['jabatan']    ?? '');
 $organisasi = trim($_POST['organisasi'] ?? '');
 $angkatan   = trim($_POST['angkatan']  ?? '');
+$from       = trim($_POST['from']       ?? 'dashboard'); // 'profile' or 'dashboard'
+
+// Tentukan tujuan redirect
+$redirect_ok  = ($from === 'profile')
+    ? BASE_URL . 'pages/profile/profile.php?updated=1'
+    : BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&success=Profil+berhasil+diperbarui!';
+$redirect_err = ($from === 'profile')
+    ? BASE_URL . 'pages/profile/profile.php?error='
+    : BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=';
 
 if (empty($nama)) {
-    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=Nama+tidak+boleh+kosong!');
+    header('Location: ' . $redirect_err . urlencode('Nama tidak boleh kosong!'));
     exit;
 }
 
@@ -48,5 +57,5 @@ $_SESSION['no_hp']      = $no_hp;
 $_SESSION['organisasi'] = $organisasi;
 $_SESSION['angkatan']   = $angkatan;
 
-header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&success=Profil+berhasil+diperbarui!');
+header('Location: ' . $redirect_ok);
 exit;
