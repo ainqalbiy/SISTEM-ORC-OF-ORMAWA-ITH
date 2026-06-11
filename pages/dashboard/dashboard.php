@@ -44,7 +44,7 @@ $rP = $conn->query("SELECT COUNT(*) AS c FROM pengumuman"); $nP = $rP ? $rP->fet
 $kegiatan_list   = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 $dokumen_list    = $conn->query("SELECT * FROM dokumen WHERE user_id=$uid ORDER BY tanggal_upload DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 $anggota_list    = $conn->query("SELECT * FROM anggota ORDER BY tanggal_daftar DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
-$pengumuman_list = $conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.user_id ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
+$pengumuman_list = $conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.id ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 
 $page_title = 'Dashboard';
 $page_css   = ['dashboard.css'];
