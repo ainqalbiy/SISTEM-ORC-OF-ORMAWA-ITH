@@ -26,7 +26,6 @@ if ($password !== $confirm_password) {
     exit;
 }
 
-// Gunakan helper dari connection.php
 $pk      = get_user_pk($conn);
 $has_nim = user_col_exists($conn, 'nim');
 
@@ -49,16 +48,15 @@ $stmt->close();
 
 // Build INSERT sesuai kolom yang tersedia
 $hash = password_hash($password, PASSWORD_DEFAULT);
-
-$has_jabatan     = user_col_exists($conn, 'jabatan');
-$has_no_hp       = user_col_exists($conn, 'no_hp');
-$has_organisasi  = user_col_exists($conn, 'organisasi');
-$has_angkatan    = user_col_exists($conn, 'angkatan');
-$has_status      = user_col_exists($conn, 'status');
-$has_created_at  = user_col_exists($conn, 'created_at');
+$has_jabatan    = user_col_exists($conn, 'jabatan');
+$has_no_hp      = user_col_exists($conn, 'no_hp');
+$has_organisasi = user_col_exists($conn, 'organisasi');
+$has_angkatan   = user_col_exists($conn, 'angkatan');
+$has_status     = user_col_exists($conn, 'status');
+$has_created_at = user_col_exists($conn, 'created_at');
 
 $cols   = ['nama', 'email', 'password'];
-$pholds = ['?', '?', '?'];
+$pholds = ['?',    '?',     '?'];
 $types  = 'sss';
 $vals   = [$nama, $email, $hash];
 
@@ -67,8 +65,7 @@ if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Anggota'"; }
 if ($has_status)    { $cols[] = 'status';     $pholds[] = "'Aktif'"; }
 if ($has_created_at){ $cols[] = 'created_at'; $pholds[] = 'NOW()'; }
 
-$sql = "INSERT INTO users (" . implode(',', $cols) . ") VALUES (" . implode(',', $pholds) . ")";
-
+$sql  = "INSERT INTO users (" . implode(',', $cols) . ") VALUES (" . implode(',', $pholds) . ")";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$vals);
 

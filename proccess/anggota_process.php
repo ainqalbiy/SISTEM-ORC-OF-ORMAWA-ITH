@@ -5,13 +5,16 @@ require_login();
 
 $action = $_POST['action'] ?? '';
 
-// Helper cek kolom tabel tertentu (lokal, berbeda dari user_col_exists)
-function tbl_col(mysqli $c, string $t, string $col): bool {
-    $t   = $c->real_escape_string($t);
-    $col = $c->real_escape_string($col);
-    $r   = $c->query("SELECT COUNT(*) AS n FROM information_schema.COLUMNS
-                      WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='$t' AND COLUMN_NAME='$col'");
-    return $r && $r->fetch_assoc()['n'] > 0;
+// Helper: cek kolom di tabel tertentu (bukan users)
+function anggota_col_exists(mysqli $conn, string $table, string $col): bool {
+    static $cache = [];
+    $key = "$table.$col";
+    if (isset($cache[$key])) return $cache[$key];
+    $t = $conn->real_escape_string($table);
+    $c = $conn->real_escape_string($col);
+    $r = $conn->query("SELECT COUNT(*) AS n FROM information_schema.COLUMNS
+                       WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='$t' AND COLUMN_NAME='$c'");
+    return $cache[$key] = ($r && $r->fetch_assoc()['n'] > 0);
 }
 
 function redirect_back(string $module, string $type, string $msg): void {
@@ -33,8 +36,8 @@ if ($action === 'tambah' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect_back('anggota', 'error', 'Field wajib tidak boleh kosong!');
     }
 
-    $has_org = tbl_col($conn, 'anggota', 'organisasi');
-    $has_jab = tbl_col($conn, 'anggota', 'jabatan');
+    $has_org = anggota_col_exists($conn, 'anggota', 'organisasi');
+    $has_jab = anggota_col_exists($conn, 'anggota', 'jabatan');
 
     if ($has_org && $has_jab) {
         $stmt = $conn->prepare(
@@ -59,48 +62,6 @@ if ($action === 'tambah' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 
     redirect_back('anggota', $ok ? 'success' : 'error', $ok ? 'Anggota berhasil ditambahkan!' : 'Gagal menambahkan anggota: ' . $conn->error);
-}
-
-// ── EDIT ────────────────────────────────────────────────────
-if ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id         = (int)($_POST['id']              ?? 0);
-    $nama       = trim($_POST['nama']             ?? '');
-    $alamat     = trim($_POST['alamat']           ?? '');
-    $no_hp      = trim($_POST['no_hp']            ?? '');
-    $tgl        = trim($_POST['tanggal_daftar']   ?? date('Y-m-d'));
-    $organisasi = trim($_POST['organisasi']       ?? 'Umum');
-    $jabatan    = trim($_POST['jabatan']          ?? 'Anggota');
-
-    if (!$id || !$nama || !$alamat || !$no_hp) {
-        redirect_back('anggota', 'error', 'Field wajib tidak boleh kosong!');
-    }
-
-    $has_org = tbl_col($conn, 'anggota', 'organisasi');
-    $has_jab = tbl_col($conn, 'anggota', 'jabatan');
-
-    if ($has_org && $has_jab) {
-        $stmt = $conn->prepare(
-            "UPDATE anggota SET organisasi=?, jabatan=?, nama=?, alamat=?, no_hp=?, tanggal_daftar=?
-             WHERE id_anggota=?"
-        );
-        $stmt->bind_param('ssssssi', $organisasi, $jabatan, $nama, $alamat, $no_hp, $tgl, $id);
-    } elseif ($has_org) {
-        $stmt = $conn->prepare(
-            "UPDATE anggota SET organisasi=?, nama=?, alamat=?, no_hp=?, tanggal_daftar=?
-             WHERE id_anggota=?"
-        );
-        $stmt->bind_param('sssssi', $organisasi, $nama, $alamat, $no_hp, $tgl, $id);
-    } else {
-        $stmt = $conn->prepare(
-            "UPDATE anggota SET nama=?, alamat=?, no_hp=?, tanggal_daftar=? WHERE id_anggota=?"
-        );
-        $stmt->bind_param('ssssi', $nama, $alamat, $no_hp, $tgl, $id);
-    }
-
-    $ok = $stmt->execute();
-    $stmt->close();
-
-    redirect_back('anggota', $ok ? 'success' : 'error', $ok ? 'Anggota berhasil diperbarui!' : 'Gagal memperbarui anggota.');
 }
 
 // ── HAPUS ───────────────────────────────────────────────────

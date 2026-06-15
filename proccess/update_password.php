@@ -15,14 +15,6 @@ $uid              = (int)$_SESSION['user_id'];
 $old_password     = $_POST['old_password']     ?? '';
 $new_password     = $_POST['new_password']     ?? '';
 $confirm_password = $_POST['confirm_password'] ?? '';
-$from             = trim($_POST['from']         ?? 'dashboard');
-
-$redirect_ok  = ($from === 'profile')
-    ? BASE_URL . 'pages/profile/profile.php?updated=1'
-    : BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&success=Password+berhasil+diubah!';
-$redirect_err = ($from === 'profile')
-    ? BASE_URL . 'pages/profile/profile.php?error='
-    : BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=';
 
 $pk = get_user_pk($conn);
 
@@ -34,15 +26,15 @@ $row = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$row || !password_verify($old_password, $row['password'])) {
-    header('Location: ' . $redirect_err . urlencode('Password lama salah!'));
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=Password+lama+salah!');
     exit;
 }
 if (strlen($new_password) < 6) {
-    header('Location: ' . $redirect_err . urlencode('Password baru minimal 6 karakter!'));
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=Password+baru+minimal+6+karakter!');
     exit;
 }
 if ($new_password !== $confirm_password) {
-    header('Location: ' . $redirect_err . urlencode('Konfirmasi password tidak cocok!'));
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=Konfirmasi+password+tidak+cocok!');
     exit;
 }
 
@@ -52,5 +44,5 @@ $stmt->bind_param('si', $hash, $uid);
 $stmt->execute();
 $stmt->close();
 
-header('Location: ' . $redirect_ok);
+header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&success=Password+berhasil+diubah!');
 exit;

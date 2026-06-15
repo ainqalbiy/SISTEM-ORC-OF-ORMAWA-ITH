@@ -47,6 +47,8 @@ INSERT INTO `users` (`nama`,`nim`,`email`,`no_hp`,`password`,`jabatan`,`organisa
 CREATE TABLE `anggota` (
   `id_anggota`     int(11)      NOT NULL AUTO_INCREMENT,
   `user_id`        int(11)      DEFAULT NULL,
+  `organisasi`     varchar(100) NOT NULL DEFAULT 'Umum',
+  `jabatan`        varchar(100) DEFAULT 'Anggota',
   `nama`           varchar(100) NOT NULL,
   `alamat`         varchar(255) NOT NULL,
   `no_hp`          varchar(15)  NOT NULL,
@@ -61,6 +63,7 @@ CREATE TABLE `anggota` (
 CREATE TABLE `kegiatan` (
   `id_kegiatan`      int(11)      NOT NULL AUTO_INCREMENT,
   `nama_kegiatan`    varchar(150) NOT NULL,
+  `organisasi`       varchar(100) NOT NULL DEFAULT 'Umum',
   `jenis_kegiatan`   varchar(50)  NOT NULL,
   `tanggal`          date         NOT NULL,
   `waktu`            time         NOT NULL,

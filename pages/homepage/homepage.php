@@ -279,3 +279,5 @@ require_once '../../components/navbar.php';
 </footer>
 
 <?php require_once '../../components/footer_scripts.php'; ?>
+</body>
+</html>

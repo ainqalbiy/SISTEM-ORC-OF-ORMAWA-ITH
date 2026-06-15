@@ -14,7 +14,7 @@ $org_slug = 'BEM'; // identifier untuk filter query
 $has_org_col = user_col_exists($conn, 'organisasi'); // reuse helper dari connection.php
 
 // Helper: cek kolom di tabel selain users
-function tbl_col_exists(mysqli $conn, string $table, string $col): bool {
+function bem_col_check(mysqli $conn, string $table, string $col): bool {
     $t = $conn->real_escape_string($table);
     $c = $conn->real_escape_string($col);
     $r = $conn->query("SELECT COUNT(*) AS n FROM information_schema.COLUMNS
@@ -24,7 +24,7 @@ function tbl_col_exists(mysqli $conn, string $table, string $col): bool {
 
 // ── Query kegiatan BEM dari DB ────────────────────────────────────
 $kegiatan_db = [];
-if (tbl_col_exists($conn, 'kegiatan', 'organisasi')) {
+if (bem_col_check($conn, 'kegiatan', 'organisasi')) {
     // Filter berdasarkan kolom organisasi
     $stmt = $conn->prepare(
         "SELECT * FROM kegiatan WHERE organisasi LIKE ? ORDER BY tanggal DESC LIMIT 6"
@@ -42,7 +42,7 @@ if (tbl_col_exists($conn, 'kegiatan', 'organisasi')) {
 
 // ── Query anggota BEM dari DB ─────────────────────────────────────
 $anggota_db = [];
-if (tbl_col_exists($conn, 'anggota', 'organisasi')) {
+if (bem_col_check($conn, 'anggota', 'organisasi')) {
     $stmt = $conn->prepare(
         "SELECT a.*, u.nama AS nama_user, u.jabatan AS jabatan_user
          FROM anggota a
@@ -509,3 +509,5 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 $page_js = [];
 require_once '../../components/footer_scripts.php';
 ?>
+</body>
+</html>

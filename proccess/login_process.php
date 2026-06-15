@@ -15,7 +15,6 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-// Gunakan helper dari connection.php
 $pk      = get_user_pk($conn);
 $has_nim = user_col_exists($conn, 'nim');
 

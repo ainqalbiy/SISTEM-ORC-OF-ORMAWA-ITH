@@ -373,3 +373,5 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
 });
 </script>
 <?php $page_js=[]; require_once '../../components/footer_scripts.php'; ?>
+</body>
+</html>

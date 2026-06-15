@@ -11,11 +11,10 @@ if (!empty($_SESSION['user_id'])) {
 $error = $_GET['error'] ?? '';
 $error_msg = '';
 switch ($error) {
-    case 'empty':    $error_msg = 'Harap isi semua kolom yang wajib diisi.'; break;
-    case 'exists':   $error_msg = 'Email atau NIM sudah terdaftar. Silakan masuk.'; break;
-    case 'failed':   $error_msg = 'Pendaftaran gagal. Silakan coba lagi.'; break;
-    case 'short':    $error_msg = 'Password minimal 6 karakter.'; break;
-    case 'mismatch': $error_msg = 'Konfirmasi password tidak cocok.'; break;
+    case 'empty':   $error_msg = 'Harap isi semua kolom yang wajib diisi.'; break;
+    case 'exists':  $error_msg = 'Email atau NIM sudah terdaftar. Silakan masuk.'; break;
+    case 'failed':  $error_msg = 'Pendaftaran gagal. Silakan coba lagi.'; break;
+    case 'short':   $error_msg = 'Password minimal 6 karakter.'; break;
 }
 $success = $_GET['success'] ?? '';
 ?>
