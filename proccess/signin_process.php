@@ -61,7 +61,7 @@ $types  = 'sss';
 $vals   = [$nama, $email, $hash];
 
 if ($has_nim)       { $cols[] = 'nim';        $pholds[] = '?'; $types .= 's'; $vals[] = $nim; }
-if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Anggota'"; }
+if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Pengurus'"; }  // ← diubah dari 'Anggota'
 if ($has_status)    { $cols[] = 'status';     $pholds[] = "'Aktif'"; }
 if ($has_created_at){ $cols[] = 'created_at'; $pholds[] = 'NOW()'; }
 
@@ -76,7 +76,7 @@ if ($stmt->execute()) {
     $_SESSION['nama']       = $nama;
     $_SESSION['email']      = $email;
     $_SESSION['nim']        = $nim;
-    $_SESSION['jabatan']    = 'Anggota';
+    $_SESSION['jabatan']    = 'Pengurus';  // ← diubah dari 'Anggota'
     $_SESSION['no_hp']      = '';
     $_SESSION['organisasi'] = '';
     $_SESSION['angkatan']   = '';

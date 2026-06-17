@@ -30,7 +30,7 @@ $first_name = $words[0];
 // ── Active tab ─────────────────────────────────────────────────────
 $tab = $_GET['tab'] ?? 'dashboard';
 
-$allowed_tabs_all     = ['dashboard','profil'];
+$allowed_tabs_all     = ['dashboard','profil','event'];
 $allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event'];
 $allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin'];
 
@@ -248,6 +248,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <div class="nav-label">Menu Utama</div>
         <a href="?tab=dashboard" class="nav-item <?= $tab==='dashboard'?'active':'' ?>"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
         <a href="?tab=profil"    class="nav-item <?= $tab==='profil'?'active':'' ?>"><i class="bi bi-person-circle"></i><span>Profil Saya</span></a>
+        <a href="?tab=event"     class="nav-item <?= $tab==='event'?'active':'' ?>"><i class="bi bi-calendar-star"></i><span>Event Organisasi</span></a>
         <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php" class="nav-item"><i class="bi bi-people"></i><span>Organisasi</span></a>
 
         <?php if ($is_pengurus): ?>
@@ -256,7 +257,6 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <a href="?tab=anggota"    class="nav-item <?= $tab==='anggota'?'active':'' ?>"><i class="bi bi-person-badge"></i><span>Anggota</span><?php if($nA>0):?><span class="badge"><?=$nA?></span><?php endif;?></a>
         <a href="?tab=dokumen"    class="nav-item <?= $tab==='dokumen'?'active':'' ?>"><i class="bi bi-folder2-open"></i><span>Dokumen</span><?php if($nD>0):?><span class="badge"><?=$nD?></span><?php endif;?></a>
         <a href="?tab=pengumuman" class="nav-item <?= $tab==='pengumuman'?'active':'' ?>"><i class="bi bi-megaphone"></i><span>Pengumuman</span><?php if($nP>0):?><span class="badge"><?=$nP?></span><?php endif;?></a>
-        <a href="?tab=event"      class="nav-item <?= $tab==='event'?'active':'' ?>"><i class="bi bi-calendar-star"></i><span>Event Organisasi</span></a>
         <?php endif; ?>
 
         <?php if ($is_admin): ?>
@@ -696,26 +696,32 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             </div>
         </div>
 
+        <?php endif; // end is_pengurus tabs ?>
+
         <!-- ══════════════════════════
-             TAB: EVENT ORGANISASI
+             TAB: EVENT ORGANISASI (semua user)
         ══════════════════════════ -->
         <div class="tab-content <?=$tab==='event'?'active':''?>">
             <div class="section-header">
                 <h2>Event Organisasi</h2>
+                <?php if($is_pengurus):?>
                 <button class="btn-primary" onclick="document.getElementById('modalEvent').classList.add('open')"><i class="bi bi-calendar-plus"></i> Tambah Event</button>
+                <?php endif;?>
             </div>
             <div class="panel">
                 <?php if(empty($event_list)):?>
                 <div class="empty-big">
                     <div class="e-icon-big"><i class="bi bi-calendar-x"></i></div>
                     <div class="e-title">Belum ada event</div>
-                    <div class="e-sub">Tambahkan event organisasi agar mahasiswa dapat melihatnya.</div>
+                    <div class="e-sub">Event organisasi yang tersedia akan muncul di sini.</div>
+                    <?php if($is_pengurus):?>
                     <button class="btn-primary" onclick="document.getElementById('modalEvent').classList.add('open')"><i class="bi bi-calendar-plus"></i> Tambah Event</button>
+                    <?php endif;?>
                 </div>
                 <?php else:?>
                 <div class="table-wrap">
                     <table>
-                        <thead><tr><th>#</th><th>Judul</th><th>Organisasi</th><th>Tanggal</th><th>Lokasi</th><th>Aksi</th></tr></thead>
+                        <thead><tr><th>#</th><th>Judul</th><th>Organisasi</th><th>Tanggal</th><th>Lokasi</th><?php if($is_pengurus):?><th>Aksi</th><?php endif;?></tr></thead>
                         <tbody>
                         <?php foreach($event_list as $i=>$ev):?>
                         <tr>
@@ -724,6 +730,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                             <td><?=e($ev['nama_organisasi'])?></td>
                             <td><?=date('d M Y',strtotime($ev['tanggal']))?></td>
                             <td><?=e($ev['lokasi'])?></td>
+                            <?php if($is_pengurus):?>
                             <td style="display:flex;gap:6px;align-items:center">
                                 <button class="btn-sm-outline" onclick="openEditEvent(<?=htmlspecialchars(json_encode($ev))?>)"><i class="bi bi-pencil"></i></button>
                                 <form method="POST" action="<?=BASE_URL?>proccess/event_process.php" style="display:inline">
@@ -732,6 +739,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                                     <button type="submit" class="btn-danger" onclick="return confirm('Hapus event ini?')"><i class="bi bi-trash3"></i></button>
                                 </form>
                             </td>
+                            <?php endif;?>
                         </tr>
                         <?php endforeach;?>
                         </tbody>
@@ -740,7 +748,6 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                 <?php endif;?>
             </div>
         </div>
-        <?php endif; // end is_pengurus tabs ?>
 
         <?php if ($is_admin): ?>
         <!-- ══════════════════════════

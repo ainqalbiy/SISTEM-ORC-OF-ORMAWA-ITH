@@ -89,18 +89,24 @@ require_once '../../components/navbar.php';
                    value="<?= htmlspecialchars($q) ?>" aria-label="Cari">
         </div>
         <div class="search-divider"></div>
-        <!-- Pilih Organisasi -->
-        <div class="search-middle">
-            <select name="org" id="orgSelect" class="search-select" aria-label="Pilih organisasi"
-                    onchange="handleOrgSelect(this)">
-                <option value="">Pilih Organisasi</option>
+        <!-- Pilih Organisasi — dropdown menurun -->
+        <div class="search-middle" style="position:relative;">
+            <div id="orgDropdownBtn" onclick="toggleOrgDropdown()" style="display:flex;align-items:center;gap:6px;cursor:pointer;min-width:180px;padding:0 4px;">
+                <span id="orgDropdownLabel" style="flex:1;font-size:.85rem;color:var(--text-dark)">Pilih Organisasi</span>
+                <i class="bi bi-chevron-down select-arrow" id="orgDropdownArrow"></i>
+            </div>
+            <div id="orgDropdownList" style="display:none;position:absolute;top:calc(100% + 10px);left:0;background:#fff;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);min-width:240px;z-index:200;overflow:hidden;">
+                <div onclick="selectOrg('','Pilih Organisasi')" style="padding:10px 16px;font-size:.83rem;color:var(--text-muted);cursor:pointer;border-bottom:1px solid var(--border)" onmouseover="this.style.background='#fff7ed'" onmouseout="this.style.background='#fff'">Semua Organisasi</div>
                 <?php foreach ($semua_organisasi as $org): ?>
-                <option value="<?= htmlspecialchars($org['slug']) ?>">
+                <div onclick="selectOrg('<?= htmlspecialchars($org['slug']) ?>','<?= htmlspecialchars($org['nama']) ?>')"
+                     style="padding:10px 16px;font-size:.83rem;color:var(--text-dark);cursor:pointer;display:flex;align-items:center;gap:10px;"
+                     onmouseover="this.style.background='#fff7ed'" onmouseout="this.style.background='#fff'">
+                    <img src="<?= htmlspecialchars($org['logo']) ?>" alt="" style="width:22px;height:22px;object-fit:contain;border-radius:4px;" onerror="this.style.display='none'">
                     <?= htmlspecialchars($org['nama']) ?>
-                </option>
+                </div>
                 <?php endforeach; ?>
-            </select>
-            <i class="bi bi-chevron-down select-arrow"></i>
+            </div>
+            <input type="hidden" name="org" id="orgHidden" value="">
         </div>
         <div class="search-divider"></div>
         <!-- Pilih Kategori -->
@@ -118,12 +124,31 @@ require_once '../../components/navbar.php';
 </section>
 
 <script>
-function handleOrgSelect(sel) {
-    const slug = sel.value;
+function toggleOrgDropdown() {
+    const list = document.getElementById('orgDropdownList');
+    const arrow = document.getElementById('orgDropdownArrow');
+    const open = list.style.display === 'block';
+    list.style.display = open ? 'none' : 'block';
+    arrow.style.transform = open ? '' : 'rotate(180deg)';
+}
+function selectOrg(slug, nama) {
+    document.getElementById('orgHidden').value = slug;
+    document.getElementById('orgDropdownLabel').textContent = nama;
+    document.getElementById('orgDropdownList').style.display = 'none';
+    document.getElementById('orgDropdownArrow').style.transform = '';
     if (slug) {
         window.location.href = '<?= BASE_URL ?>pages/organisasi/' + slug + '.php';
     }
 }
+// Tutup dropdown kalau klik di luar
+document.addEventListener('click', function(e) {
+    const btn = document.getElementById('orgDropdownBtn');
+    const list = document.getElementById('orgDropdownList');
+    if (btn && list && !btn.contains(e.target) && !list.contains(e.target)) {
+        list.style.display = 'none';
+        document.getElementById('orgDropdownArrow').style.transform = '';
+    }
+});
 </script>
 
 <section class="orgs-section" style="padding:40px 0 60px;">
