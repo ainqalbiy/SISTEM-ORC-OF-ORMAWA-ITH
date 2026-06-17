@@ -49,9 +49,6 @@ $stmt->close();
 // Build INSERT sesuai kolom yang tersedia
 $hash = password_hash($password, PASSWORD_DEFAULT);
 $has_jabatan    = user_col_exists($conn, 'jabatan');
-$has_no_hp      = user_col_exists($conn, 'no_hp');
-$has_organisasi = user_col_exists($conn, 'organisasi');
-$has_angkatan   = user_col_exists($conn, 'angkatan');
 $has_status     = user_col_exists($conn, 'status');
 $has_created_at = user_col_exists($conn, 'created_at');
 
@@ -61,7 +58,7 @@ $types  = 'sss';
 $vals   = [$nama, $email, $hash];
 
 if ($has_nim)       { $cols[] = 'nim';        $pholds[] = '?'; $types .= 's'; $vals[] = $nim; }
-if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Pengurus'"; }  // ← diubah dari 'Anggota'
+if ($has_jabatan)   { $cols[] = 'jabatan';    $pholds[] = "'Anggota'"; }  // ← default Anggota
 if ($has_status)    { $cols[] = 'status';     $pholds[] = "'Aktif'"; }
 if ($has_created_at){ $cols[] = 'created_at'; $pholds[] = 'NOW()'; }
 
@@ -76,7 +73,7 @@ if ($stmt->execute()) {
     $_SESSION['nama']       = $nama;
     $_SESSION['email']      = $email;
     $_SESSION['nim']        = $nim;
-    $_SESSION['jabatan']    = 'Pengurus';  // ← diubah dari 'Anggota'
+    $_SESSION['jabatan']    = 'Anggota';  // ← default Anggota
     $_SESSION['no_hp']      = '';
     $_SESSION['organisasi'] = '';
     $_SESSION['angkatan']   = '';

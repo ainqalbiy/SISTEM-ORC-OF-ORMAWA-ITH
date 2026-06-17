@@ -51,8 +51,8 @@ $success = $_GET['success'] ?? '';
         <p class="text-[11px] tracking-[0.3em] uppercase opacity-80 mb-10 font-medium">Organization Resource Center</p>
         <div class="space-y-3 text-sm opacity-90">
           <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Akses semua organisasi ITH</span></div>
-          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Simpan & kelola dokumen</span></div>
-          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Pantau kegiatan ORMAWA</span></div>
+          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Lihat event & kegiatan ORMAWA</span></div>
+          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Pantau informasi organisasi</span></div>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@ $success = $_GET['success'] ?? '';
     <div class="w-full md:w-7/12 bg-soft-cream p-8 md:p-14 flex flex-col justify-center">
       <div class="max-w-md mx-auto w-full text-center">
         <h2 class="text-4xl font-bold text-orange-800 mb-2 tracking-tight">DAFTAR</h2>
-        <p class="text-gray-500 mb-5 font-medium">Buat akunmu dan bergabung dengan ORC</p>
+        <p class="text-gray-500 mb-5 font-medium">Daftar sebagai <span class="text-orange-600 font-bold">Anggota</span> dan pantau ORMAWA ITH</p>
         <div class="w-16 h-[1.5px] bg-gray-300 mx-auto mb-6"></div>
 
         <?php if ($error_msg): ?>
@@ -137,7 +137,6 @@ $success = $_GET['success'] ?? '';
   </div>
 
   <script>
-    // Toggle password visibility
     document.getElementById('togglePass').addEventListener('click', function () {
       const pw = document.getElementById('passwordField');
       const icon = document.getElementById('eyeIcon');
@@ -150,7 +149,6 @@ $success = $_GET['success'] ?? '';
       }
     });
 
-    // Cek kecocokan password real-time
     document.getElementById('confirmPassword').addEventListener('input', function () {
       const pw = document.getElementById('passwordField').value;
       const msg = document.getElementById('matchMsg');
@@ -161,7 +159,6 @@ $success = $_GET['success'] ?? '';
       }
     });
 
-    // Validasi sebelum submit
     document.getElementById('signInForm').addEventListener('submit', function (e) {
       const pw = document.getElementById('passwordField').value;
       const cpw = document.getElementById('confirmPassword').value;
