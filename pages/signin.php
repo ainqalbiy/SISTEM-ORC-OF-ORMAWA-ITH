@@ -50,10 +50,9 @@ $success = $_GET['success'] ?? '';
         <h1 class="text-5xl font-extralight tracking-[0.6em] mb-2 ml-4">ORC</h1>
         <p class="text-[11px] tracking-[0.3em] uppercase opacity-80 mb-10 font-medium">Organization Resource Center</p>
         <div class="space-y-3 text-sm opacity-90">
-          <!-- ↓ diubah: fitur disesuaikan untuk Pengurus -->
-          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Kelola kegiatan organisasi</span></div>
-          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Upload dokumen & materi rapat</span></div>
-          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Tambah & umumkan event ORMAWA</span></div>
+          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Akses semua organisasi ITH</span></div>
+          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Simpan & kelola dokumen</span></div>
+          <div class="flex items-center gap-3"><i class="fas fa-check-circle text-orange-200"></i><span>Pantau kegiatan ORMAWA</span></div>
         </div>
       </div>
     </div>
@@ -62,8 +61,7 @@ $success = $_GET['success'] ?? '';
     <div class="w-full md:w-7/12 bg-soft-cream p-8 md:p-14 flex flex-col justify-center">
       <div class="max-w-md mx-auto w-full text-center">
         <h2 class="text-4xl font-bold text-orange-800 mb-2 tracking-tight">DAFTAR</h2>
-        <!-- ↓ diubah: menyebut Pengurus secara eksplisit -->
-        <p class="text-gray-500 mb-5 font-medium">Daftar sebagai <span class="text-orange-600 font-bold">Pengurus</span> dan kelola organisasimu</p>
+        <p class="text-gray-500 mb-5 font-medium">Buat akunmu dan bergabung dengan ORC</p>
         <div class="w-16 h-[1.5px] bg-gray-300 mx-auto mb-6"></div>
 
         <?php if ($error_msg): ?>
