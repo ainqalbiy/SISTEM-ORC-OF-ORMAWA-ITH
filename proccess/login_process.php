@@ -42,6 +42,7 @@ if ($user && password_verify($password, $user['password'])) {
     $_SESSION['status']     = $user['status']      ?? 'Aktif';
     $_SESSION['foto']       = $user['foto']        ?? '';
 
+    // Landing page berbeda berdasarkan role
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?from=login');
     exit;
 } else {

@@ -1,5 +1,5 @@
 <?php
-// pages/dashboard/dashboard.php — Full CRUD Dashboard
+// pages/dashboard/dashboard.php — Full CRUD Dashboard (Revised)
 require_once '../../config/connection.php';
 require_login();
 
@@ -17,6 +17,11 @@ if (!$user) { session_destroy(); header('Location:'.BASE_URL.'pages/login/login.
 $_SESSION['nama']    = $user['nama'];
 $_SESSION['jabatan'] = $user['jabatan'] ?? 'Anggota';
 
+$jabatan    = $user['jabatan'] ?? 'Anggota';
+$is_admin   = ($jabatan === 'Admin');
+$is_pengurus = ($jabatan === 'Pengurus' || $is_admin);
+// Anggota: hanya lihat event, konten, profil
+
 // ── Inisial & first name ──────────────────────────────────────────
 $words      = preg_split('/\s+/', trim($user['nama']));
 $initials   = mb_strtoupper(mb_substr($words[0],0,1)) . (count($words)>1 ? mb_strtoupper(mb_substr($words[1],0,1)) : '');
@@ -24,8 +29,14 @@ $first_name = $words[0];
 
 // ── Active tab ─────────────────────────────────────────────────────
 $tab = $_GET['tab'] ?? 'dashboard';
-$allowed_tabs = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman'];
-if (!in_array($tab, $allowed_tabs)) $tab = 'dashboard';
+
+$allowed_tabs_all     = ['dashboard','profil'];
+$allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event'];
+$allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin'];
+
+if ($is_admin && !in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
+elseif ($is_pengurus && !in_array($tab, $allowed_tabs_pengurus)) $tab = 'dashboard';
+elseif (!$is_pengurus && !in_array($tab, $allowed_tabs_all)) $tab = 'dashboard';
 
 // ── Flash message ──────────────────────────────────────────────────
 $flash_ok  = urldecode($_GET['success'] ?? '');
@@ -34,17 +45,49 @@ $flash_err = urldecode($_GET['error']   ?? '');
 // ── Greeting type ──────────────────────────────────────────────────
 $from = $_GET['from'] ?? 'login';
 
-// ── Stats ─────────────────────────────────────────────────────────
-$rK = $conn->query("SELECT COUNT(*) AS c FROM kegiatan"); $nK = $rK ? $rK->fetch_assoc()['c'] : 0;
-$rD = $conn->query("SELECT COUNT(*) AS c FROM dokumen WHERE user_id=$uid"); $nD = $rD ? $rD->fetch_assoc()['c'] : 0;
-$rA = $conn->query("SELECT COUNT(*) AS c FROM anggota"); $nA = $rA ? $rA->fetch_assoc()['c'] : 0;
-$rP = $conn->query("SELECT COUNT(*) AS c FROM pengumuman"); $nP = $rP ? $rP->fetch_assoc()['c'] : 0;
+// ── Stats (Pengurus & Admin) ───────────────────────────────────────
+$nK = $nD = $nA = $nP = 0;
+if ($is_pengurus) {
+    $rK = $conn->query("SELECT COUNT(*) AS c FROM kegiatan"); $nK = $rK ? $rK->fetch_assoc()['c'] : 0;
+    $rD = $conn->query("SELECT COUNT(*) AS c FROM dokumen WHERE user_id=$uid"); $nD = $rD ? $rD->fetch_assoc()['c'] : 0;
+    $rA = $conn->query("SELECT COUNT(*) AS c FROM anggota"); $nA = $rA ? $rA->fetch_assoc()['c'] : 0;
+    $rP = $conn->query("SELECT COUNT(*) AS c FROM pengumuman"); $nP = $rP ? $rP->fetch_assoc()['c'] : 0;
+}
 
 // ── Data per tab ───────────────────────────────────────────────────
-$kegiatan_list   = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
-$dokumen_list    = $conn->query("SELECT * FROM dokumen WHERE user_id=$uid ORDER BY tanggal_upload DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
-$anggota_list    = $conn->query("SELECT * FROM anggota ORDER BY tanggal_daftar DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
-$pengumuman_list = $conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.`{$pk_col}` ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
+$kegiatan_list   = $is_pengurus ? ($conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? []) : [];
+$dokumen_list    = $is_pengurus ? ($conn->query("SELECT * FROM dokumen WHERE user_id=$uid ORDER BY tanggal_upload DESC")?->fetch_all(MYSQLI_ASSOC) ?? []) : [];
+$anggota_list    = $is_pengurus ? ($conn->query("SELECT * FROM anggota ORDER BY tanggal_daftar DESC")?->fetch_all(MYSQLI_ASSOC) ?? []) : [];
+$pengumuman_list = $is_pengurus ? ($conn->query("SELECT p.*,u.nama AS penulis FROM pengumuman p LEFT JOIN users u ON p.user_id=u.`{$pk_col}` ORDER BY p.tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? []) : [];
+
+// ── Event list (semua user) ────────────────────────────────────────
+$event_list = [];
+$event_tbl  = $conn->query("SHOW TABLES LIKE 'event_organisasi'");
+if ($event_tbl && $event_tbl->num_rows > 0) {
+    $event_list = $conn->query("SELECT * FROM event_organisasi ORDER BY tanggal DESC")?->fetch_all(MYSQLI_ASSOC) ?? [];
+}
+
+// ── Organisasi list (Admin) ────────────────────────────────────────
+$org_list_admin = [];
+if ($is_admin) {
+    $org_tbl = $conn->query("SHOW TABLES LIKE 'organisasi'");
+    if ($org_tbl && $org_tbl->num_rows > 0) {
+        $org_list_admin = $conn->query("SELECT * FROM organisasi ORDER BY id ASC")?->fetch_all(MYSQLI_ASSOC) ?? [];
+    }
+}
+
+// ── Daftar nama organisasi (untuk select) ─────────────────────────
+$org_options = [
+    ['slug'=>'bem',       'nama'=>'BEM'],
+    ['slug'=>'hero',      'nama'=>'HERO'],
+    ['slug'=>'hcc',       'nama'=>'HCC'],
+    ['slug'=>'aratta',    'nama'=>'ARATTA'],
+    ['slug'=>'wirausaha', 'nama'=>'Wirausaha (WITH)'],
+];
+// Jika tabel organisasi ada, ambil dari DB
+if (!empty($org_list_admin)) {
+    $org_options = array_map(fn($o) => ['slug'=>$o['slug'],'nama'=>$o['nama']], $org_list_admin);
+}
 
 $page_title = 'Dashboard';
 $page_css   = ['dashboard.css'];
@@ -64,6 +107,13 @@ require_once '../../components/header.php';
   transition:.2s; text-decoration:none;
 }
 .btn-primary:hover { background:#a85000; }
+.btn-success {
+  display:inline-flex; align-items:center; gap:5px;
+  background:#e8f5e9; color:#2e7d32; font-size:.74rem; font-weight:700;
+  padding:6px 13px; border-radius:999px; border:1px solid #a5d6a7; cursor:pointer;
+  font-family:var(--font); transition:.2s;
+}
+.btn-success:hover { background:#c8e6c9; }
 .btn-danger {
   display:inline-flex; align-items:center; gap:5px;
   background:#fff0ee; color:#c0392b; font-size:.74rem; font-weight:700;
@@ -91,6 +141,8 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .badge-status.berlangsung{ background:#e0f7fa; color:#0077a8; border:1px solid #b2ebf2; }
 .badge-status.selesai    { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
 .badge-status.dibatalkan { background:#fce4ec; color:#c62828; border:1px solid #f48fb1; }
+.badge-aktif   { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; padding:3px 10px; border-radius:999px; font-size:.68rem; font-weight:700; }
+.badge-nonaktif{ background:#fff0ee; color:#c0392b; border:1px solid #fbbcb8; padding:3px 10px; border-radius:999px; font-size:.68rem; font-weight:700; }
 
 /* MODAL */
 .modal-backdrop {
@@ -101,7 +153,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .modal-box {
   background:#fff; border-radius:22px; padding:28px 28px 24px;
   width:100%; max-width:520px; box-shadow:0 20px 60px rgba(0,0,0,.22);
-  position:relative; animation:fadeUp .3s both;
+  position:relative; animation:fadeUp .3s both; max-height:90vh; overflow-y:auto;
 }
 .modal-title { font-size:1.05rem; font-weight:800; color:var(--text-dark); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
 .modal-title i { color:var(--orange); }
@@ -112,12 +164,10 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .form-group input, .form-group select, .form-group textarea {
   width:100%; padding:10px 14px; border:1.5px solid var(--border);
   border-radius:var(--r-sm); font-size:.84rem; font-family:var(--font);
-  color:var(--text-dark); background:#fff; transition:border-color .2s;
-  outline:none;
+  color:var(--text-dark); background:#fff; transition:border-color .2s; outline:none;
+  box-sizing:border-box;
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-  border-color:var(--orange);
-}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--orange); }
 .form-group textarea { resize:vertical; min-height:90px; }
 .form-group input[type=file] { padding:8px; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -130,16 +180,56 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .flash.ok  { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
 .flash.err { background:#fce4ec; color:#c62828; border:1px solid #f48fb1; }
 
-/* PROFILE FORM */
+/* PROFILE */
 .profile-card { background:#fff; border:1px solid var(--border); border-radius:var(--r-lg); padding:28px; }
 .profile-avatar-big { width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--brown)); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.6rem; color:#fff; margin-bottom:16px; }
-.profile-info-label { font-size:.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.08em; }
 
-/* Empty state */
+/* EMPTY */
 .empty-big { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 20px; text-align:center; }
 .empty-big .e-icon-big { width:64px; height:64px; border-radius:18px; background:var(--cream); display:flex; align-items:center; justify-content:center; color:var(--beige-dk,#D9C4AD); font-size:1.8rem; margin-bottom:14px; box-shadow:inset 0 0 0 1.5px var(--border); }
 .empty-big .e-title { font-size:.95rem; font-weight:700; color:var(--text-mid); margin-bottom:5px; }
 .empty-big .e-sub { font-size:.8rem; color:var(--text-muted); line-height:1.6; max-width:240px; margin-bottom:20px; }
+
+/* EVENT CARDS — horizontal scroll */
+.event-scroll-wrap { overflow-x:auto; padding-bottom:12px; }
+.event-scroll-inner { display:flex; gap:16px; min-width:max-content; padding:4px 2px; }
+.event-card {
+    flex:0 0 280px; background:#fff; border:1px solid var(--border);
+    border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07);
+    display:flex; flex-direction:column; transition:box-shadow .2s;
+}
+.event-card:hover { box-shadow:0 6px 24px rgba(0,0,0,.13); }
+.event-card-banner {
+    width:100%; height:140px; object-fit:cover;
+    background:linear-gradient(135deg,var(--orange,#c95611),#e8956d);
+    display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.7); font-size:2rem;
+}
+.event-card-banner img { width:100%; height:100%; object-fit:cover; display:block; }
+.event-card-body { padding:14px 16px; flex:1; display:flex; flex-direction:column; gap:5px; }
+.event-card-title { font-size:.88rem; font-weight:800; color:var(--text-dark); line-height:1.35; }
+.event-card-org   { font-size:.72rem; font-weight:700; color:var(--orange,#c95611); }
+.event-card-meta  { font-size:.72rem; color:var(--text-muted); display:flex; align-items:center; gap:5px; margin-top:2px; }
+.event-card-desc  { font-size:.75rem; color:var(--text-mid); line-height:1.5; margin-top:4px; flex:1; }
+
+/* ORG CARD with image */
+.org-img-card {
+    background:#fff; border:1px solid var(--border); border-radius:16px;
+    overflow:hidden; display:flex; align-items:center; gap:16px;
+    padding:14px 18px;
+}
+.org-img-thumb {
+    width:54px; height:54px; border-radius:12px; object-fit:contain;
+    background:var(--cream); flex-shrink:0;
+}
+.org-img-thumb-placeholder {
+    width:54px; height:54px; border-radius:12px; background:var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-muted); font-size:1.4rem; flex-shrink:0;
+}
+
+/* ANGGOTA role badge */
+.role-anggota { background:#f3f0ff; color:#5e35b1; border:1px solid #d1c4e9; padding:2px 9px; border-radius:999px; font-size:.68rem; font-weight:700; }
 </style>
 
 <!-- Overlay mobile -->
@@ -159,11 +249,21 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <a href="?tab=dashboard" class="nav-item <?= $tab==='dashboard'?'active':'' ?>"><i class="bi bi-grid-1x2"></i><span>Dashboard</span></a>
         <a href="?tab=profil"    class="nav-item <?= $tab==='profil'?'active':'' ?>"><i class="bi bi-person-circle"></i><span>Profil Saya</span></a>
         <a href="<?= BASE_URL ?>pages/organisasi/organisasi.php" class="nav-item"><i class="bi bi-people"></i><span>Organisasi</span></a>
+
+        <?php if ($is_pengurus): ?>
         <div class="nav-label">Pengelolaan</div>
         <a href="?tab=kegiatan"   class="nav-item <?= $tab==='kegiatan'?'active':'' ?>"><i class="bi bi-calendar-event"></i><span>Kegiatan</span><?php if($nK>0):?><span class="badge"><?=$nK?></span><?php endif;?></a>
         <a href="?tab=anggota"    class="nav-item <?= $tab==='anggota'?'active':'' ?>"><i class="bi bi-person-badge"></i><span>Anggota</span><?php if($nA>0):?><span class="badge"><?=$nA?></span><?php endif;?></a>
         <a href="?tab=dokumen"    class="nav-item <?= $tab==='dokumen'?'active':'' ?>"><i class="bi bi-folder2-open"></i><span>Dokumen</span><?php if($nD>0):?><span class="badge"><?=$nD?></span><?php endif;?></a>
         <a href="?tab=pengumuman" class="nav-item <?= $tab==='pengumuman'?'active':'' ?>"><i class="bi bi-megaphone"></i><span>Pengumuman</span><?php if($nP>0):?><span class="badge"><?=$nP?></span><?php endif;?></a>
+        <a href="?tab=event"      class="nav-item <?= $tab==='event'?'active':'' ?>"><i class="bi bi-calendar-star"></i><span>Event Organisasi</span></a>
+        <?php endif; ?>
+
+        <?php if ($is_admin): ?>
+        <div class="nav-label">Admin</div>
+        <a href="?tab=org_admin"  class="nav-item <?= $tab==='org_admin'?'active':'' ?>"><i class="bi bi-building"></i><span>Manajemen Org.</span></a>
+        <?php endif; ?>
+
         <div class="nav-label">Akun</div>
         <a href="?tab=profil" class="nav-item"><i class="bi bi-gear"></i><span>Pengaturan</span></a>
     </nav>
@@ -172,7 +272,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             <div class="sidebar-avatar"><?=e($initials)?></div>
             <div>
                 <div class="sidebar-user-name"><?=e($user['nama'])?></div>
-                <div class="sidebar-user-role"><?=e($user['jabatan']??'Anggota')?></div>
+                <div class="sidebar-user-role"><?=e($jabatan)?></div>
             </div>
         </div>
         <a href="<?=BASE_URL?>proccess/logout.php" class="btn-logout" onclick="return confirm('Yakin ingin keluar?')">
@@ -185,14 +285,14 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 <div class="main-wrapper">
     <header class="topbar">
         <button class="hamburger" id="hamburgerBtn"><i class="bi bi-list"></i></button>
-        <h1 class="topbar-title"><?= ucfirst($tab) === 'Dashboard' ? 'Dashboard' : ucfirst($tab) ?></h1>
+        <h1 class="topbar-title"><?= ucfirst($tab) === 'Dashboard' ? 'Dashboard' : ucfirst(str_replace('_',' ',$tab)) ?></h1>
         <div class="topbar-right">
             <div class="topbar-icon-btn"><i class="bi bi-bell"></i><?php if($nP>0):?><div class="notif-badge"></div><?php endif;?></div>
             <div class="topbar-profile">
                 <div class="topbar-avatar"><?=e($initials)?></div>
                 <div>
                     <div class="topbar-name"><?=e($user['nama'])?></div>
-                    <div class="topbar-role"><?=e($user['jabatan']??'Anggota')?></div>
+                    <div class="topbar-role"><?=e($jabatan)?></div>
                 </div>
                 <i class="bi bi-chevron-down topbar-chevron"></i>
             </div>
@@ -201,7 +301,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 
     <main class="content">
 
-        <!-- ── FLASH ── -->
+        <!-- FLASH -->
         <?php if($flash_ok):?><div class="flash ok"><i class="bi bi-check-circle-fill"></i> <?=e($flash_ok)?></div><?php endif;?>
         <?php if($flash_err):?><div class="flash err"><i class="bi bi-exclamation-circle-fill"></i> <?=e($flash_err)?></div><?php endif;?>
 
@@ -221,14 +321,18 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                         <?php if($from==='signin'):?>Halo, <?=e($first_name)?>! 👋
                         <?php else:?>Selamat Datang Kembali, <?=e($first_name)?>!<?php endif;?>
                     </div>
-                    <div class="welcome-sub">Mulai kelola organisasimu dari sini</div>
+                    <div class="welcome-sub">
+                        <?php if($is_pengurus): ?>Kelola konten & event organisasimu dari sini
+                        <?php else: ?>Lihat event dan konten organisasi ORMAWA ITH<?php endif; ?>
+                    </div>
                 </div>
                 <div class="welcome-right">
                     <a href="?tab=profil" class="btn-active"><i class="bi bi-check-circle-fill"></i> Akun aktif</a>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
+            <?php if ($is_pengurus): ?>
+            <!-- Stats Grid (Pengurus/Admin only) -->
             <div class="stats-grid">
                 <div class="stat-card" onclick="location='?tab=kegiatan'" style="cursor:pointer">
                     <div class="stat-icon"><i class="bi bi-calendar-event"></i></div>
@@ -251,16 +355,17 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                     <?php if($nA>0):?><div class="stat-number"><?=$nA?></div>
                     <?php else:?><div class="stat-value">Belum ada anggota</div><?php endif;?>
                 </div>
-                <div class="stat-card" onclick="location='?tab=pengumuman'" style="cursor:pointer">
-                    <div class="stat-icon"><i class="bi bi-megaphone"></i></div>
-                    <div class="stat-title">Pengumuman</div>
+                <div class="stat-card" onclick="location='?tab=event'" style="cursor:pointer">
+                    <div class="stat-icon"><i class="bi bi-calendar-star"></i></div>
+                    <div class="stat-title">Event</div>
                     <div class="stat-divider"></div>
-                    <?php if($nP>0):?><div class="stat-number"><?=$nP?></div>
-                    <?php else:?><div class="stat-value">Belum ada info</div><?php endif;?>
+                    <?php $nEv = count($event_list); ?>
+                    <?php if($nEv>0):?><div class="stat-number"><?=$nEv?></div>
+                    <?php else:?><div class="stat-value">Belum ada event</div><?php endif;?>
                 </div>
             </div>
 
-            <!-- 2 Col Panels -->
+            <!-- 2 Col Panels (Pengurus) -->
             <div class="two-col">
                 <div class="panel">
                     <div class="panel-header">
@@ -273,14 +378,13 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                         <div class="empty-state">
                             <div class="empty-icon-wrap"><i class="bi bi-calendar-x"></i></div>
                             <div class="empty-title">Belum ada kegiatan</div>
-                            <div class="empty-sub">Kegiatan yang kamu ikuti atau kelola akan muncul di sini</div>
+                            <div class="empty-sub">Kegiatan yang dikelola akan muncul di sini</div>
                         </div>
-                        <div class="skeleton-row medium"></div><div class="skeleton-row short"></div><div class="skeleton-row medium"></div>
                         <?php else: foreach(array_slice($kegiatan_list,0,4) as $k):?>
                         <div style="padding:10px 12px;background:var(--cream);border-radius:var(--r-sm);border:1px solid var(--border)">
                             <div style="font-size:.83rem;font-weight:700;color:var(--text-dark)"><?=e($k['nama_kegiatan'])?></div>
                             <div style="font-size:.72rem;color:var(--text-muted);margin-top:2px"><?=date('d M Y',strtotime($k['tanggal']))?> · <?=e($k['tempat'])?></div>
-                            <span class="badge-status <?=strtolower($k['status'])?>" style="margin-top:5px"><?=e($k['status'])?></span>
+                            <span class="badge-status <?=strtolower($k['status'])?>""style="margin-top:5px"><?=e($k['status'])?></span>
                         </div>
                         <?php endforeach; endif;?>
                     </div>
@@ -293,8 +397,6 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                     </div>
                     <div class="panel-body">
                         <?php if(empty($pengumuman_list)):?>
-                        <div class="skeleton-announcement"><div class="skeleton-dot"></div><div class="skeleton-lines"><div class="skeleton-row"></div><div class="skeleton-row short"></div></div></div>
-                        <div class="skeleton-announcement"><div class="skeleton-dot"></div><div class="skeleton-lines"><div class="skeleton-row medium"></div><div class="skeleton-row short"></div></div></div>
                         <div style="text-align:center;padding:14px 0;font-size:.78rem;color:var(--text-muted)">Pengumuman akan tampil di sini</div>
                         <?php else: foreach(array_slice($pengumuman_list,0,3) as $p):?>
                         <div style="padding:10px 12px;background:var(--cream);border-radius:var(--r-sm);border:1px solid var(--border);border-left:3px solid var(--orange)">
@@ -306,6 +408,74 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
+
+            <!-- EVENT ORGANISASI — tampil untuk semua user -->
+            <div>
+                <div class="panel-header" style="margin-bottom:12px">
+                    <div class="panel-icon"><i class="bi bi-calendar-star"></i></div>
+                    <span class="panel-title">Event Organisasi</span>
+                    <?php if($is_pengurus):?>
+                    <a href="?tab=event" class="btn-sm-outline" style="margin-left:auto"><i class="bi bi-plus-lg"></i> Kelola Event</a>
+                    <?php endif; ?>
+                </div>
+                <?php if(empty($event_list)):?>
+                <div class="empty-big" style="padding:32px 20px">
+                    <div class="e-icon-big"><i class="bi bi-calendar-x"></i></div>
+                    <div class="e-title">Belum ada event</div>
+                    <div class="e-sub">Event organisasi yang tersedia akan muncul di sini</div>
+                </div>
+                <?php else:?>
+                <div class="event-scroll-wrap">
+                    <div class="event-scroll-inner">
+                        <?php foreach($event_list as $ev):?>
+                        <div class="event-card">
+                            <div class="event-card-banner">
+                                <?php if(!empty($ev['banner'])):?>
+                                <img src="<?=BASE_URL.e($ev['banner'])?>" alt="Banner <?=e($ev['judul'])?>">
+                                <?php else:?>
+                                <i class="bi bi-calendar-star"></i>
+                                <?php endif;?>
+                            </div>
+                            <div class="event-card-body">
+                                <div class="event-card-org"><i class="bi bi-people-fill"></i> <?=e($ev['nama_organisasi'])?></div>
+                                <div class="event-card-title"><?=e($ev['judul'])?></div>
+                                <div class="event-card-meta"><i class="bi bi-calendar3"></i> <?=date('d M Y',strtotime($ev['tanggal']))?></div>
+                                <div class="event-card-meta"><i class="bi bi-geo-alt"></i> <?=e($ev['lokasi'])?></div>
+                                <?php if(!empty($ev['deskripsi'])):?>
+                                <div class="event-card-desc"><?=e(mb_substr($ev['deskripsi'],0,100))?><?=mb_strlen($ev['deskripsi'])>100?'...':''?></div>
+                                <?php endif;?>
+                            </div>
+                        </div>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+                <?php endif;?>
+            </div>
+
+            <?php if(!$is_pengurus):?>
+            <!-- Akses Cepat Anggota -->
+            <div class="two-col">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-icon"><i class="bi bi-people"></i></div>
+                        <span class="panel-title">Organisasi</span>
+                    </div>
+                    <div class="panel-body">
+                        <a href="<?=BASE_URL?>pages/organisasi/organisasi.php" class="btn-primary" style="width:fit-content"><i class="bi bi-grid-3x3-gap"></i> Lihat Semua Organisasi</a>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-icon"><i class="bi bi-person-circle"></i></div>
+                        <span class="panel-title">Profil Saya</span>
+                    </div>
+                    <div class="panel-body">
+                        <a href="?tab=profil" class="btn-sm-outline" style="width:fit-content"><i class="bi bi-pencil"></i> Edit Profil</a>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
         <!-- ══════════════════════════
@@ -317,38 +487,20 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                 <div class="profile-avatar-big"><?=e($initials)?></div>
                 <div style="margin-bottom:20px">
                     <div style="font-size:1.2rem;font-weight:800;color:var(--text-dark)"><?=e($user['nama'])?></div>
-                    <div style="font-size:.82rem;color:var(--text-muted)"><?=e($user['email'])?> · <?=e($user['jabatan']??'Anggota')?></div>
+                    <div style="font-size:.82rem;color:var(--text-muted)"><?=e($user['email'])?> · <?=e($jabatan)?></div>
                 </div>
                 <form action="<?=BASE_URL?>proccess/update_profile.php" method="POST">
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Nama Lengkap *</label>
-                            <input type="text" name="nama" value="<?=e($user['nama'])?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label>NIM</label>
-                            <input type="text" value="<?=e($user['nim']??'')?>" disabled style="background:var(--cream);color:var(--text-muted)">
-                        </div>
+                        <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" value="<?=e($user['nama'])?>" required></div>
+                        <div class="form-group"><label>NIM</label><input type="text" value="<?=e($user['nim']??'')?>" disabled style="background:var(--cream);color:var(--text-muted)"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" value="<?=e($user['email'])?>" disabled style="background:var(--cream);color:var(--text-muted)">
-                        </div>
-                        <div class="form-group">
-                            <label>No. HP</label>
-                            <input type="text" name="no_hp" value="<?=e($user['no_hp']??'')?>">
-                        </div>
+                        <div class="form-group"><label>Email</label><input type="email" value="<?=e($user['email'])?>" disabled style="background:var(--cream);color:var(--text-muted)"></div>
+                        <div class="form-group"><label>No. HP</label><input type="text" name="no_hp" value="<?=e($user['no_hp']??'')?>"></div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Jabatan</label>
-                            <input type="text" name="jabatan" value="<?=e($user['jabatan']??'')?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Organisasi</label>
-                            <input type="text" name="organisasi" value="<?=e($user['organisasi']??'')?>">
-                        </div>
+                        <div class="form-group"><label>Jabatan</label><input type="text" name="jabatan" value="<?=e($user['jabatan']??'')?>"></div>
+                        <div class="form-group"><label>Organisasi</label><input type="text" name="organisasi" value="<?=e($user['organisasi']??'')?>"></div>
                     </div>
                     <div class="form-group" style="max-width:200px">
                         <label>Angkatan</label>
@@ -362,6 +514,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             </div>
         </div>
 
+        <?php if ($is_pengurus): ?>
         <!-- ══════════════════════════
              TAB: KEGIATAN
         ══════════════════════════ -->
@@ -391,7 +544,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                             <td><?=date('d M Y',strtotime($k['tanggal']))?></td>
                             <td><?=e($k['tempat'])?></td>
                             <td><?=e($k['penanggung_jawab'])?></td>
-                            <td><span class="badge-status <?=strtolower($k['status'])?>"><?=e($k['status'])?></span></td>
+                            <td><span class="badge-status <?=strtolower($k['status'])?>""><?=e($k['status'])?></span></td>
                             <td>
                                 <form method="POST" action="<?=BASE_URL?>proccess/kegiatan_process.php" style="display:inline">
                                     <input type="hidden" name="action" value="hapus">
@@ -543,6 +696,108 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             </div>
         </div>
 
+        <!-- ══════════════════════════
+             TAB: EVENT ORGANISASI
+        ══════════════════════════ -->
+        <div class="tab-content <?=$tab==='event'?'active':''?>">
+            <div class="section-header">
+                <h2>Event Organisasi</h2>
+                <button class="btn-primary" onclick="document.getElementById('modalEvent').classList.add('open')"><i class="bi bi-calendar-plus"></i> Tambah Event</button>
+            </div>
+            <div class="panel">
+                <?php if(empty($event_list)):?>
+                <div class="empty-big">
+                    <div class="e-icon-big"><i class="bi bi-calendar-x"></i></div>
+                    <div class="e-title">Belum ada event</div>
+                    <div class="e-sub">Tambahkan event organisasi agar mahasiswa dapat melihatnya.</div>
+                    <button class="btn-primary" onclick="document.getElementById('modalEvent').classList.add('open')"><i class="bi bi-calendar-plus"></i> Tambah Event</button>
+                </div>
+                <?php else:?>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>#</th><th>Judul</th><th>Organisasi</th><th>Tanggal</th><th>Lokasi</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                        <?php foreach($event_list as $i=>$ev):?>
+                        <tr>
+                            <td><?=$i+1?></td>
+                            <td style="font-weight:600"><?=e($ev['judul'])?></td>
+                            <td><?=e($ev['nama_organisasi'])?></td>
+                            <td><?=date('d M Y',strtotime($ev['tanggal']))?></td>
+                            <td><?=e($ev['lokasi'])?></td>
+                            <td style="display:flex;gap:6px;align-items:center">
+                                <button class="btn-sm-outline" onclick="openEditEvent(<?=htmlspecialchars(json_encode($ev))?>)"><i class="bi bi-pencil"></i></button>
+                                <form method="POST" action="<?=BASE_URL?>proccess/event_process.php" style="display:inline">
+                                    <input type="hidden" name="action" value="hapus">
+                                    <input type="hidden" name="id" value="<?=$ev['id']?>">
+                                    <button type="submit" class="btn-danger" onclick="return confirm('Hapus event ini?')"><i class="bi bi-trash3"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif;?>
+            </div>
+        </div>
+        <?php endif; // end is_pengurus tabs ?>
+
+        <?php if ($is_admin): ?>
+        <!-- ══════════════════════════
+             TAB: MANAJEMEN ORGANISASI (Admin)
+        ══════════════════════════ -->
+        <div class="tab-content <?=$tab==='org_admin'?'active':''?>">
+            <div class="section-header">
+                <h2>Manajemen Organisasi</h2>
+                <button class="btn-primary" onclick="document.getElementById('modalOrgTambah').classList.add('open')"><i class="bi bi-plus-lg"></i> Tambah Organisasi</button>
+            </div>
+            <div class="panel">
+                <?php if(empty($org_list_admin)):?>
+                <div class="empty-big">
+                    <div class="e-icon-big"><i class="bi bi-building"></i></div>
+                    <div class="e-title">Belum ada data organisasi di database</div>
+                    <div class="e-sub">Jalankan migration v3 terlebih dahulu.</div>
+                </div>
+                <?php else:?>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>#</th><th>Logo</th><th>Nama</th><th>Slug</th><th>Kategori</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                        <?php foreach($org_list_admin as $i=>$org):?>
+                        <tr>
+                            <td><?=$i+1?></td>
+                            <td>
+                                <?php if(!empty($org['logo'])):?>
+                                <img src="<?=BASE_URL.e($org['logo'])?>" alt="logo" style="width:40px;height:40px;object-fit:contain;border-radius:8px;background:var(--cream)">
+                                <?php else:?><div style="width:40px;height:40px;border-radius:8px;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><i class="bi bi-building"></i></div><?php endif;?>
+                            </td>
+                            <td style="font-weight:600"><?=e($org['nama'])?></td>
+                            <td><code><?=e($org['slug'])?></code></td>
+                            <td><?=e($org['kategori'])?></td>
+                            <td>
+                                <span class="badge-<?=e($org['status'])?>"><?=ucfirst(e($org['status']))?></span>
+                            </td>
+                            <td>
+                                <form method="POST" action="<?=BASE_URL?>proccess/organisasi_process.php" style="display:inline">
+                                    <input type="hidden" name="action" value="toggle_status">
+                                    <input type="hidden" name="id" value="<?=$org['id']?>">
+                                    <?php if($org['status']==='aktif'):?>
+                                    <button type="submit" class="btn-danger" onclick="return confirm('Nonaktifkan organisasi ini?')"><i class="bi bi-pause-circle"></i> Nonaktifkan</button>
+                                    <?php else:?>
+                                    <button type="submit" class="btn-success" onclick="return confirm('Aktifkan kembali organisasi ini?')"><i class="bi bi-play-circle"></i> Aktifkan</button>
+                                    <?php endif;?>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif;?>
+            </div>
+        </div>
+        <?php endif; // end is_admin tabs ?>
+
     </main>
 </div>
 
@@ -551,6 +806,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 ══════════════════════════════ -->
 
 <!-- Modal: Tambah Kegiatan -->
+<?php if ($is_pengurus): ?>
 <div class="modal-backdrop" id="modalKegiatan">
 <div class="modal-box">
     <div class="modal-title"><i class="bi bi-calendar-plus"></i> Tambah Kegiatan</div>
@@ -561,11 +817,9 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             <div class="form-group"><label>Nama Kegiatan *</label><input type="text" name="nama_kegiatan" required placeholder="Contoh: Rapat Bulanan BEM"></div>
             <div class="form-group"><label>Organisasi *</label>
                 <select name="organisasi" required>
-                    <option value="BEM" <?= ($_SESSION['organisasi']??'')==='BEM'?'selected':'' ?>>BEM</option>
-                    <option value="HERO" <?= ($_SESSION['organisasi']??'')==='HERO'?'selected':'' ?>>HERO</option>
-                    <option value="HCC" <?= ($_SESSION['organisasi']??'')==='HCC'?'selected':'' ?>>HCC</option>
-                    <option value="ARATTA" <?= ($_SESSION['organisasi']??'')==='ARATTA'?'selected':'' ?>>ARATTA</option>
-                    <option value="Wirausaha">Wirausaha</option>
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>" <?= ($_SESSION['organisasi']??'')===$o['slug']?'selected':'' ?>><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
                     <option value="Umum">Umum</option>
                 </select>
             </div>
@@ -605,11 +859,9 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <div class="form-row">
             <div class="form-group"><label>Organisasi *</label>
                 <select name="organisasi" required>
-                    <option value="BEM" <?= ($_SESSION['organisasi']??'')==='BEM'?'selected':'' ?>>BEM</option>
-                    <option value="HERO" <?= ($_SESSION['organisasi']??'')==='HERO'?'selected':'' ?>>HERO</option>
-                    <option value="HCC" <?= ($_SESSION['organisasi']??'')==='HCC'?'selected':'' ?>>HCC</option>
-                    <option value="ARATTA" <?= ($_SESSION['organisasi']??'')==='ARATTA'?'selected':'' ?>>ARATTA</option>
-                    <option value="Wirausaha">Wirausaha</option>
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>"><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
                     <option value="Umum">Umum</option>
                 </select>
             </div>
@@ -687,6 +939,104 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 </div>
 </div>
 
+<!-- Modal: Tambah Event -->
+<div class="modal-backdrop" id="modalEvent">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-calendar-plus"></i> Tambah Event</div>
+    <button class="modal-close" onclick="closeModal('modalEvent')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/event_process.php" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="tambah">
+        <div class="form-group"><label>Judul Event *</label><input type="text" name="judul" required placeholder="Contoh: Habibie Robotic Competition 2025"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi_slug" id="evOrgSlug" required onchange="updateNamaOrg(this)">
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>" data-nama="<?=e($o['nama'])?>"><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
+                </select>
+                <input type="hidden" name="nama_organisasi" id="evNamaOrg" value="<?=e($org_options[0]['nama']??'')?>">
+            </div>
+            <div class="form-group"><label>Tanggal *</label><input type="date" name="tanggal" required value="<?=date('Y-m-d')?>"></div>
+        </div>
+        <div class="form-group"><label>Lokasi *</label><input type="text" name="lokasi" required placeholder="Aula Kampus ITH / Online / Dll"></div>
+        <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" placeholder="Keterangan singkat event..."></textarea></div>
+        <div class="form-group"><label>Banner Event <span style="color:var(--text-muted);font-weight:400">(JPG, PNG, GIF — opsional)</span></label>
+            <input type="file" name="banner" accept="image/*">
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEvent')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-check-lg"></i> Simpan Event</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Modal: Edit Event -->
+<div class="modal-backdrop" id="modalEditEvent">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-calendar-check"></i> Edit Event</div>
+    <button class="modal-close" onclick="closeModal('modalEditEvent')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/event_process.php" enctype="multipart/form-data" id="editEventForm">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="editEvId">
+        <div class="form-group"><label>Judul Event *</label><input type="text" name="judul" id="editEvJudul" required></div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi *</label>
+                <select name="organisasi_slug" id="editEvOrgSlug" required onchange="updateEditNamaOrg(this)">
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>" data-nama="<?=e($o['nama'])?>"><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
+                </select>
+                <input type="hidden" name="nama_organisasi" id="editEvNamaOrg">
+            </div>
+            <div class="form-group"><label>Tanggal *</label><input type="date" name="tanggal" id="editEvTanggal" required></div>
+        </div>
+        <div class="form-group"><label>Lokasi *</label><input type="text" name="lokasi" id="editEvLokasi" required></div>
+        <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" id="editEvDeskripsi"></textarea></div>
+        <div class="form-group"><label>Ganti Banner <span style="color:var(--text-muted);font-weight:400">(kosongkan jika tidak diganti)</span></label>
+            <input type="file" name="banner" accept="image/*">
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEditEvent')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-floppy"></i> Simpan Perubahan</button>
+        </div>
+    </form>
+</div>
+</div>
+<?php endif; // pengurus modals ?>
+
+<?php if ($is_admin): ?>
+<!-- Modal: Tambah Organisasi -->
+<div class="modal-backdrop" id="modalOrgTambah">
+<div class="modal-box">
+    <div class="modal-title"><i class="bi bi-building-add"></i> Tambah Organisasi</div>
+    <button class="modal-close" onclick="closeModal('modalOrgTambah')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/organisasi_process.php" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="tambah">
+        <div class="form-group"><label>Nama Organisasi *</label><input type="text" name="nama" required placeholder="Contoh: Himpunan Mahasiswa Teknik Informatika"></div>
+        <div class="form-row">
+            <div class="form-group"><label>Slug * <span style="color:var(--text-muted);font-weight:400">(tanpa spasi, huruf kecil)</span></label><input type="text" name="slug" required placeholder="hmti" pattern="[a-z0-9\-]+"></div>
+            <div class="form-group"><label>Kategori</label>
+                <select name="kategori">
+                    <option value="bem">BEM</option>
+                    <option value="ukm" selected>UKM</option>
+                    <option value="himpunan">Himpunan</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>Deskripsi</label><textarea name="deskripsi" placeholder="Deskripsi singkat organisasi..."></textarea></div>
+        <div class="form-group"><label>Logo <span style="color:var(--text-muted);font-weight:400">(PNG, JPG — opsional)</span></label>
+            <input type="file" name="logo" accept="image/*">
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalOrgTambah')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-check-lg"></i> Tambah Organisasi</button>
+        </div>
+    </form>
+</div>
+</div>
+<?php endif; ?>
+
 <!-- Modal: Ganti Password -->
 <div class="modal-backdrop" id="modalPassword">
 <div class="modal-box">
@@ -725,11 +1075,40 @@ $show_toast  = in_array($from, ['signin','login']);
 <?php endif;?>
 
 <script>
-// Modal helpers
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-backdrop').forEach(m => {
     m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
+// Update nama_organisasi hidden field saat select berubah (Tambah Event)
+function updateNamaOrg(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById('evNamaOrg').value = opt.dataset.nama || opt.text;
+}
+function updateEditNamaOrg(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById('editEvNamaOrg').value = opt.dataset.nama || opt.text;
+}
+
+// Buka modal Edit Event dengan data yang ada
+function openEditEvent(ev) {
+    document.getElementById('editEvId').value       = ev.id;
+    document.getElementById('editEvJudul').value    = ev.judul;
+    document.getElementById('editEvTanggal').value  = ev.tanggal;
+    document.getElementById('editEvLokasi').value   = ev.lokasi;
+    document.getElementById('editEvDeskripsi').value= ev.deskripsi || '';
+
+    const slugSel = document.getElementById('editEvOrgSlug');
+    if (slugSel) {
+        for (let i=0;i<slugSel.options.length;i++) {
+            if (slugSel.options[i].value === ev.organisasi_slug) {
+                slugSel.selectedIndex = i; break;
+            }
+        }
+        document.getElementById('editEvNamaOrg').value = ev.nama_organisasi;
+    }
+    document.getElementById('modalEditEvent').classList.add('open');
+}
 
 // Toast
 const toast = document.getElementById('toastNotif');

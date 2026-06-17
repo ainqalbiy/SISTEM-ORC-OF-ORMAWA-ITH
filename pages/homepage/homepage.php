@@ -65,6 +65,74 @@ $stats = [
     ['angka' => '50', 'suffix' => '+', 'label' => 'Mahasiswa Aktif Ber-Organisasi'],
 ];
 
+// ── Event Organisasi (publik) ──────────────────────────────────────
+$hp_event_list = [];
+$ev_tbl_check  = $conn->query("SHOW TABLES LIKE 'event_organisasi'");
+if ($ev_tbl_check && $ev_tbl_check->num_rows > 0) {
+    // Cek kolom nama_organisasi — tambahkan jika belum ada
+    $cols = $conn->query("SHOW COLUMNS FROM event_organisasi LIKE 'nama_organisasi'");
+    if ($cols && $cols->num_rows === 0) {
+        $conn->query("ALTER TABLE event_organisasi ADD COLUMN nama_organisasi VARCHAR(150) DEFAULT 'ORMAWA ITH' AFTER organisasi_slug");
+    }
+    $hp_event_list = $conn->query(
+        "SELECT * FROM event_organisasi ORDER BY tanggal DESC LIMIT 10"
+    )?->fetch_all(MYSQLI_ASSOC) ?? [];
+}
+
+// Dummy fallback — tampil hanya jika DB kosong atau tabel belum ada
+if (empty($hp_event_list)) {
+    $hp_event_list = [
+        [
+            'judul'           => 'Habibie Robotic Competition 2026',
+            'nama_organisasi' => 'HERO – ITH',
+            'tanggal'         => '2026-08-05',
+            'lokasi'          => 'Lapangan Kampus ITH',
+            'deskripsi'       => 'Kompetisi robotika antar kampus tingkat nasional yang diselenggarakan oleh HERO ITH.',
+            'banner'          => null,
+        ],
+        [
+            'judul'           => 'HCC Coding Bootcamp 2026',
+            'nama_organisasi' => 'HCC – ITH',
+            'tanggal'         => '2026-07-20',
+            'lokasi'          => 'Lab Komputer Lantai 3',
+            'deskripsi'       => 'Bootcamp intensif pemrograman web dan mobile selama 3 hari untuk mahasiswa ITH.',
+            'banner'          => null,
+        ],
+        [
+            'judul'           => 'Seminar Nasional Teknologi & Inovasi',
+            'nama_organisasi' => 'BEM – ITH',
+            'tanggal'         => '2026-07-15',
+            'lokasi'          => 'Aula Utama ITH Parepare',
+            'deskripsi'       => 'Seminar nasional membahas perkembangan teknologi dan inovasi terkini di era digital.',
+            'banner'          => null,
+        ],
+        [
+            'judul'           => 'Pameran Seni ARATTA 2026',
+            'nama_organisasi' => 'ARATTA – ITH',
+            'tanggal'         => '2026-07-10',
+            'lokasi'          => 'Gedung Serbaguna ITH',
+            'deskripsi'       => 'Pameran karya seni mahasiswa ITH: lukisan, fotografi, dan pertunjukan musik live.',
+            'banner'          => null,
+        ],
+        [
+            'judul'           => 'Workshop Kewirausahaan Digital',
+            'nama_organisasi' => 'Wirausaha (WITH) – ITH',
+            'tanggal'         => '2026-07-05',
+            'lokasi'          => 'Ruang Seminar Kampus ITH',
+            'deskripsi'       => 'Workshop praktis membangun bisnis digital dari nol bersama mentor berpengalaman.',
+            'banner'          => null,
+        ],
+        [
+            'judul'           => 'Malam Keakraban BEM ITH 2026',
+            'nama_organisasi' => 'BEM – ITH',
+            'tanggal'         => '2026-06-28',
+            'lokasi'          => 'Lapangan Olahraga ITH',
+            'deskripsi'       => 'Malam keakraban dan pelantikan pengurus BEM ITH periode 2026/2027.',
+            'banner'          => null,
+        ],
+    ];
+}
+
 require_once '../../components/header.php';
 require_once '../../components/navbar.php';
 ?>
@@ -110,12 +178,28 @@ require_once '../../components/navbar.php';
 <section class="search-section">
     <form class="search-bar" id="searchForm" role="search"
           action="<?= BASE_URL ?>pages/organisasi/organisasi.php" method="GET">
+        <!-- Cari Organisasi -->
         <div class="search-left">
             <i class="bi bi-search search-icon"></i>
             <input type="text" id="searchInput" name="q" class="search-input"
                    placeholder="Cari Organisasi" aria-label="Cari organisasi">
         </div>
         <div class="search-divider"></div>
+        <!-- Pilih Organisasi -->
+        <div class="search-middle">
+            <select name="org" id="orgSelect" class="search-select" aria-label="Pilih organisasi"
+                    onchange="handleOrgSelect(this)">
+                <option value="">Pilih Organisasi</option>
+                <?php foreach ($organisasi as $org): ?>
+                <option value="<?= htmlspecialchars($org['slug']) ?>">
+                    <?= htmlspecialchars($org['nama']) ?>
+                </option>
+                <?php endforeach; ?>
+            </select>
+            <i class="bi bi-chevron-down select-arrow"></i>
+        </div>
+        <div class="search-divider"></div>
+        <!-- Pilih Kategori Organisasi -->
         <div class="search-middle">
             <select name="kategori" id="categorySelect" class="search-select" aria-label="Pilih kategori">
                 <option value="">Pilih Kategori Organisasi</option>
@@ -128,6 +212,16 @@ require_once '../../components/navbar.php';
         <button type="submit" class="btn-search">Explore</button>
     </form>
 </section>
+
+<script>
+// Saat organisasi dipilih dari dropdown, langsung arahkan ke halaman organisasi tersebut
+function handleOrgSelect(sel) {
+    const slug = sel.value;
+    if (slug) {
+        window.location.href = '<?= BASE_URL ?>pages/organisasi/' + slug + '.php';
+    }
+}
+</script>
 
 <!-- ═══════════ DISCOVER / ABOUT ═══════════ -->
 <section class="discover-section" id="about">
@@ -166,9 +260,10 @@ require_once '../../components/navbar.php';
         <div class="orgs-scroll-container" id="orgsScroll">
             <?php foreach ($organisasi as $org): ?>
             <div class="org-card">
+                <!-- Foto/logo organisasi — ganti nilai src untuk mengubah gambar -->
                 <div class="org-card-logo">
                     <img src="<?= htmlspecialchars($org['logo']) ?>"
-                         alt="<?= htmlspecialchars($org['logo_alt']) ?>"
+                         alt="<?= htmlspecialchars($org['logo_alt'] ?? $org['nama']) ?>"
                          loading="lazy"
                          onerror="this.src='<?= BASE_URL ?>assets/img/logo/header-logo.jpeg'">
                 </div>
@@ -193,6 +288,112 @@ require_once '../../components/navbar.php';
                 aria-label="Ke organisasi <?= $i + 1 ?>" role="tab"></button>
         <?php endforeach; ?>
     </div>
+</section>
+
+<!-- ═══════════ EVENT ORGANISASI ═══════════ -->
+<section class="orgs-section" id="events-section">
+    <div class="orgs-section-header" data-reveal>
+        <h2>Event Organisasi Terbaru</h2>
+        <p style="font-size:.9rem;color:#7a5a3a;margin-top:6px">Temukan kegiatan dan event terkini dari ORMAWA ITH</p>
+    </div>
+
+    <div class="ev-scroll-wrap">
+        <?php
+        $ev_colors = [
+            'hero'     => ['#6B3A00','#C47A27'],
+            'hcc'      => ['#1A3A5C','#2E6DA4'],
+            'bem'      => ['#5C1A1A','#A43A2E'],
+            'aratta'   => ['#2D4A1E','#5A8C3B'],
+            'wirausaha'=> ['#3A2D5C','#6B4EA4'],
+            'default'  => ['#8B4513','#C95611'],
+        ];
+        $ev_icons = [
+            'hero'     => 'bi-gear-wide-connected',
+            'hcc'      => 'bi-code-slash',
+            'bem'      => 'bi-people-fill',
+            'aratta'   => 'bi-palette2',
+            'wirausaha'=> 'bi-briefcase',
+            'default'  => 'bi-calendar-star',
+        ];
+        foreach ($hp_event_list as $hpev):
+            $slug  = $hpev['organisasi_slug'] ?? 'default';
+            $clr   = $ev_colors[$slug]  ?? $ev_colors['default'];
+            $icon  = $ev_icons[$slug]   ?? $ev_icons['default'];
+            $org   = htmlspecialchars($hpev['nama_organisasi'] ?? 'ORMAWA ITH');
+            $judul = htmlspecialchars($hpev['judul']);
+            $tgl   = date('d M Y', strtotime($hpev['tanggal']));
+            $lok   = htmlspecialchars($hpev['lokasi']);
+            $raw_d = $hpev['deskripsi'] ?? '';
+            $desc  = htmlspecialchars(mb_substr($raw_d, 0, 110));
+            $more  = mb_strlen($raw_d) > 110;
+        ?>
+        <div class="ev-card">
+            <div class="ev-card-banner" style="background:linear-gradient(140deg,<?= $clr[0] ?>,<?= $clr[1] ?>)">
+                <?php if (!empty($hpev['banner'])): ?>
+                <img src="<?= BASE_URL . htmlspecialchars($hpev['banner']) ?>"
+                     alt="Banner <?= $judul ?>">
+                <?php else: ?>
+                <div class="ev-banner-placeholder"><i class="bi <?= $icon ?>"></i></div>
+                <?php endif; ?>
+            </div>
+            <div class="ev-card-body">
+                <span class="ev-org-badge"><i class="bi bi-people-fill"></i> <?= $org ?></span>
+                <h3 class="ev-title"><?= $judul ?></h3>
+                <div class="ev-meta">
+                    <span><i class="bi bi-calendar3"></i> <?= $tgl ?></span>
+                    <span><i class="bi bi-geo-alt"></i> <?= $lok ?></span>
+                </div>
+                <?php if ($desc): ?><p class="ev-desc"><?= $desc ?><?= $more ? '...' : '' ?></p><?php endif; ?>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <style>
+    .ev-scroll-wrap {
+        display:flex; gap:20px; overflow-x:auto;
+        padding:8px 40px 24px;
+        scroll-snap-type:x mandatory;
+        -webkit-overflow-scrolling:touch;
+        scrollbar-width:thin;
+        scrollbar-color:var(--orange,#c95611) transparent;
+    }
+    .ev-scroll-wrap::-webkit-scrollbar       { height:5px; }
+    .ev-scroll-wrap::-webkit-scrollbar-track { background:transparent; }
+    .ev-scroll-wrap::-webkit-scrollbar-thumb { background:var(--orange,#c95611); border-radius:99px; }
+    .ev-card {
+        flex:0 0 270px; background:#fff; border:1px solid #e8d8c8;
+        border-radius:20px; overflow:hidden;
+        box-shadow:0 4px 18px rgba(100,50,20,.09);
+        display:flex; flex-direction:column;
+        scroll-snap-align:start;
+        transition:transform .22s, box-shadow .22s;
+    }
+    .ev-card:hover { transform:translateY(-4px); box-shadow:0 12px 36px rgba(100,50,20,.17); }
+    .ev-card-banner { position:relative; width:100%; height:148px; overflow:hidden; flex-shrink:0; }
+    .ev-card-banner img { width:100%; height:100%; object-fit:cover; display:block; }
+    .ev-banner-placeholder {
+        width:100%; height:100%;
+        display:flex; align-items:center; justify-content:center;
+        font-size:2.6rem; color:rgba(255,255,255,.38);
+    }
+    .ev-card-body { padding:16px 18px 18px; display:flex; flex-direction:column; gap:6px; flex:1; }
+    .ev-org-badge {
+        display:inline-flex; align-items:center; gap:5px;
+        font-size:.68rem; font-weight:700; color:var(--orange,#c95611);
+        background:#fff4ec; border:1px solid #f0d4b8;
+        border-radius:99px; padding:3px 10px; width:fit-content;
+    }
+    .ev-title { font-size:.92rem; font-weight:800; color:#2c1a0e; line-height:1.35; margin:2px 0 0; }
+    .ev-meta  { display:flex; flex-direction:column; gap:3px; margin-top:2px; }
+    .ev-meta span { display:flex; align-items:center; gap:6px; font-size:.72rem; color:#7a5a3a; }
+    .ev-meta i { color:var(--orange,#c95611); font-size:.75rem; }
+    .ev-desc  { font-size:.76rem; color:#5a4030; line-height:1.55; margin-top:4px; }
+    @media (max-width:640px) {
+        .ev-scroll-wrap { padding:8px 20px 16px; gap:14px; }
+        .ev-card { flex:0 0 240px; }
+    }
+    </style>
 </section>
 
 <!-- ═══════════ TESTIMONI + STATS ═══════════ -->

@@ -32,47 +32,4 @@ $is_logged_in = !empty($_SESSION['user_id']);
         </div>
     </div>
 
-    <!-- MAIN NAV -->
-    <nav class="main-nav">
-        <div class="nav-inner">
-            <button class="hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="<?= BASE_URL ?>pages/homepage/homepage.php"
-                       class="<?= $current_page === 'home' ? 'active' : '' ?>">HOME</a></li>
-                <li><a href="<?= BASE_URL ?>pages/homepage/homepage.php#about"
-                       class="<?= $current_page === 'about' ? 'active' : '' ?>">ABOUT US</a></li>
-                <li><a href="<?= BASE_URL ?>pages/organisasi/bem.php"
-                       class="<?= $current_page === 'bem' ? 'active' : '' ?>">BEM</a></li>
-                <li><a href="<?= BASE_URL ?>pages/organisasi/hero.php"
-                       class="<?= $current_page === 'hero' ? 'active' : '' ?>">HERO</a></li>
-                <li><a href="<?= BASE_URL ?>pages/organisasi/hcc.php"
-                       class="<?= $current_page === 'hcc' ? 'active' : '' ?>">HCC</a></li>
-                <li><a href="<?= BASE_URL ?>pages/organisasi/aratta.php"
-                       class="<?= $current_page === 'aratta' ? 'active' : '' ?>">ARATTA</a></li>
-                <li><a href="<?= BASE_URL ?>pages/organisasi/wirausaha.php"
-                       class="<?= $current_page === 'wirausaha' ? 'active' : '' ?>">WIRAUSAHA</a></li>
-            </ul>
-        </div>
-    </nav>
-
 </header>
-
-<script>
-// Hamburger toggle — inline so it works on every page without extra JS file
-(function() {
-    const btn = document.getElementById('navHamburger');
-    const nav = document.getElementById('navLinks');
-    if (btn && nav) {
-        btn.addEventListener('click', function() {
-            const open = nav.classList.toggle('open');
-            btn.setAttribute('aria-expanded', open);
-        });
-        // Close when clicking a link
-        nav.querySelectorAll('a').forEach(function(a) {
-            a.addEventListener('click', function() { nav.classList.remove('open'); });
-        });
-    }
-})();
-</script>
