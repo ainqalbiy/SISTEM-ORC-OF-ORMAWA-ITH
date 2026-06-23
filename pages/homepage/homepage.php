@@ -238,7 +238,7 @@ function handleOrgSelect(sel) {
                 unit kegiatan mahasiswa. Dapatkan informasi program kerja, kegiatan, dan
                 aktivitas terbaru dalam satu platform terintegrasi!
             </p>
-            <a href="<?= BASE_URL ?>pages/signin.php" class="btn-discover">
+            <a href="<?= BASE_URL ?>pages/signup.php" class="btn-discover">
                 Yuk! Daftar dan Mulai Organisasimu di ITH.
                 <i class="bi bi-arrow-right-circle-fill"></i>
             </a>

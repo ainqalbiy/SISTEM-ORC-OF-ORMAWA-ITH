@@ -1,9 +1,9 @@
 <?php
-// proccess/signin_process.php
+// proccess/signup_process.php
 require_once '../config/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ' . BASE_URL . 'pages/signin.php');
+    header('Location: ' . BASE_URL . 'pages/signup.php');
     exit;
 }
 
@@ -14,15 +14,15 @@ $password         = trim($_POST['password']         ?? '');
 $confirm_password = trim($_POST['confirm_password'] ?? '');
 
 if (empty($nama) || empty($nim) || empty($email) || empty($password)) {
-    header('Location: ' . BASE_URL . 'pages/signin.php?error=empty');
+    header('Location: ' . BASE_URL . 'pages/signup.php?error=empty');
     exit;
 }
 if (strlen($password) < 6) {
-    header('Location: ' . BASE_URL . 'pages/signin.php?error=short');
+    header('Location: ' . BASE_URL . 'pages/signup.php?error=short');
     exit;
 }
 if ($password !== $confirm_password) {
-    header('Location: ' . BASE_URL . 'pages/signin.php?error=mismatch');
+    header('Location: ' . BASE_URL . 'pages/signup.php?error=mismatch');
     exit;
 }
 
@@ -41,7 +41,7 @@ $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->close();
-    header('Location: ' . BASE_URL . 'pages/signin.php?error=exists');
+    header('Location: ' . BASE_URL . 'pages/signup.php?error=exists');
     exit;
 }
 $stmt->close();
@@ -81,11 +81,11 @@ if ($stmt->execute()) {
     $_SESSION['foto']       = '';
 
     $stmt->close();
-    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?from=signin');
+    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?from=signup');
     exit;
 } else {
     $err = $conn->error;
     $stmt->close();
-    header('Location: ' . BASE_URL . 'pages/signin.php?error=failed&detail=' . urlencode($err));
+    header('Location: ' . BASE_URL . 'pages/signup.php?error=failed&detail=' . urlencode($err));
     exit;
 }

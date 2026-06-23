@@ -331,7 +331,7 @@ require_once '../../components/navbar.php';
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     Tambahkan kegiatan BEM melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan">Dashboard</a>.
                 <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/login/login.php">Login</a> untuk menambahkan kegiatan.
+                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan kegiatan.
                 <?php endif; ?>
             </p>
         </div>
@@ -387,7 +387,7 @@ require_once '../../components/navbar.php';
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     Daftarkan anggota melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota">Dashboard</a>.
                 <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/login/login.php">Login</a> untuk menambahkan anggota.
+                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan anggota.
                 <?php endif; ?>
             </p>
         </div>

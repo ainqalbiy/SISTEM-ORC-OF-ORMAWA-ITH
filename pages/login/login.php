@@ -1,8 +1,8 @@
 <?php
-// pages/login/login.php
+// pages/Sign In/Sign In.php
 require_once '../../config/connection.php';
 
-// Jika sudah login, redirect ke profile
+// Jika sudah Sign In, redirect ke profile
 if (!empty($_SESSION['user_id'])) {
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php');
     exit;
@@ -24,7 +24,7 @@ if ($error === 'invalid') {
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <title>Login – ORC ORMAWA ITH</title>
+  <title>Sign In – ORC ORMAWA ITH</title>
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .bg-soft-cream { background-color: #fff7ed; }
@@ -70,7 +70,7 @@ if ($error === 'invalid') {
           </div>
         <?php endif; ?>
 
-        <form action="<?= BASE_URL ?>proccess/login_process.php" method="POST" class="space-y-5" id="loginForm">
+        <form action="<?= BASE_URL ?>proccess/Sign In_process.php" method="POST" class="space-y-5" id="Sign InForm">
 
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-gray-400">
@@ -112,7 +112,7 @@ if ($error === 'invalid') {
 
         <p class="text-sm text-gray-600">
           Belum punya akun?
-          <a href="<?= BASE_URL ?>pages/signin.php" class="text-orange-700 font-bold hover:underline">Daftar Sekarang</a>
+          <a href="<?= BASE_URL ?>pages/signup.php" class="text-orange-700 font-bold hover:underline">Daftar Sekarang</a>
         </p>
       </div>
     </div>

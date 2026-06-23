@@ -30,7 +30,7 @@ $org_email = $org_email ?? 'info@ith.ac.id';
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     Tambahkan melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan">Dashboard</a>.
                 <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/login/login.php">Login</a> untuk menambahkan kegiatan.
+                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan kegiatan.
                 <?php endif; ?>
             </p>
         </div>
@@ -80,7 +80,7 @@ $org_email = $org_email ?? 'info@ith.ac.id';
                 <?php if (!empty($_SESSION['user_id'])): ?>
                     Daftarkan melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota">Dashboard</a>.
                 <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/login/login.php">Login</a> untuk menambahkan anggota.
+                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan anggota.
                 <?php endif; ?>
             </p>
         </div>

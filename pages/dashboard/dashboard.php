@@ -314,11 +314,11 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             <div class="welcome-card">
                 <div class="welcome-left">
                     <div class="welcome-tag">
-                        <?php if($from==='signin'):?><i class="bi bi-stars"></i> Selamat datang di ORC!
+                        <?php if($from==='signup'):?><i class="bi bi-stars"></i> Selamat datang di ORC!
                         <?php else:?><i class="bi bi-hand-wave"></i> Selamat datang kembali<?php endif;?>
                     </div>
                     <div class="welcome-name">
-                        <?php if($from==='signin'):?>Halo, <?=e($first_name)?>! 👋
+                        <?php if($from==='signup'):?>Halo, <?=e($first_name)?>! 👋
                         <?php else:?>Selamat Datang Kembali, <?=e($first_name)?>!<?php endif;?>
                     </div>
                     <div class="welcome-sub">
@@ -1063,16 +1063,16 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 
 <!-- ══ TOAST ══ -->
 <?php
-$is_signin   = ($from==='signin');
-$toast_title = $is_signin ? 'Pendaftaran berhasil! 🎉' : 'Login berhasil!';
-$toast_msg   = $is_signin
+$is_signup   = ($from==='signup');
+$toast_title = $is_signup ? 'Pendaftaran berhasil! 🎉' : 'Sign In berhasil!';
+$toast_msg   = $is_signup
     ? 'Selamat datang di ORC, '.e($user['nama']).'! Akun Anda sudah aktif.'
     : 'Selamat datang kembali, '.e($first_name).'! Semangat berorganisasi!';
-$show_toast  = in_array($from, ['signin','login']);
+$show_toast  = in_array($from, ['signup','login']);
 ?>
 <?php if($show_toast):?>
-<div class="toast <?=$is_signin?'signin-toast':''?>" id="toastNotif">
-    <div class="toast-icon"><i class="bi <?=$is_signin?'bi-stars':'bi-emoji-smile'?>"></i></div>
+<div class="toast <?=$is_signup?'signup-toast':''?>" id="toastNotif">
+    <div class="toast-icon"><i class="bi <?=$is_signup?'bi-stars':'bi-emoji-smile'?>"></i></div>
     <div class="toast-content">
         <div class="toast-title"><?=$toast_title?></div>
         <div class="toast-msg"><?=$toast_msg?></div>

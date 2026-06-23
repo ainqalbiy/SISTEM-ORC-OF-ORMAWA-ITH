@@ -1,5 +1,5 @@
 <?php
-// pages/signin.php — Halaman Pendaftaran Akun Baru
+// pages/signup.php — Halaman Pendaftaran Akun Baru
 require_once '../config/connection.php';
 
 // Jika sudah login, langsung ke profile
@@ -70,7 +70,7 @@ $success = $_GET['success'] ?? '';
           </div>
         <?php endif; ?>
 
-        <form action="<?= BASE_URL ?>proccess/signin_process.php" method="POST" class="space-y-4 text-left" id="signInForm">
+        <form action="<?= BASE_URL ?>proccess/signup_process.php" method="POST" class="space-y-4 text-left" id="signupForm">
 
           <!-- Nama Lengkap -->
           <div class="relative">
@@ -159,7 +159,7 @@ $success = $_GET['success'] ?? '';
       }
     });
 
-    document.getElementById('signInForm').addEventListener('submit', function (e) {
+    document.getElementById('signupForm').addEventListener('submit', function (e) {
       const pw = document.getElementById('passwordField').value;
       const cpw = document.getElementById('confirmPassword').value;
       if (pw !== cpw) {
