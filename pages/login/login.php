@@ -70,7 +70,7 @@ if ($error === 'invalid') {
           </div>
         <?php endif; ?>
 
-        <form action="<?= BASE_URL ?>proccess/Sign In_process.php" method="POST" class="space-y-5" id="Sign InForm">
+        <form action="<?= BASE_URL ?>proccess/login_process.php" method="POST" class="space-y-5" id="loginForm">
 
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-5 flex items-center text-gray-400">
