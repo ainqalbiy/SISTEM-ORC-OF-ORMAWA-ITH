@@ -5,7 +5,7 @@ require_login();
 
 $jabatan = $_SESSION['jabatan'] ?? 'Anggota';
 
-if ($jabatan !== 'Admin') {
+if ($jabatan !== 'Admin' && $jabatan !== 'Super Admin') {
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?error=' . urlencode('Akses ditolak.'));
     exit;
 }

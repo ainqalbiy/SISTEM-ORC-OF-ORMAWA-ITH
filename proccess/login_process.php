@@ -18,8 +18,12 @@ if (empty($email) || empty($password)) {
 $pk      = get_user_pk($conn);
 $has_nim = user_col_exists($conn, 'nim');
 
-// Cari user berdasarkan email atau NIM
-if ($has_nim) {
+// Cari user berdasarkan email, NIM, atau username
+$has_username = user_col_exists($conn, 'username');
+if ($has_nim && $has_username) {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR nim = ? OR username = ? LIMIT 1");
+    $stmt->bind_param('sss', $email, $email, $email);
+} elseif ($has_nim) {
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? OR nim = ? LIMIT 1");
     $stmt->bind_param('ss', $email, $email);
 } else {
@@ -31,6 +35,12 @@ $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if ($user && password_verify($password, $user['password'])) {
+    // Cek status akun — Nonaktif tidak bisa login
+    if (($user['status'] ?? 'Aktif') === 'Nonaktif') {
+        header('Location: ' . BASE_URL . 'pages/login/login.php?error=nonaktif');
+        exit;
+    }
+
     $_SESSION['user_id']    = $user[$pk];
     $_SESSION['nama']       = $user['nama']        ?? '';
     $_SESSION['email']      = $user['email']       ?? '';
@@ -42,7 +52,6 @@ if ($user && password_verify($password, $user['password'])) {
     $_SESSION['status']     = $user['status']      ?? 'Aktif';
     $_SESSION['foto']       = $user['foto']        ?? '';
 
-    // Landing page berbeda berdasarkan role
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?from=login');
     exit;
 } else {

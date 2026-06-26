@@ -22,18 +22,14 @@ if (!defined('BASE_URL')) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-    // Posisi folder root proyek ini = satu level di atas /config/
     $root_dir  = str_replace('\\', '/', realpath(__DIR__ . '/..'));
     $doc_root  = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? $root_dir));
 
-    // Buat relative path dari document root ke root proyek
     if (strpos($root_dir, $doc_root) === 0) {
         $base_path = substr($root_dir, strlen($doc_root));
     } else {
-        // Fallback: ambil dari SCRIPT_NAME
         $script = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME'] ?? '');
         $base_path = '';
-        // Cari nama folder orc_fixed di path
         if (preg_match('#(/[^/]+/orc_fixed)#', str_replace($doc_root, '', $script), $m)) {
             $base_path = $m[1];
         }
@@ -53,6 +49,32 @@ function require_login(): void {
     }
 }
 
+/**
+ * Cek apakah user yang sedang login adalah Super Admin
+ */
+function is_super_admin(): bool {
+    return ($_SESSION['jabatan'] ?? '') === 'Super Admin';
+}
+
+/**
+ * Cek apakah user yang sedang login adalah Admin (termasuk Super Admin)
+ */
+function is_admin_or_super(): bool {
+    $j = $_SESSION['jabatan'] ?? '';
+    return in_array($j, ['Admin', 'Super Admin']);
+}
+
+/**
+ * Paksa hanya Super Admin yang boleh akses, redirect jika bukan
+ */
+function require_super_admin(): void {
+    require_login();
+    if (!is_super_admin()) {
+        header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?error=akses_ditolak');
+        exit;
+    }
+}
+
 function e(string $str): string {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
@@ -68,7 +90,6 @@ function redirect(string $path, array $params = []): void {
 
 /**
  * Deteksi nama kolom primary key tabel users secara otomatis.
- * Menangani database lama (user_id, id_user, dll) maupun baru (id).
  */
 function get_user_pk(mysqli $conn): string {
     static $cache = null;

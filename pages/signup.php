@@ -1,12 +1,11 @@
 <?php
-// pages/signup.php — Halaman Pendaftaran Akun Baru
+// pages/signup.php — Registrasi mandiri telah dinonaktifkan.
+// Akun hanya dapat dibuat oleh Super Admin.
 require_once '../config/connection.php';
 
-// Jika sudah login, langsung ke profile
-if (!empty($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php');
-    exit;
-}
+// Redirect ke halaman login dengan notifikasi
+header('Location: ' . BASE_URL . 'pages/login/login.php?info=reg_disabled');
+exit;
 
 $error = $_GET['error'] ?? '';
 $error_msg = '';

@@ -9,11 +9,18 @@ if (!empty($_SESSION['user_id'])) {
 }
 
 $error = $_GET['error'] ?? '';
+$info  = $_GET['info']  ?? '';
 $error_msg = '';
+$info_msg  = '';
 if ($error === 'invalid') {
     $error_msg = 'Email/NIM atau password salah. Silakan coba lagi.';
 } elseif ($error === 'empty') {
     $error_msg = 'Harap isi semua kolom.';
+} elseif ($error === 'nonaktif') {
+    $error_msg = 'Akun Anda telah dinonaktifkan. Hubungi Super Admin untuk mengaktifkan kembali.';
+}
+if ($info === 'reg_disabled') {
+    $info_msg = 'Pendaftaran mandiri tidak tersedia. Akun dibuat oleh Super Admin.';
 }
 ?>
 <!DOCTYPE html>
@@ -70,6 +77,13 @@ if ($error === 'invalid') {
           </div>
         <?php endif; ?>
 
+        <?php if ($info_msg ?? ''): ?>
+          <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center gap-2">
+            <i class="fas fa-info-circle"></i>
+            <?= e($info_msg) ?>
+          </div>
+        <?php endif; ?>
+
         <form action="<?= BASE_URL ?>proccess/login_process.php" method="POST" class="space-y-5" id="loginForm">
 
           <div class="relative">
@@ -110,9 +124,9 @@ if ($error === 'invalid') {
           <div class="flex-grow border-t border-gray-200"></div>
         </div>
 
-        <p class="text-sm text-gray-600">
-          Belum punya akun?
-          <a href="<?= BASE_URL ?>pages/signup.php" class="text-orange-700 font-bold hover:underline">Daftar Sekarang</a>
+        <p class="text-sm text-gray-500 text-center">
+          <i class="fas fa-info-circle"></i>
+          Akun dibuat oleh <strong>Super Admin</strong> ORC ITH.
         </p>
       </div>
     </div>

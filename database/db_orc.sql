@@ -20,6 +20,7 @@ CREATE TABLE `users` (
   `nama`       varchar(100) NOT NULL,
   `nim`        varchar(20)  NOT NULL DEFAULT '',
   `email`      varchar(150) NOT NULL,
+  `username`   varchar(100) DEFAULT NULL,
   `no_hp`      varchar(20)  DEFAULT NULL,
   `password`   varchar(255) NOT NULL,
   `jabatan`    varchar(100) NOT NULL DEFAULT 'Anggota',
@@ -28,20 +29,26 @@ CREATE TABLE `users` (
   `status`     enum('Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif',
   `foto`       varchar(255) DEFAULT NULL,
   `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
+  `created_by` int(11)      DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `nim`   (`nim`)
+  UNIQUE KEY `nim`   (`nim`),
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Akun demo  (password plaintext: Admin123!)
-INSERT INTO `users` (`nama`,`nim`,`email`,`no_hp`,`password`,`jabatan`,`organisasi`,`angkatan`,`status`) VALUES
-('Administrator ORC','000000000','admin@orc.ith.ac.id','081200000000',
+-- Akun demo (password plaintext: Admin123!)
+-- Super Admin
+INSERT INTO `users` (`nama`,`nim`,`email`,`username`,`no_hp`,`password`,`jabatan`,`organisasi`,`angkatan`,`status`) VALUES
+('Super Admin ORC','000000000','superadmin@orc.ith.ac.id','superadmin','081200000000',
+ '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ 'Super Admin',NULL,NULL,'Aktif'),
+('Administrator ORC','000000001','admin@orc.ith.ac.id','admin_orc','081200000099',
  '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
  'Admin','BEM','2022','Aktif'),
-('Demo Pengurus','241011002','pengurus@orc.ith.ac.id','081200000002',
+('Demo Pengurus','241011002','pengurus@orc.ith.ac.id','pengurus_demo','081200000002',
  '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
  'Pengurus','HCC','2023','Aktif'),
-('Demo Mahasiswa','241011001','demo@orc.ith.ac.id','081200000001',
+('Demo Mahasiswa','241011001','demo@orc.ith.ac.id','demo_mhs','081200000001',
  '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
  'Anggota','HCC','2024','Aktif');
 

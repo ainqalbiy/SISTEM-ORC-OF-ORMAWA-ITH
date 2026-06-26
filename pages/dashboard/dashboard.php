@@ -17,9 +17,10 @@ if (!$user) { session_destroy(); header('Location:'.BASE_URL.'pages/login/login.
 $_SESSION['nama']    = $user['nama'];
 $_SESSION['jabatan'] = $user['jabatan'] ?? 'Anggota';
 
-$jabatan    = $user['jabatan'] ?? 'Anggota';
-$is_admin   = ($jabatan === 'Admin');
-$is_pengurus = ($jabatan === 'Pengurus' || $is_admin);
+$jabatan         = $user['jabatan'] ?? 'Anggota';
+$is_super_admin  = ($jabatan === 'Super Admin');
+$is_admin        = ($jabatan === 'Admin' || $is_super_admin);
+$is_pengurus     = ($jabatan === 'Pengurus' || $is_admin);
 // Anggota: hanya lihat event, konten, profil
 
 // ── Inisial & first name ──────────────────────────────────────────
@@ -33,8 +34,10 @@ $tab = $_GET['tab'] ?? 'dashboard';
 $allowed_tabs_all     = ['dashboard','profil','event'];
 $allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event'];
 $allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin'];
+$allowed_tabs_superadmin = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin'];
 
-if ($is_admin && !in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
+if ($is_super_admin && !in_array($tab, $allowed_tabs_superadmin)) $tab = 'dashboard';
+elseif ($is_admin && !in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
 elseif ($is_pengurus && !in_array($tab, $allowed_tabs_pengurus)) $tab = 'dashboard';
 elseif (!$is_pengurus && !in_array($tab, $allowed_tabs_all)) $tab = 'dashboard';
 
@@ -74,6 +77,12 @@ if ($is_admin) {
     if ($org_tbl && $org_tbl->num_rows > 0) {
         $org_list_admin = $conn->query("SELECT * FROM organisasi ORDER BY id ASC")?->fetch_all(MYSQLI_ASSOC) ?? [];
     }
+}
+
+// ── Daftar semua user (Super Admin) ───────────────────────────────
+$all_users_list = [];
+if ($is_super_admin) {
+    $all_users_list = $conn->query("SELECT id,nama,nim,email,jabatan,organisasi,angkatan,status,created_at FROM users ORDER BY id ASC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 }
 
 // ── Daftar nama organisasi (untuk select) ─────────────────────────
@@ -262,6 +271,11 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <?php if ($is_admin): ?>
         <div class="nav-label">Admin</div>
         <a href="?tab=org_admin"  class="nav-item <?= $tab==='org_admin'?'active':'' ?>"><i class="bi bi-building"></i><span>Manajemen Org.</span></a>
+        <?php endif; ?>
+
+        <?php if ($is_super_admin): ?>
+        <div class="nav-label">Super Admin</div>
+        <a href="?tab=superadmin" class="nav-item <?= $tab==='superadmin'?'active':'' ?>"><i class="bi bi-shield-lock"></i><span>Manajemen Akun</span></a>
         <?php endif; ?>
 
         <div class="nav-label">Akun</div>
@@ -805,6 +819,132 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         </div>
         <?php endif; // end is_admin tabs ?>
 
+        <?php if ($is_super_admin): ?>
+        <!-- ══════════════════════════
+             TAB: MANAJEMEN AKUN (Super Admin)
+        ══════════════════════════ -->
+        <div class="tab-content <?=$tab==='superadmin'?'active':''?>">
+            <!-- Flash messages -->
+            <?php
+            $sa_ok  = urldecode($_GET['success'] ?? '');
+            $sa_err = urldecode($_GET['error']   ?? '');
+            if ($sa_ok && $tab==='superadmin'): ?>
+            <div class="alert-ok"><i class="bi bi-check-circle-fill"></i> <?=e($sa_ok)?></div>
+            <?php endif; ?>
+            <?php if ($sa_err && $tab==='superadmin'): ?>
+            <div class="alert-err"><i class="bi bi-exclamation-triangle-fill"></i> <?=e($sa_err)?></div>
+            <?php endif; ?>
+
+            <div class="section-header">
+                <h2><i class="bi bi-shield-lock" style="color:var(--orange)"></i> Manajemen Akun</h2>
+                <button class="btn-primary" onclick="document.getElementById('modalBuatAkun').classList.add('open')"><i class="bi bi-person-plus"></i> Buat Akun Baru</button>
+            </div>
+
+            <!-- Stats ringkas -->
+            <?php
+            $total_users    = count($all_users_list);
+            $aktif_users    = count(array_filter($all_users_list, fn($u) => $u['status']==='Aktif'));
+            $nonaktif_users = $total_users - $aktif_users;
+            ?>
+            <div class="stats-row" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:4px">
+                <div class="stat-card" style="flex:1;min-width:120px;background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:14px 18px;text-align:center">
+                    <div style="font-size:1.6rem;font-weight:800;color:var(--orange)"><?=$total_users?></div>
+                    <div style="font-size:.72rem;color:var(--text-muted);font-weight:600">Total Akun</div>
+                </div>
+                <div class="stat-card" style="flex:1;min-width:120px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:14px 18px;text-align:center">
+                    <div style="font-size:1.6rem;font-weight:800;color:#2e7d32"><?=$aktif_users?></div>
+                    <div style="font-size:.72rem;color:#388e3c;font-weight:600">Akun Aktif</div>
+                </div>
+                <div class="stat-card" style="flex:1;min-width:120px;background:#fff0ee;border:1px solid #fbbcb8;border-radius:12px;padding:14px 18px;text-align:center">
+                    <div style="font-size:1.6rem;font-weight:800;color:#c0392b"><?=$nonaktif_users?></div>
+                    <div style="font-size:.72rem;color:#c0392b;font-weight:600">Nonaktif</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <?php if(empty($all_users_list)):?>
+                <div class="empty-big">
+                    <div class="e-icon-big"><i class="bi bi-people"></i></div>
+                    <div class="e-title">Belum ada data akun</div>
+                </div>
+                <?php else:?>
+                <!-- Filter role -->
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
+                    <span style="font-size:.78rem;font-weight:700;color:var(--text-muted)">Filter:</span>
+                    <button class="sa-filter-btn active" data-filter="semua" onclick="filterAkun(this,'semua')">Semua</button>
+                    <button class="sa-filter-btn" data-filter="Super Admin" onclick="filterAkun(this,'Super Admin')">Super Admin</button>
+                    <button class="sa-filter-btn" data-filter="Admin" onclick="filterAkun(this,'Admin')">Admin</button>
+                    <button class="sa-filter-btn" data-filter="Pengurus" onclick="filterAkun(this,'Pengurus')">Pengurus</button>
+                    <button class="sa-filter-btn" data-filter="Anggota" onclick="filterAkun(this,'Anggota')">Anggota</button>
+                    <button class="sa-filter-btn" data-filter="Nonaktif" onclick="filterAkun(this,'Nonaktif')">Nonaktif</button>
+                </div>
+                <style>
+                .sa-filter-btn{background:var(--cream);border:1.5px solid var(--border);color:var(--text-muted);font-size:.72rem;font-weight:700;padding:5px 13px;border-radius:999px;cursor:pointer;transition:.2s;font-family:var(--font)}
+                .sa-filter-btn.active,.sa-filter-btn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+                </style>
+                <div class="table-wrap">
+                    <table id="tblAkun">
+                        <thead><tr><th>#</th><th>Nama</th><th>NIM</th><th>Email</th><th>Role</th><th>Organisasi</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody>
+                        <?php foreach($all_users_list as $i=>$u):?>
+                        <tr data-role="<?=e($u['jabatan'])?>" data-status="<?=e($u['status'])?>">
+                            <td><?=$i+1?></td>
+                            <td style="font-weight:600"><?=e($u['nama'])?></td>
+                            <td style="font-size:.78rem;color:var(--text-muted)"><?=e($u['nim']??'-')?></td>
+                            <td style="font-size:.78rem"><?=e($u['email'])?></td>
+                            <td>
+                                <?php
+                                $role_colors = ['Super Admin'=>'#4a148c','Admin'=>'#1565c0','Pengurus'=>'#e65100','Anggota'=>'#2e7d32'];
+                                $rc = $role_colors[$u['jabatan']] ?? '#555';
+                                ?>
+                                <span style="background:<?=$rc?>22;color:<?=$rc?>;border:1px solid <?=$rc?>44;padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:700"><?=e($u['jabatan'])?></span>
+                            </td>
+                            <td style="font-size:.78rem"><?=e($u['organisasi']??'-')?></td>
+                            <td>
+                                <?php if($u['status']==='Aktif'):?>
+                                <span class="badge-aktif">Aktif</span>
+                                <?php else:?>
+                                <span class="badge-nonaktif">Nonaktif</span>
+                                <?php endif;?>
+                            </td>
+                            <td>
+                                <div style="display:flex;gap:6px;flex-wrap:wrap">
+                                    <!-- Edit -->
+                                    <button class="btn-sm-outline" onclick="openEditAkun(<?=htmlspecialchars(json_encode($u), ENT_QUOTES)?>)"><i class="bi bi-pencil"></i> Edit</button>
+                                    <!-- Reset Password -->
+                                    <button class="btn-sm-outline" style="color:#1565c0;border-color:#1565c0" onclick="openResetPw(<?=$u['id']?>, '<?=e($u['nama'])?>')"><i class="bi bi-key"></i> Reset PW</button>
+                                    <!-- Toggle Status -->
+                                    <?php if((int)$u['id'] !== $uid):?>
+                                    <?php if($u['status']==='Aktif'):?>
+                                    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php" style="display:inline" onsubmit="return confirm('Nonaktifkan akun <?=e($u['nama'])?>?')">
+                                        <input type="hidden" name="action" value="toggle_status_akun">
+                                        <input type="hidden" name="target_id" value="<?=$u['id']?>">
+                                        <input type="hidden" name="new_status" value="Nonaktif">
+                                        <button type="submit" class="btn-danger"><i class="bi bi-person-x"></i> Nonaktifkan</button>
+                                    </form>
+                                    <?php else:?>
+                                    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php" style="display:inline" onsubmit="return confirm('Aktifkan kembali akun <?=e($u['nama'])?>?')">
+                                        <input type="hidden" name="action" value="toggle_status_akun">
+                                        <input type="hidden" name="target_id" value="<?=$u['id']?>">
+                                        <input type="hidden" name="new_status" value="Aktif">
+                                        <button type="submit" class="btn-success"><i class="bi bi-person-check"></i> Aktifkan</button>
+                                    </form>
+                                    <?php endif;?>
+                                    <?php else:?>
+                                    <span style="font-size:.72rem;color:var(--text-muted);font-style:italic">Akun Anda</span>
+                                    <?php endif;?>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach;?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif;?>
+            </div>
+        </div>
+        <?php endif; // end is_super_admin ?>
+
     </main>
 </div>
 
@@ -1044,6 +1184,134 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 </div>
 <?php endif; ?>
 
+<?php if ($is_super_admin): ?>
+<!-- Modal: Buat Akun Baru (Super Admin) -->
+<div class="modal-backdrop" id="modalBuatAkun">
+<div class="modal-box" style="max-width:560px">
+    <div class="modal-title"><i class="bi bi-person-plus"></i> Buat Akun Baru</div>
+    <button class="modal-close" onclick="closeModal('modalBuatAkun')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php">
+        <input type="hidden" name="action" value="buat_akun">
+        <div class="form-row">
+            <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" required placeholder="Nama lengkap"></div>
+            <div class="form-group"><label>NIM</label><input type="text" name="nim" placeholder="Nomor induk mahasiswa"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="user@email.com"></div>
+            <div class="form-group"><label>Username</label><input type="text" name="username" placeholder="username_login"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>No. HP</label><input type="text" name="no_hp" placeholder="08xxxxxxxxxx"></div>
+            <div class="form-group"><label>Angkatan</label><input type="text" name="angkatan" placeholder="2024"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Password Awal *</label><input type="password" name="password" required placeholder="Min. 6 karakter"></div>
+            <div class="form-group"><label>Role *</label>
+                <select name="jabatan" required>
+                    <option value="Anggota">Anggota</option>
+                    <option value="Pengurus">Pengurus</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Super Admin">Super Admin</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi</label>
+                <select name="organisasi">
+                    <option value="">-- Tidak ada --</option>
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>"><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+            <div class="form-group"><label>Status Akun</label>
+                <select name="status">
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalBuatAkun')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-check-lg"></i> Buat Akun</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Modal: Edit Akun (Super Admin) -->
+<div class="modal-backdrop" id="modalEditAkun">
+<div class="modal-box" style="max-width:560px">
+    <div class="modal-title"><i class="bi bi-pencil-square"></i> Edit Data Akun</div>
+    <button class="modal-close" onclick="closeModal('modalEditAkun')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php">
+        <input type="hidden" name="action" value="update_akun">
+        <input type="hidden" name="target_id" id="editAkunId">
+        <div class="form-row">
+            <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" id="editAkunNama" required></div>
+            <div class="form-group"><label>NIM</label><input type="text" name="nim" id="editAkunNim"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Email *</label><input type="email" name="email" id="editAkunEmail" required></div>
+            <div class="form-group"><label>Username</label><input type="text" name="username" id="editAkunUsername"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>No. HP</label><input type="text" name="no_hp" id="editAkunNoHp"></div>
+            <div class="form-group"><label>Angkatan</label><input type="text" name="angkatan" id="editAkunAngkatan"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Role *</label>
+                <select name="jabatan" id="editAkunJabatan" required>
+                    <option value="Anggota">Anggota</option>
+                    <option value="Pengurus">Pengurus</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Super Admin">Super Admin</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Organisasi</label>
+                <select name="organisasi" id="editAkunOrg">
+                    <option value="">-- Tidak ada --</option>
+                    <?php foreach($org_options as $o):?>
+                    <option value="<?=e($o['slug'])?>"><?=e($o['nama'])?></option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
+        <div class="form-group"><label>Status Akun</label>
+            <select name="status" id="editAkunStatus">
+                <option value="Aktif">Aktif</option>
+                <option value="Nonaktif">Nonaktif</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalEditAkun')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-floppy"></i> Simpan Perubahan</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<!-- Modal: Reset Password (Super Admin) -->
+<div class="modal-backdrop" id="modalResetPw">
+<div class="modal-box" style="max-width:420px">
+    <div class="modal-title"><i class="bi bi-key"></i> Reset Password</div>
+    <button class="modal-close" onclick="closeModal('modalResetPw')"><i class="bi bi-x"></i></button>
+    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php">
+        <input type="hidden" name="action" value="reset_password">
+        <input type="hidden" name="target_id" id="resetPwId">
+        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px">Reset password untuk: <strong id="resetPwNama"></strong></p>
+        <div class="form-group"><label>Password Baru * <span style="font-weight:400;color:var(--text-muted)">(min. 6 karakter)</span></label>
+            <input type="password" name="new_password" required placeholder="Password baru">
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-cancel" onclick="closeModal('modalResetPw')">Batal</button>
+            <button type="submit" class="btn-primary"><i class="bi bi-check-lg"></i> Reset Password</button>
+        </div>
+    </form>
+</div>
+</div>
+<?php endif; // superadmin modals ?>
+
 <!-- Modal: Ganti Password -->
 <div class="modal-backdrop" id="modalPassword">
 <div class="modal-box">
@@ -1139,6 +1407,42 @@ overlay?.addEventListener('click', () => { sidebar.classList.remove('open'); ove
 
 // Flash auto-remove
 setTimeout(() => document.querySelectorAll('.flash').forEach(f => { f.style.opacity=0; setTimeout(()=>f.remove(),400); }), 4000);
+
+// ── Super Admin: filter tabel akun ───────────────────────────────
+function filterAkun(btn, filter) {
+    document.querySelectorAll('.sa-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#tblAkun tbody tr').forEach(tr => {
+        if (filter === 'semua') { tr.style.display = ''; return; }
+        if (filter === 'Nonaktif') {
+            tr.style.display = tr.dataset.status === 'Nonaktif' ? '' : 'none';
+        } else {
+            tr.style.display = tr.dataset.role === filter ? '' : 'none';
+        }
+    });
+}
+
+// ── Super Admin: buka modal edit akun ───────────────────────────
+function openEditAkun(u) {
+    document.getElementById('editAkunId').value        = u.id;
+    document.getElementById('editAkunNama').value      = u.nama      || '';
+    document.getElementById('editAkunNim').value       = u.nim       || '';
+    document.getElementById('editAkunEmail').value     = u.email     || '';
+    document.getElementById('editAkunUsername').value  = u.username  || '';
+    document.getElementById('editAkunNoHp').value      = u.no_hp     || '';
+    document.getElementById('editAkunAngkatan').value  = u.angkatan  || '';
+    document.getElementById('editAkunJabatan').value   = u.jabatan   || 'Anggota';
+    document.getElementById('editAkunOrg').value       = u.organisasi || '';
+    document.getElementById('editAkunStatus').value    = u.status    || 'Aktif';
+    document.getElementById('modalEditAkun').classList.add('open');
+}
+
+// ── Super Admin: buka modal reset password ───────────────────────
+function openResetPw(id, nama) {
+    document.getElementById('resetPwId').value  = id;
+    document.getElementById('resetPwNama').textContent = nama;
+    document.getElementById('modalResetPw').classList.add('open');
+}
 </script>
 
 <?php $page_js = []; require_once '../../components/footer_scripts.php'; ?>

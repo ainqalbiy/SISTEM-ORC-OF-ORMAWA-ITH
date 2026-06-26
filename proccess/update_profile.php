@@ -14,9 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $uid        = (int)$_SESSION['user_id'];
 $nama       = trim($_POST['nama']       ?? '');
 $no_hp      = trim($_POST['no_hp']      ?? '');
-$jabatan    = trim($_POST['jabatan']    ?? '');
 $organisasi = trim($_POST['organisasi'] ?? '');
 $angkatan   = trim($_POST['angkatan']  ?? '');
+
+// Jabatan HANYA bisa diubah oleh Super Admin — user biasa tidak bisa ubah role sendiri
+$current_jabatan = $_SESSION['jabatan'] ?? 'Anggota';
+$jabatan = $current_jabatan; // default: pertahankan role saat ini
 
 if (empty($nama)) {
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?tab=profil&error=Nama+tidak+boleh+kosong!');
