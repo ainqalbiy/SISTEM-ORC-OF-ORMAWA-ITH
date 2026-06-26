@@ -36,20 +36,20 @@ CREATE TABLE `users` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Akun demo (password plaintext: Admin123!)
+-- Akun demo (password plaintext: admin123)
 -- Super Admin
 INSERT INTO `users` (`nama`,`nim`,`email`,`username`,`no_hp`,`password`,`jabatan`,`organisasi`,`angkatan`,`status`) VALUES
 ('Super Admin ORC','000000000','superadmin@orc.ith.ac.id','superadmin','081200000000',
- '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ '$2b$12$8Fe2NtihsWa9L0m0Z62uWePrphLY64D4nmgNTNU4maB/lCCBttxtm',
  'Super Admin',NULL,NULL,'Aktif'),
 ('Administrator ORC','000000001','admin@orc.ith.ac.id','admin_orc','081200000099',
- '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ '$2b$12$8Fe2NtihsWa9L0m0Z62uWePrphLY64D4nmgNTNU4maB/lCCBttxtm',
  'Admin','BEM','2022','Aktif'),
 ('Demo Pengurus','241011002','pengurus@orc.ith.ac.id','pengurus_demo','081200000002',
- '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ '$2b$12$8Fe2NtihsWa9L0m0Z62uWePrphLY64D4nmgNTNU4maB/lCCBttxtm',
  'Pengurus','HCC','2023','Aktif'),
 ('Demo Mahasiswa','241011001','demo@orc.ith.ac.id','demo_mhs','081200000001',
- '$2y$12$Fz9wKGV3ZVnY2Oz4YGkFxeQzM7qcDZ0i6JgHBXSRiPnFjjpFXrRLG',
+ '$2b$12$8Fe2NtihsWa9L0m0Z62uWePrphLY64D4nmgNTNU4maB/lCCBttxtm',
  'Anggota','HCC','2024','Aktif');
 
 -- ============================================================
