@@ -118,16 +118,15 @@ if ($info === 'reg_disabled') {
           </button>
         </form>
 
-        <div class="flex items-center my-8">
-          <div class="flex-grow border-t border-gray-200"></div>
-          <span class="px-4 text-xs text-gray-400 font-medium uppercase tracking-widest">atau</span>
-          <div class="flex-grow border-t border-gray-200"></div>
+        <div class="mt-8 bg-orange-50 border border-orange-200 rounded-2xl px-6 py-4 text-center space-y-2">
+          <p class="text-sm text-orange-800 font-medium">
+            <i class="fas fa-sign-in-alt mr-1 opacity-70"></i>
+            Silakan login menggunakan Username &amp; Password Anda!
+          </p>
+          <p class="text-xs text-gray-500 leading-relaxed">
+            Belum memiliki akun? Silakan hubungi <strong class="text-orange-700">Super Admin</strong> atau pengurus organisasi Anda.
+          </p>
         </div>
-
-        <p class="text-sm text-gray-500 text-center">
-          <i class="fas fa-info-circle"></i>
-          Akun dibuat oleh <strong>Super Admin</strong> ORC ITH.
-        </p>
       </div>
     </div>
 
