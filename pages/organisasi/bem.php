@@ -112,20 +112,24 @@ require_once '../../components/navbar.php';
 
     <!-- Left Poster -->
     <div class="hero-poster-left">
-        <div class="poster-placeholder" style="height:300px;background:linear-gradient(160deg,#D8893D,#5C3518)">
-            <div class="logo-big">BEM</div>
-            <div class="event-title">FILOSOFT FESTIVAL<br>2026</div>
+            <img src="<?= $BASE ?>assets/img/bem/POSTER_FILOSOFI.jpeg" 
+                alt="Filosoft Festival 2026"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                onerror="this.style.display='none'">
+            <div class="logo-big" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; text-align:center; letter-spacing:.04em;">BEM</div>
+<div class="event-title" style="font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:700; color:rgba(255,255,255,.9); text-align:center; letter-spacing:.04em; line-height:1.5;">FILOSOFT FESTIVAL<br>2026</div>
         </div>
-        <div class="poster-label">Filosoft · Event Kampus</div>
     </div>
 
     <!-- Right Poster -->
     <div class="hero-poster-right">
-        <div class="poster-placeholder" style="height:260px;background:linear-gradient(160deg,#8C5A32,#2A1A08)">
-            <div class="logo-big" style="font-size:1.8rem">#FA8943</div>
-            <div class="event-title" style="font-size:.72rem">#925630</div>
+            <img src="<?= $BASE ?>assets/img/bem/POSTER_WARNA.jpeg" 
+                alt="FA8943"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                onerror="this.style.display='none'">   
+           <div class="logo-big" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; text-align:center; letter-spacing:.04em;">#FA8943</div>
+            <div class="event-title" style="font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:700; color:rgba(255,255,255,.9); text-align:center; letter-spacing:.04em;">#925630</div>
         </div>
-        <div class="poster-code">#BEM ITH 2026</div>
     </div>
 
     <!-- Center -->
