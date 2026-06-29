@@ -232,12 +232,10 @@ require_once '../../components/navbar.php';
         <h2>Momen &amp; Poster</h2>
     </div>
     <div class="poster-row">
-        <div class="poster-card" data-reveal>
+            <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%">
-                    <div class="logo-big">BEM</div>
-                    <div class="event-title">FILOSOFT<br>FESTIVAL</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/Filosoft festival.jpeg" alt="Filosoft Festival"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Event Kampus</div>
                     <div class="p-title">Filosoft Festival 2026</div>
@@ -246,10 +244,8 @@ require_once '../../components/navbar.php';
         </div>
         <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%;background:linear-gradient(160deg,#8C5A32,#2A1A08)">
-                    <div class="logo-big">🏆</div>
-                    <div class="event-title">HABIBIE<br>COMPETITION</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/Habibie Competition.jpeg" alt="Habibie Competition"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Kompetisi Nasional</div>
                     <div class="p-title">Habibie Competition 2025</div>
@@ -258,10 +254,8 @@ require_once '../../components/navbar.php';
         </div>
         <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%;background:linear-gradient(160deg,#E6B07B,#8C5A32)">
-                    <div class="logo-big">🎯</div>
-                    <div class="event-title">OPEN<br>RECRUITMENT</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/open recruitment BEM ITH.jpeg" alt="Open Recruitment"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Rekrutmen Anggota</div>
                     <div class="p-title">Open Recruitment BEM ITH</div>
