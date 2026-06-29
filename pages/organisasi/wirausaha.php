@@ -24,9 +24,9 @@ $poster_r_grad = 'linear-gradient(160deg,#C96511,#5C2E0A)';
 $poster_r_label = 'WITH ITH 2026';
 
 $org_collage = [
-    ['class'=>'tall','grad'=>'linear-gradient(160deg,#1B3A1F,#2E7D32)','icon'=>'💼','label'=>'Business Plan','img'=>'assets/img/with/with-1.jpeg'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🚀','label'=>'Startup Pitching','img'=>'assets/img/with/with-2.jpeg'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#2E7D32,#1B3A1F)','icon'=>'🤝','label'=>'Networking Event','img'=>'assets/img/with/with-3.jpeg'],
+    ['class'=>'tall','grad'=>'linear-gradient(160deg,#1B3A1F,#2E7D32)','icon'=>'💼','label'=>'Business Plan'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🚀','label'=>'Startup Pitching'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#2E7D32,#1B3A1F)','icon'=>'🤝','label'=>'Networking Event'],
 ];
 
 $org_posters = [
