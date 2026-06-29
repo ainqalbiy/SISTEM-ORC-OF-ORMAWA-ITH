@@ -79,6 +79,7 @@ $programs = [
         'desc'  => 'Pekan Olahraga dan Seni ITH — ajang kompetisi antar mahasiswa dalam bidang olahraga, seni, dan kreativitas kampus.',
         'icon'  => '🏆',
         'color' => 'linear-gradient(135deg,#D8893D,#8C5A32)',
+        'img'   => $BASE . 'assets/img/bem/PORSENI_ITH.jpeg',
     ],
     [
         'cat'   => 'Budaya & Kreativitas',
@@ -86,6 +87,7 @@ $programs = [
         'desc'  => 'Festival seni tahunan yang menampilkan pertunjukan teater, musik, pameran karya, dan ekspresi kreatif mahasiswa ITH.',
         'icon'  => '🎨',
         'color' => 'linear-gradient(135deg,#E6B07B,#D8893D)',
+        'img'   => $BASE . 'assets/img/bem/FESTIVAL_SENI_ITH.jpeg',
     ],
     [
         'cat'   => 'Akademik & Kompetisi',
@@ -93,6 +95,7 @@ $programs = [
         'desc'  => 'Kompetisi ilmiah dan teknologi bergengsi tingkat nasional yang diselenggarakan oleh BEM ITH setiap tahunnya.',
         'icon'  => '🚀',
         'color' => 'linear-gradient(135deg,#5C3518,#8C5A32)',
+        'img'   => $BASE . 'assets/img/bem/HABIBIE_COMPETITION.jpeg',
     ],
 ];
 
@@ -277,12 +280,13 @@ require_once '../../components/navbar.php';
         <div class="programs-grid">
             <?php foreach ($programs as $i => $p): ?>
             <div class="program-card" data-reveal style="animation-delay: <?= $i * .12 ?>s">
-                <div class="program-img">
-                    <div class="program-img-placeholder" style="background: <?= $p['color'] ?>">
-                        <span style="font-size:2.5rem"><?= $p['icon'] ?></span>
-                        <span><?= htmlspecialchars($p['cat']) ?></span>
-                    </div>
-                </div>
+               <div class="program-img">
+                <img
+                    src="<?= htmlspecialchars($p['img']) ?>"
+                    alt="<?= htmlspecialchars($p['title']) ?>"
+                    class="program-image"
+                    onerror="this.src='<?= $BASE ?>assets/img/default-event.jpg';">
+            </div>
                 <div class="program-body">
                     <div class="program-cat"><?= htmlspecialchars($p['cat']) ?></div>
                     <div class="program-title"><?= htmlspecialchars($p['title']) ?></div>
