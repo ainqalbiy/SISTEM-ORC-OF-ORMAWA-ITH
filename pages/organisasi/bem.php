@@ -79,7 +79,6 @@ $programs = [
         'desc'  => 'Pekan Olahraga dan Seni ITH — ajang kompetisi antar mahasiswa dalam bidang olahraga, seni, dan kreativitas kampus.',
         'icon'  => '🏆',
         'color' => 'linear-gradient(135deg,#D8893D,#8C5A32)',
-        'img'   => $BASE . 'assets/img/bem/PORSENI_ITH.jpeg',
     ],
     [
         'cat'   => 'Budaya & Kreativitas',
@@ -87,7 +86,6 @@ $programs = [
         'desc'  => 'Festival seni tahunan yang menampilkan pertunjukan teater, musik, pameran karya, dan ekspresi kreatif mahasiswa ITH.',
         'icon'  => '🎨',
         'color' => 'linear-gradient(135deg,#E6B07B,#D8893D)',
-        'img'   => $BASE . 'assets/img/bem/FESTIVAL_SENI_ITH.jpeg',
     ],
     [
         'cat'   => 'Akademik & Kompetisi',
@@ -95,7 +93,6 @@ $programs = [
         'desc'  => 'Kompetisi ilmiah dan teknologi bergengsi tingkat nasional yang diselenggarakan oleh BEM ITH setiap tahunnya.',
         'icon'  => '🚀',
         'color' => 'linear-gradient(135deg,#5C3518,#8C5A32)',
-        'img'   => $BASE . 'assets/img/bem/HABIBIE_COMPETITION.jpeg',
     ],
 ];
 
@@ -188,29 +185,23 @@ require_once '../../components/navbar.php';
                 </div>
             </div>
 
-            <!-- Right: Photo Collage -->
+           <!-- Right: Photo Collage -->
             <div class="about-right" data-reveal-right>
                 <div class="photo-collage">
                     <!-- Card 1 — tall left -->
                     <div class="photo-card tall">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#E6B07B,#D8893D)">
-                            <span>🏆</span>
-                            <span>Habibie Competition</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 2.jpeg" alt="LKKM-TD 2025"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                     <!-- Card 2 — top right -->
                     <div class="photo-card">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#D8893D,#8C5A32)">
-                            <span>🎓</span>
-                            <span>Seminar Nasional</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 3.jpeg" alt="Pelatihan KTI"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                     <!-- Card 3 — bottom right -->
                     <div class="photo-card">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#8C5A32,#5C3518)">
-                            <span>📋</span>
-                            <span>Kepanitiaan</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 4.jpeg" alt="Festival Seni ITH"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                 </div>
             </div>
@@ -241,12 +232,10 @@ require_once '../../components/navbar.php';
         <h2>Momen &amp; Poster</h2>
     </div>
     <div class="poster-row">
-        <div class="poster-card" data-reveal>
+            <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%">
-                    <div class="logo-big">BEM</div>
-                    <div class="event-title">FILOSOFT<br>FESTIVAL</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/Filosoft festival.jpeg" alt="Filosoft Festival"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Event Kampus</div>
                     <div class="p-title">Filosoft Festival 2026</div>
@@ -255,10 +244,8 @@ require_once '../../components/navbar.php';
         </div>
         <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%;background:linear-gradient(160deg,#8C5A32,#2A1A08)">
-                    <div class="logo-big">🏆</div>
-                    <div class="event-title">HABIBIE<br>COMPETITION</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/Habibie Competition.jpeg" alt="Habibie Competition"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Kompetisi Nasional</div>
                     <div class="p-title">Habibie Competition 2025</div>
@@ -267,10 +254,8 @@ require_once '../../components/navbar.php';
         </div>
         <div class="poster-card" data-reveal>
             <div class="poster-card-inner">
-                <div class="poster-placeholder" style="width:100%;height:100%;background:linear-gradient(160deg,#E6B07B,#8C5A32)">
-                    <div class="logo-big">🎯</div>
-                    <div class="event-title">OPEN<br>RECRUITMENT</div>
-                </div>
+                <img src="<?= $BASE ?>assets/img/bem/open recruitment BEM ITH.jpeg" alt="Open Recruitment"
+                    style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                 <div class="poster-content">
                     <div class="p-tag">Rekrutmen Anggota</div>
                     <div class="p-title">Open Recruitment BEM ITH</div>
@@ -293,14 +278,7 @@ require_once '../../components/navbar.php';
             <?php foreach ($programs as $i => $p): ?>
             <div class="program-card" data-reveal style="animation-delay: <?= $i * .12 ?>s">
                 <div class="program-img">
-                    <?php if (!empty($p['img'])): ?>
-                    <img src="<?= $p['img'] ?>"
-                         alt="<?= htmlspecialchars($p['title']) ?>"
-                         style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                    <?php endif; ?>
-                    <div class="program-img-placeholder"
-                         style="background:<?= $p['color'] ?>;<?= !empty($p['img']) ? 'display:none' : '' ?>">
+                    <div class="program-img-placeholder" style="background: <?= $p['color'] ?>">
                         <span style="font-size:2.5rem"><?= $p['icon'] ?></span>
                         <span><?= htmlspecialchars($p['cat']) ?></span>
                     </div>
