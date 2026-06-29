@@ -136,12 +136,17 @@ require_once '../../components/navbar.php';
     <div class="about-right" data-reveal-right>
         <div class="photo-collage">
             <?php foreach ($org_collage as $c): ?>
-            <div class="photo-card <?= $c['class'] ?? '' ?>">
-                <div class="photo-placeholder" style="background:<?= $c['grad'] ?>">
-                    <span><?= $c['icon'] ?></span>
-                    <span><?= e($c['label']) ?></span>
-                </div>
+           <div class="photo-card <?= $c['class'] ?? '' ?>">
+    <?php if (!empty($c['img'])): ?>
+    <img src="<?= $BASE . e($c['img']) ?>" alt="<?= e($c['label']) ?>"
+         style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+    <?php else: ?>
+            <div class="photo-placeholder" style="background:<?= $c['grad'] ?>">
+                <span><?= $c['icon'] ?></span>
+                <span><?= e($c['label']) ?></span>
             </div>
+            <?php endif; ?>
+        </div>
             <?php endforeach; ?>
         </div>
     </div>

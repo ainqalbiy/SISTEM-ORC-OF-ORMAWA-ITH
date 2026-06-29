@@ -185,29 +185,23 @@ require_once '../../components/navbar.php';
                 </div>
             </div>
 
-            <!-- Right: Photo Collage -->
+           <!-- Right: Photo Collage -->
             <div class="about-right" data-reveal-right>
                 <div class="photo-collage">
                     <!-- Card 1 — tall left -->
                     <div class="photo-card tall">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#E6B07B,#D8893D)">
-                            <span>🏆</span>
-                            <span>Habibie Competition</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 2.jpeg" alt="LKKM-TD 2025"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                     <!-- Card 2 — top right -->
                     <div class="photo-card">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#D8893D,#8C5A32)">
-                            <span>🎓</span>
-                            <span>Seminar Nasional</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 3.jpeg" alt="Pelatihan KTI"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                     <!-- Card 3 — bottom right -->
                     <div class="photo-card">
-                        <div class="photo-placeholder" style="background:linear-gradient(160deg,#8C5A32,#5C3518)">
-                            <span>📋</span>
-                            <span>Kepanitiaan</span>
-                        </div>
+                        <img src="<?= $BASE ?>assets/img/bem/BEM 4.jpeg" alt="Festival Seni ITH"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
                 </div>
             </div>
