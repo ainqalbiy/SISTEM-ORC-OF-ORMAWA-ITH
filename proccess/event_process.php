@@ -38,10 +38,10 @@ if ($action === 'tambah') {
             exit;
         }
         $fname = 'event_' . time() . '_' . rand(100,999) . '.' . $ext;
-        $dest  = __DIR__ . '/../uploads/event/' . $fname;
+        $dest  = __DIR__ . '/../assets/img/event/' . $fname;
         if (!is_dir(dirname($dest))) mkdir(dirname($dest), 0755, true);
         if (move_uploaded_file($_FILES['banner']['tmp_name'], $dest)) {
-            $banner_path = 'uploads/event/' . $fname;
+            $banner_path = 'assets/img/event/' . $fname;
         }
     }
 
@@ -83,14 +83,14 @@ if ($action === 'edit') {
         $allowed = ['jpg','jpeg','png','gif','webp'];
         if (in_array($ext, $allowed)) {
             $fname = 'event_' . time() . '_' . rand(100,999) . '.' . $ext;
-            $dest  = __DIR__ . '/../uploads/event/' . $fname;
+            $dest  = __DIR__ . '/../assets/img/event/' . $fname;
             if (!is_dir(dirname($dest))) mkdir(dirname($dest), 0755, true);
             if (move_uploaded_file($_FILES['banner']['tmp_name'], $dest)) {
                 // Hapus banner lama
                 if ($banner_path && file_exists(__DIR__ . '/../' . $banner_path)) {
                     @unlink(__DIR__ . '/../' . $banner_path);
                 }
-                $banner_path = 'uploads/event/' . $fname;
+                $banner_path = 'assets/img/event/' . $fname;
             }
         }
     }

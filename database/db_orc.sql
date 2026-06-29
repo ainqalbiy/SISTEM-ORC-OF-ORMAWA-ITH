@@ -193,13 +193,13 @@ CREATE TABLE `event_organisasi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data demo event
-INSERT INTO `event_organisasi` (`judul`,`organisasi_slug`,`nama_organisasi`,`tanggal`,`lokasi`,`deskripsi`,`user_id`) VALUES
-('Habibie Robotic Competition 2026','hero','HERO – ITH','2026-08-05','Lapangan Kampus ITH','Kompetisi robotika antar kampus tingkat nasional yang diselenggarakan oleh HERO ITH.',1),
-('HCC Coding Bootcamp 2026','hcc','HCC – ITH','2026-07-20','Lab Komputer Lantai 3','Bootcamp intensif pemrograman web dan mobile selama 3 hari untuk mahasiswa ITH.',1),
-('Seminar Nasional Teknologi & Inovasi','bem','BEM – ITH','2026-07-15','Aula Utama ITH Parepare','Seminar nasional membahas perkembangan teknologi dan inovasi terkini di era digital.',1),
-('Pameran Seni ARATTA 2026','aratta','ARATTA – ITH','2026-07-10','Gedung Serbaguna ITH','Pameran karya seni mahasiswa ITH: lukisan, fotografi, dan pertunjukan musik live.',1),
-('Workshop Kewirausahaan Digital','wirausaha','Wirausaha (WITH) – ITH','2026-07-05','Ruang Seminar Kampus ITH','Workshop praktis membangun bisnis digital dari nol bersama mentor berpengalaman.',1),
-('Malam Keakraban BEM ITH 2026','bem','BEM – ITH','2026-06-28','Lapangan Olahraga ITH','Malam keakraban dan pelantikan pengurus BEM ITH periode 2026/2027.',1);
+INSERT INTO `event_organisasi` (`judul`,`organisasi_slug`,`nama_organisasi`,`tanggal`,`lokasi`,`deskripsi`,`banner`,`user_id`) VALUES
+('Habibie Robotic Competition 2026','hero','HERO – ITH','2026-08-05','Lapangan Kampus ITH','Kompetisi robotika antar kampus tingkat nasional yang diselenggarakan oleh HERO ITH.','assets/img/event/event_1782479869_256.jpeg',1),
+('HCC Coding Bootcamp 2026','hcc','HCC – ITH','2026-07-20','Lab Komputer Lantai 3','Bootcamp intensif pemrograman web dan mobile selama 3 hari untuk mahasiswa ITH.','assets/img/event/event_1782481247_734.jpeg',1),
+('Seminar Nasional Teknologi & Inovasi','bem','BEM – ITH','2026-07-15','Aula Utama ITH Parepare','Seminar nasional membahas perkembangan teknologi dan inovasi terkini di era digital.','assets/img/event/event_1782481287_787.jpeg',1),
+('Pameran Seni ARATTA 2026','aratta','ARATTA – ITH','2026-07-10','Gedung Serbaguna ITH','Pameran karya seni mahasiswa ITH: lukisan, fotografi, dan pertunjukan musik live.','assets/img/event/event_1782481326_296.jpeg',1),
+('Workshop Kewirausahaan Digital','wirausaha','Wirausaha (WITH) – ITH','2026-07-05','Ruang Seminar Kampus ITH','Workshop praktis membangun bisnis digital dari nol bersama mentor berpengalaman.','assets/img/event/event_1782707321_126.jpeg',1),
+('Malam Keakraban BEM ITH 2026','bem','BEM – ITH','2026-06-28','Lapangan Olahraga ITH','Malam keakraban dan pelantikan pengurus BEM ITH periode 2026/2027.','assets/img/event/event_1782707608_899.jpeg',1);
 
 -- ============================================================
 --  FOREIGN KEYS
