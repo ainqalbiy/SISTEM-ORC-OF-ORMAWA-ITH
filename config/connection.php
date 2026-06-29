@@ -17,22 +17,18 @@ if ($conn->connect_error) {
 }
 $conn->set_charset("utf8mb4");
 
-// ── BASE_URL — cara paling reliable lintas setup XAMPP/Laragon/dll ─
+// ── BASE_URL — dinamis, tidak bergantung nama folder ──────────────
 if (!defined('BASE_URL')) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
-    $root_dir  = str_replace('\\', '/', realpath(__DIR__ . '/..'));
-    $doc_root  = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? $root_dir));
+    $root_dir = str_replace('\\', '/', realpath(__DIR__ . '/..'));
+    $doc_root = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'] ?? ''));
 
-    if (strpos($root_dir, $doc_root) === 0) {
+    if ($doc_root && strpos($root_dir, $doc_root) === 0) {
         $base_path = substr($root_dir, strlen($doc_root));
     } else {
-        $script = str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME'] ?? '');
-        $base_path = '';
-        if (preg_match('#(/[^/]+/orc_fixed)#', str_replace($doc_root, '', $script), $m)) {
-            $base_path = $m[1];
-        }
+        $base_path = '/' . basename($root_dir);
     }
 
     $base_path = '/' . trim($base_path, '/') . '/';
