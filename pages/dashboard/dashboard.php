@@ -105,7 +105,7 @@ require_once '../../components/header.php';
 <style>
 /* ── TAB & PAGE-SPECIFIC ─────────────────────────────── */
 .tab-content { display:none; }
-.tab-content.active { display:flex; flex-direction:column; gap:18px; animation:fadeUp .38s both; }
+.tab-content.active { display:flex; flex-direction:column; gap:18px; min-width:0; animation:fadeUp .38s both; }
 .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
 .section-header h2 { font-size:1rem; font-weight:800; color:var(--text-dark); }
 .btn-primary {
@@ -199,15 +199,33 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .empty-big .e-title { font-size:.95rem; font-weight:700; color:var(--text-mid); margin-bottom:5px; }
 .empty-big .e-sub { font-size:.8rem; color:var(--text-muted); line-height:1.6; max-width:240px; margin-bottom:20px; }
 
-/* EVENT CARDS — horizontal scroll */
-.event-scroll-wrap { overflow-x:auto; padding-bottom:12px; }
-.event-scroll-inner { display:flex; gap:16px; min-width:max-content; padding:4px 2px; }
+/* EVENT CARDS — horizontal scroll (pola sama seperti homepage) */
+.event-scroll-wrapper {
+  position:relative; display:flex; align-items:center; gap:10px;
+}
+.event-scroll-wrap {
+  display:flex; gap:16px; overflow-x:auto; flex:1; min-width:0;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; -ms-overflow-style:none;
+  padding:4px 2px 12px;
+}
+.event-scroll-wrap::-webkit-scrollbar { display:none; }
+.event-scroll-btn {
+  width:40px; height:40px; border-radius:50%; background:#fff;
+  border:1.5px solid var(--border); color:var(--orange,#c95611); font-size:1.05rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; flex-shrink:0; box-shadow:0 2px 10px rgba(0,0,0,.08); transition:.2s;
+}
+.event-scroll-btn:hover:not(:disabled) { background:var(--orange,#c95611); color:#fff; }
+.event-scroll-btn:disabled { opacity:.35; cursor:not-allowed; }
 .event-card {
     flex:0 0 280px; background:#fff; border:1px solid var(--border);
     border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.07);
-    display:flex; flex-direction:column; transition:box-shadow .2s;
+    display:flex; flex-direction:column; transition:transform .22s, box-shadow .22s;
+    scroll-snap-align:start;
 }
-.event-card:hover { box-shadow:0 6px 24px rgba(0,0,0,.13); }
+.event-card:hover { transform:translateY(-4px); box-shadow:0 6px 24px rgba(0,0,0,.13); }
 .event-card-banner {
     width:100%; height:140px; object-fit:cover;
     background:linear-gradient(135deg,var(--orange,#c95611),#e8956d);
@@ -220,6 +238,10 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 .event-card-org   { font-size:.72rem; font-weight:700; color:var(--orange,#c95611); }
 .event-card-meta  { font-size:.72rem; color:var(--text-muted); display:flex; align-items:center; gap:5px; margin-top:2px; }
 .event-card-desc  { font-size:.75rem; color:var(--text-mid); line-height:1.5; margin-top:4px; flex:1; }
+@media (max-width:640px) {
+    .event-scroll-btn { width:34px; height:34px; font-size:.92rem; }
+    .event-card { flex:0 0 240px; }
+}
 
 /* ORG CARD with image */
 .org-img-card {
@@ -440,8 +462,11 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                     <div class="e-sub">Event organisasi yang tersedia akan muncul di sini</div>
                 </div>
                 <?php else:?>
-                <div class="event-scroll-wrap">
-                    <div class="event-scroll-inner">
+                <div class="event-scroll-wrapper">
+                    <button class="event-scroll-btn left" aria-label="Geser ke kiri" disabled>
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <div class="event-scroll-wrap">
                         <?php foreach($event_list as $ev):?>
                         <div class="event-card">
                             <div class="event-card-banner">
@@ -463,6 +488,9 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                         </div>
                         <?php endforeach;?>
                     </div>
+                    <button class="event-scroll-btn right" aria-label="Geser ke kanan">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
                 </div>
                 <?php endif;?>
             </div>
@@ -1397,6 +1425,28 @@ if (toast) {
     tClose?.addEventListener('click', dismissToast);
     toast.addEventListener('click', dismissToast);
 }
+
+// ── Event Organisasi: scroll horizontal pakai tombol (pola sama seperti homepage) ──
+document.querySelectorAll('.event-scroll-wrapper').forEach(wrapper => {
+    const track   = wrapper.querySelector('.event-scroll-wrap');
+    const btnLeft = wrapper.querySelector('.event-scroll-btn.left');
+    const btnRight= wrapper.querySelector('.event-scroll-btn.right');
+    if (!track || !btnLeft || !btnRight) return;
+
+    const card = track.querySelector('.event-card');
+    const STEP = card ? card.getBoundingClientRect().width + 16 : 296;
+
+    function updateButtons() {
+        btnLeft.disabled  = track.scrollLeft < 10;
+        btnRight.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 10;
+    }
+
+    btnLeft.addEventListener('click', () => track.scrollBy({ left: -STEP, behavior: 'smooth' }));
+    btnRight.addEventListener('click', () => track.scrollBy({ left: STEP, behavior: 'smooth' }));
+    track.addEventListener('scroll', updateButtons);
+
+    updateButtons();
+});
 
 // Sidebar toggle (mobile)
 const sidebar = document.getElementById('sidebar');
