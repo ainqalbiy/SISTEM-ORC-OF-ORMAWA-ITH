@@ -22,6 +22,8 @@ $poster_l_grad = 'linear-gradient(160deg,#3E1A47,#7B2D8B)';
 $poster_l_label = 'FESTIVAL SENI<br>ITH 2026';
 $poster_r_grad = 'linear-gradient(160deg,#C96511,#5C2E0A)';
 $poster_r_label = 'ARATTA ITH 2026';
+$poster_l_img  = 'assets/img/aratta/festival_seni.jpeg';
+$poster_r_img  = 'assets/img/aratta/logo_aratta.jpeg';
 
 $org_collage = [
     ['class'=>'tall','img'=>'assets/img/aratta/festival_seni.jpeg','grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','label'=>'Festival Seni'],
