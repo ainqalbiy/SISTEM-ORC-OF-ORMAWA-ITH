@@ -57,7 +57,7 @@ require_once '../../components/navbar.php';
         <?php if (!empty($poster_r_img)): ?>
          <div style="height:260px;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_name) ?>"
-                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;filter:brightness(1.5);"g
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;filter:brightness(1.5);"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="logo-big" style="display:none;font-size:1.5rem"><?= $org_logo_fallback ?></div>
         </div>
@@ -186,12 +186,7 @@ require_once '../../components/navbar.php';
             <div class="program-img">
                 <?php if (!empty($p['img'])): ?>
                 <img src="<?= $BASE . e($p['img']) ?>" alt="<?= htmlspecialchars($p['title']) ?>"
-                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
-                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div class="program-img-placeholder" style="background:<?= $p['color'] ?>;display:none">
-                    <span style="font-size:2.5rem"><?= $p['icon'] ?></span>
-                    <span><?= htmlspecialchars($p['cat']) ?></span>
-                </div>
+                     style="width:100%;height:100%;object-fit:cover;">
                 <?php else: ?>
                 <div class="program-img-placeholder" style="background:<?= $p['color'] ?>">
                     <span style="font-size:2.5rem"><?= $p['icon'] ?></span>

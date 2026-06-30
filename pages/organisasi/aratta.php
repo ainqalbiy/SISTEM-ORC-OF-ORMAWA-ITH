@@ -36,11 +36,10 @@ $org_posters = [
 ];
 
 $programs = [
-    ['cat'=>'Festival Tahunan','title'=>'Festival Seni ITH','desc'=>'Festival seni tahunan yang menampilkan pertunjukan teater, musik, tari tradisional dan modern, serta pameran karya visual mahasiswa.','icon'=>'🎭','color'=>'linear-gradient(135deg,#3E1A47,#7B2D8B)'],
-    ['cat'=>'Pertunjukan Musik','title'=>'Pentas Musik Kampus','desc'=>'Konser dan pentas musik rutin yang memberikan panggung bagi mahasiswa berbakat untuk tampil dan berkolaborasi bersama.','icon'=>'🎵','color'=>'linear-gradient(135deg,#C96511,#5C2E0A)'],
-    ['cat'=>'Seni Visual','title'=>'Pameran Karya Visual','desc'=>'Pameran karya seni visual mahasiswa — fotografi, ilustrasi, desain grafis, dan instalasi seni yang dipamerkan untuk civitas kampus.','icon'=>'🎨','color'=>'linear-gradient(135deg,#7B2D8B,#3E1A47)'],
+    ['cat'=>'Festival Tahunan','title'=>'Festival Seni ITH','desc'=>'Festival seni tahunan yang menampilkan pertunjukan teater, musik, tari tradisional dan modern, serta pameran karya visual mahasiswa.','icon'=>'🎭','color'=>'linear-gradient(135deg,#3E1A47,#7B2D8B)','img'=>'assets/img/aratta/FESTIVAL_ITH.jpeg'],
+    ['cat'=>'Pertunjukan Musik','title'=>'Pentas Musik Kampus','desc'=>'Konser dan pentas musik rutin yang memberikan panggung bagi mahasiswa berbakat untuk tampil dan berkolaborasi bersama.','icon'=>'🎵','color'=>'linear-gradient(135deg,#C96511,#5C2E0A)','img'=>'assets/img/aratta/PENTAS_MUSIK_KAMPUS.jpeg'],
+    ['cat'=>'Seni Visual','title'=>'Pameran Karya Visual','desc'=>'Pameran karya seni visual mahasiswa — fotografi, ilustrasi, desain grafis, dan instalasi seni yang dipamerkan untuk civitas kampus.','icon'=>'🎨','color'=>'linear-gradient(135deg,#7B2D8B,#3E1A47)','img'=>'assets/img/aratta/PAMERAN_KARYA_VISUAL.jpeg'],
 ];
-
 $contact_email = 'aratta@ith.ac.id';
 
 require '_org_template.php';
