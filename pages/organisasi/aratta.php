@@ -24,9 +24,9 @@ $poster_r_grad = 'linear-gradient(160deg,#C96511,#5C2E0A)';
 $poster_r_label = 'ARATTA ITH 2026';
 
 $org_collage = [
-    ['class'=>'tall','grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','label'=>'Festival Seni'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','label'=>'Pentas Musik'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#7B2D8B,#3E1A47)','icon'=>'🎨','label'=>'Pameran Karya'],
+    ['class'=>'tall','img'=>'assets/img/aratta/festival_seni.jpeg','grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','label'=>'Festival Seni'],
+    ['class'=>'',    'img'=>'assets/img/aratta/pentas_musik.jpeg','grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','label'=>'Pentas Musik'],
+    ['class'=>'',    'img'=>'assets/img/aratta/pameran_karya.jpeg','grad'=>'linear-gradient(160deg,#7B2D8B,#3E1A47)','icon'=>'🎨','label'=>'Pameran Karya'],
 ];
 
 $org_posters = [
