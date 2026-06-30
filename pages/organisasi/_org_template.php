@@ -38,17 +38,11 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-left">
         <?php if (!empty($poster_l_img)): ?>
-<<<<<<< HEAD
-        <div class="poster-placeholder" style="height:300px;padding:0;overflow:hidden">
-            <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_slug) ?>"
-                 style="width:100%;height:100%;object-fit:cover;display:block">
-=======
         <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_name) ?>"
                  style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="logo-big" style="display:none"><?= $org_logo_fallback ?></div>
->>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
         </div>
         <?php else: ?>
         <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>">
@@ -61,17 +55,11 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-right">
         <?php if (!empty($poster_r_img)): ?>
-<<<<<<< HEAD
-        <div class="poster-placeholder" style="height:260px;padding:0;overflow:hidden">
-            <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_slug) ?>"
-                 style="width:100%;height:100%;object-fit:cover;display:block">
-=======
         <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_name) ?>"
                  style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="logo-big" style="display:none;font-size:1.5rem"><?= $org_logo_fallback ?></div>
->>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
         </div>
         <?php else: ?>
         <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>">
@@ -164,16 +152,11 @@ require_once '../../components/navbar.php';
     <div class="poster-card" data-reveal>
         <div class="poster-card-inner">
             <?php if (!empty($p['img'])): ?>
-<<<<<<< HEAD
-            <img src="<?= $BASE . e($p['img']) ?>" alt="<?= e($p['title']) ?>"
-                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
-=======
             <div class="poster-placeholder" style="width:100%;height:100%;background:<?= $p['grad'] ?>;padding:0;overflow:hidden">
                 <img src="<?= $BASE . e($p['img']) ?>" alt="<?= e($p['title']) ?>"
                      style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
                      onerror="this.style.display='none';this.parentElement.style.display='flex'">
             </div>
->>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
             <?php else: ?>
             <div class="poster-placeholder" style="width:100%;height:100%;background:<?= $p['grad'] ?>">
                 <div class="logo-big"><?= $p['icon'] ?></div>

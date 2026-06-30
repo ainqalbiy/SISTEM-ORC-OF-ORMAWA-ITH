@@ -20,21 +20,19 @@ $hero_grad_r   = '#B85C00';
 
 $poster_l_grad = 'linear-gradient(160deg,#1a3a5c,#0D1B2A)';
 $poster_l_label = 'HABIBIE ROBOTIC<br>COMPETITION';
-$poster_l_img  = 'assets/img/hero/poster-kiri.jpeg';   // ganti dengan foto Anda
 $poster_r_grad = 'linear-gradient(160deg,#B85C00,#5C2E0A)';
 $poster_r_label = 'HERO ITH 2026';
-$poster_r_img  = 'assets/img/hero/poster-kanan.jpeg';  // ganti dengan foto Anda
 
 $org_collage = [
-    ['class'=>'tall','grad'=>'linear-gradient(160deg,#1a3a5c,#0D1B2A)','icon'=>'🤖','label'=>'Robot Competition','img'=>'assets/img/hero/collage-1.jpeg'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#B85C00,#5C2E0A)','icon'=>'⚙️','label'=>'Workshop IoT','img'=>'assets/img/hero/collage-2.jpeg'],
-    ['class'=>'',    'grad'=>'linear-gradient(160deg,#2d5986,#1a3a5c)','icon'=>'💡','label'=>'Inovasi Teknik','img'=>'assets/img/hero/collage-3.jpeg'],
+    ['class'=>'tall','grad'=>'linear-gradient(160deg,#1a3a5c,#0D1B2A)','icon'=>'🤖','label'=>'Robot Competition'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#B85C00,#5C2E0A)','icon'=>'⚙️','label'=>'Workshop IoT'],
+    ['class'=>'',    'grad'=>'linear-gradient(160deg,#2d5986,#1a3a5c)','icon'=>'💡','label'=>'Inovasi Teknik'],
 ];
 
 $org_posters = [
-    ['grad'=>'linear-gradient(160deg,#0D1B2A,#1a3a5c)','icon'=>'🤖','title'=>'HABIBIE ROBOTIC COMPETITION','tag'=>'Kompetisi Robotik','subtitle'=>'Habibie Robotic Competition 2025','img'=>'assets/img/hero/poster-robotic.jpeg'],
-    ['grad'=>'linear-gradient(160deg,#B85C00,#5C2E0A)','icon'=>'⚙️','title'=>'WORKSHOP IOT & PROGRAMMING','tag'=>'Workshop Teknologi','subtitle'=>'Workshop IoT & Programming HERO','img'=>'assets/img/hero/poster-workshop.jpeg'],
-    ['grad'=>'linear-gradient(160deg,#1a3a5c,#B85C00)','icon'=>'🎯','title'=>'OPEN RECRUITMENT HERO','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment HERO ITH 2026','img'=>'assets/img/hero/poster-recruitment.jpeg'],
+    ['grad'=>'linear-gradient(160deg,#0D1B2A,#1a3a5c)','icon'=>'🤖','title'=>'HABIBIE ROBOTIC COMPETITION','tag'=>'Kompetisi Robotik','subtitle'=>'Habibie Robotic Competition 2025'],
+    ['grad'=>'linear-gradient(160deg,#B85C00,#5C2E0A)','icon'=>'⚙️','title'=>'WORKSHOP IOT & PROGRAMMING','tag'=>'Workshop Teknologi','subtitle'=>'Workshop IoT & Programming HERO'],
+    ['grad'=>'linear-gradient(160deg,#1a3a5c,#B85C00)','icon'=>'🎯','title'=>'OPEN RECRUITMENT HERO','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment HERO ITH 2026'],
 ];
 
 $programs = [
