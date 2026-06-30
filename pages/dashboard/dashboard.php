@@ -33,7 +33,7 @@ $tab = $_GET['tab'] ?? 'dashboard';
 
 $allowed_tabs_all     = ['dashboard','profil','event','pengaturan'];
 $allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','pengaturan'];
-$allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','pengaturan'];
+$allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin','pengaturan'];
 $allowed_tabs_superadmin = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin','pengaturan'];
 
 if ($is_super_admin && !in_array($tab, $allowed_tabs_superadmin)) $tab = 'dashboard';
@@ -81,7 +81,7 @@ if ($is_admin) {
 
 // ── Daftar semua user (Super Admin) ───────────────────────────────
 $all_users_list = [];
-if ($is_super_admin) {
+if ($is_admin) {
     $all_users_list = $conn->query("SELECT id,nama,nim,email,jabatan,organisasi,angkatan,status,created_at FROM users ORDER BY id ASC")?->fetch_all(MYSQLI_ASSOC) ?? [];
 }
 
@@ -295,7 +295,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <a href="?tab=org_admin"  class="nav-item <?= $tab==='org_admin'?'active':'' ?>"><i class="bi bi-building"></i><span>Manajemen Org.</span></a>
         <?php endif; ?>
 
-        <?php if ($is_super_admin): ?>
+        <?php if ($is_admin): ?>
         <div class="nav-label">Super Admin</div>
         <a href="?tab=superadmin" class="nav-item <?= $tab==='superadmin'?'active':'' ?>"><i class="bi bi-shield-lock"></i><span>Manajemen Akun</span></a>
         <?php endif; ?>
@@ -848,9 +848,9 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         </div>
         <?php endif; // end is_admin tabs ?>
 
-        <?php if ($is_super_admin): ?>
+        <?php if ($is_admin): ?>
         <!-- ══════════════════════════
-             TAB: MANAJEMEN AKUN (Super Admin)
+             TAB: MANAJEMEN AKUN (Super Admin & Admin ORC)
         ══════════════════════════ -->
         <div class="tab-content <?=$tab==='superadmin'?'active':''?>">
             <!-- Flash messages -->
@@ -866,7 +866,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 
             <?php require_once __DIR__ . '/partials/tab_superadmin.php'; ?>
         </div>
-        <?php endif; // end is_super_admin ?>
+        <?php endif; // end is_admin (manajemen akun) ?>
 
         <!-- ══════════════════════════
              TAB: PENGATURAN
@@ -1114,8 +1114,8 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 </div>
 <?php endif; ?>
 
-<?php if ($is_super_admin): ?>
-<!-- Modal: Buat Akun Baru (Super Admin) -->
+<?php if ($is_admin): ?>
+<!-- Modal: Buat Akun Baru (Super Admin & Admin ORC) -->
 <div class="modal-backdrop" id="modalBuatAkun">
 <div class="modal-box" style="max-width:560px">
     <div class="modal-title"><i class="bi bi-person-plus"></i> Buat Akun Baru</div>

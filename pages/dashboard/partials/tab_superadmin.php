@@ -24,6 +24,56 @@ if ($sa_err && $tab === 'superadmin'): ?>
     </button>
 </div>
 
+<!-- Section: Buat Akun Baru (inline, tampil untuk Super Admin & Admin ORC) -->
+<div class="panel" style="margin-bottom:18px">
+    <div class="sa-bar-title" style="margin-bottom:14px"><i class="bi bi-person-plus-fill"></i> Buat Akun Baru</div>
+    <form method="POST" action="<?= BASE_URL ?>proccess/superadmin_process.php">
+        <input type="hidden" name="action" value="buat_akun">
+        <div class="form-row">
+            <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" required placeholder="Nama lengkap"></div>
+            <div class="form-group"><label>NIM</label><input type="text" name="nim" placeholder="Nomor induk mahasiswa"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Email *</label><input type="email" name="email" required placeholder="user@email.com"></div>
+            <div class="form-group"><label>Username</label><input type="text" name="username" placeholder="username_login"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>No. HP</label><input type="text" name="no_hp" placeholder="08xxxxxxxxxx"></div>
+            <div class="form-group"><label>Angkatan</label><input type="text" name="angkatan" placeholder="2024"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Password Awal *</label><input type="password" name="password" required placeholder="Min. 6 karakter"></div>
+            <div class="form-group"><label>Role *</label>
+                <select name="jabatan" required>
+                    <option value="Anggota">Anggota</option>
+                    <option value="Pengurus">Pengurus</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Super Admin">Super Admin</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Organisasi</label>
+                <select name="organisasi">
+                    <option value="">-- Tidak ada --</option>
+                    <?php foreach ($org_options as $o): ?>
+                    <option value="<?= e($o['slug']) ?>"><?= e($o['nama']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group"><label>Status Akun</label>
+                <select name="status">
+                    <option value="Aktif">Aktif</option>
+                    <option value="Nonaktif">Nonaktif</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary"><i class="bi bi-check-lg"></i> Buat Akun</button>
+        </div>
+    </form>
+</div>
+
 <?php
 // Hitung statistik
 $total_users    = count($all_users_list);

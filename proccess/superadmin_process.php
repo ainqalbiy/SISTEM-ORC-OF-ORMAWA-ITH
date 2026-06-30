@@ -1,14 +1,25 @@
 <?php
 // proccess/superadmin_process.php
-// Seluruh aksi manajemen akun oleh Super Admin
+// Seluruh aksi manajemen akun oleh Super Admin (dan pembuatan akun oleh Admin ORC)
 require_once '../config/connection.php';
-require_super_admin();
+require_login();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('pages/dashboard/dashboard.php', ['tab' => 'superadmin']);
 }
 
 $action  = trim($_POST['action'] ?? '');
+
+// Admin ORC hanya diizinkan untuk membuat akun baru; aksi lain tetap khusus Super Admin
+if ($action === 'buat_akun') {
+    if (!is_admin_or_super()) {
+        header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php?error=akses_ditolak');
+        exit;
+    }
+} else {
+    require_super_admin();
+}
+
 $back    = BASE_URL . 'pages/dashboard/dashboard.php?tab=superadmin';
 $pk      = get_user_pk($conn);
 
