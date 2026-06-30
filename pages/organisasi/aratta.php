@@ -30,9 +30,9 @@ $org_collage = [
 ];
 
 $org_posters = [
-    ['grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','title'=>'FESTIVAL SENI ITH 2026','tag'=>'Festival Seni','subtitle'=>'Festival Seni Tahunan ARATTA ITH'],
-    ['grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','title'=>'PENTAS SENI & MUSIK','tag'=>'Pertunjukan','subtitle'=>'Pentas Seni & Musik Kampus ITH'],
-    ['grad'=>'linear-gradient(160deg,#7B2D8B,#C96511)','icon'=>'🎯','title'=>'OPEN RECRUITMENT ARATTA','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment ARATTA ITH 2026'],
+    ['img'=>'assets/img/aratta/festival.jpeg','grad'=>'linear-gradient(160deg,#3E1A47,#7B2D8B)','icon'=>'🎭','title'=>'FESTIVAL SENI ITH 2026','tag'=>'Festival Seni','subtitle'=>'Festival Seni Tahunan ARATTA ITH'],
+    ['img'=>'assets/img/aratta/pentas.jpeg','grad'=>'linear-gradient(160deg,#C96511,#5C2E0A)','icon'=>'🎵','title'=>'PENTAS SENI & MUSIK','tag'=>'Pertunjukan','subtitle'=>'Pentas Seni & Musik Kampus ITH'],
+    ['img'=>'assets/img/aratta/recruitment.jpeg','grad'=>'linear-gradient(160deg,#7B2D8B,#C96511)','icon'=>'🎯','title'=>'OPEN RECRUITMENT ARATTA','tag'=>'Rekrutmen Anggota','subtitle'=>'Open Recruitment ARATTA ITH 2026'],
 ];
 
 $programs = [
