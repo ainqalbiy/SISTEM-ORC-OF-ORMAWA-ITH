@@ -76,18 +76,32 @@ require_once '../../components/navbar.php';
     <div class="bem-hero-grain"></div>
 
     <div class="hero-poster-left">
+        <?php if (!empty($poster_l_img)): ?>
+        <div class="poster-placeholder" style="height:300px;padding:0;overflow:hidden">
+            <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_slug) ?>"
+                 style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+        <?php else: ?>
         <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>">
             <div class="logo-big"><?= $org_logo_fallback ?></div>
             <div class="event-title"><?= $poster_l_label ?></div>
         </div>
+        <?php endif; ?>
         <div class="poster-label"><?= e($org_slug) ?> · Event Kampus</div>
     </div>
 
     <div class="hero-poster-right">
+        <?php if (!empty($poster_r_img)): ?>
+        <div class="poster-placeholder" style="height:260px;padding:0;overflow:hidden">
+            <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_slug) ?>"
+                 style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+        <?php else: ?>
         <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>">
             <div class="logo-big" style="font-size:1.5rem"><?= $org_logo_fallback ?></div>
             <div class="event-title" style="font-size:.75rem"><?= e($org_year) ?></div>
         </div>
+        <?php endif; ?>
         <div class="poster-code">#<?= e($org_slug) ?> ITH <?= e($org_year) ?></div>
     </div>
 
@@ -172,10 +186,15 @@ require_once '../../components/navbar.php';
     <?php foreach ($org_posters as $p): ?>
     <div class="poster-card" data-reveal>
         <div class="poster-card-inner">
+            <?php if (!empty($p['img'])): ?>
+            <img src="<?= $BASE . e($p['img']) ?>" alt="<?= e($p['title']) ?>"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+            <?php else: ?>
             <div class="poster-placeholder" style="width:100%;height:100%;background:<?= $p['grad'] ?>">
                 <div class="logo-big"><?= $p['icon'] ?></div>
                 <div class="event-title"><?= e($p['title']) ?></div>
             </div>
+            <?php endif; ?>
             <div class="poster-content">
                 <div class="p-tag"><?= e($p['tag']) ?></div>
                 <div class="p-title"><?= e($p['subtitle']) ?></div>
