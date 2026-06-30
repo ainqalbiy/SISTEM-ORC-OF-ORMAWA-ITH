@@ -38,9 +38,9 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-left">
         <?php if (!empty($poster_l_img)): ?>
-        <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>;padding:0;overflow:hidden">
-            <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_name) ?>"
-                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+         <div style="height:300px;padding:0;overflow:hidden">
+           <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_name) ?>"
+            style="width:100%;height:100%;object-fit:cover;border-radius:inherit;filter:none !important;opacity:1 !important;mix-blend-mode:normal !important;"
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="logo-big" style="display:none"><?= $org_logo_fallback ?></div>
         </div>
@@ -55,9 +55,9 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-right">
         <?php if (!empty($poster_r_img)): ?>
-        <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>;padding:0;overflow:hidden">
+         <div style="height:260px;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_name) ?>"
-                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;filter:brightness(1.5);"g
                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="logo-big" style="display:none;font-size:1.5rem"><?= $org_logo_fallback ?></div>
         </div>
