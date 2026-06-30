@@ -10,68 +10,6 @@ $current_page = 'bem';
 $BASE = BASE_URL;
 $org_slug = 'BEM'; // identifier untuk filter query
 
-// ── Cek apakah kolom organisasi sudah ada di tabel kegiatan ──────
-$has_org_col = user_col_exists($conn, 'organisasi'); // reuse helper dari connection.php
-
-// Helper: cek kolom di tabel selain users
-function bem_col_check(mysqli $conn, string $table, string $col): bool {
-    $t = $conn->real_escape_string($table);
-    $c = $conn->real_escape_string($col);
-    $r = $conn->query("SELECT COUNT(*) AS n FROM information_schema.COLUMNS
-                       WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='$t' AND COLUMN_NAME='$c'");
-    return $r && $r->fetch_assoc()['n'] > 0;
-}
-
-// ── Query kegiatan BEM dari DB ────────────────────────────────────
-$kegiatan_db = [];
-if (bem_col_check($conn, 'kegiatan', 'organisasi')) {
-    // Filter berdasarkan kolom organisasi
-    $stmt = $conn->prepare(
-        "SELECT * FROM kegiatan WHERE organisasi LIKE ? ORDER BY tanggal DESC LIMIT 6"
-    );
-    $like = '%BEM%';
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $kegiatan_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-} else {
-    // Kolom belum ada → ambil semua kegiatan terbaru (fallback)
-    $r = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC LIMIT 6");
-    if ($r) $kegiatan_db = $r->fetch_all(MYSQLI_ASSOC);
-}
-
-// ── Query anggota BEM dari DB ─────────────────────────────────────
-$anggota_db = [];
-if (bem_col_check($conn, 'anggota', 'organisasi')) {
-    $stmt = $conn->prepare(
-        "SELECT a.*, u.nama AS nama_user, u.jabatan AS jabatan_user
-         FROM anggota a
-         LEFT JOIN users u ON a.user_id = u.id
-         WHERE a.organisasi LIKE ?
-         ORDER BY a.tanggal_daftar DESC LIMIT 8"
-    );
-    $like = '%BEM%';
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $anggota_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-} else {
-    // Fallback: ambil dari tabel users yang punya organisasi BEM
-    $stmt = $conn->prepare(
-        "SELECT id, nama, jabatan, organisasi, angkatan FROM users
-         WHERE organisasi LIKE ? AND status='Aktif' ORDER BY nama LIMIT 8"
-    );
-    $like = '%BEM%';
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $anggota_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-}
-
-// ── Hitung stats ──────────────────────────────────────────────────
-$total_kegiatan = count($kegiatan_db);
-$total_anggota  = count($anggota_db);
-
 $programs = [
     [
         'cat'   => 'Olahraga & Seni',
@@ -112,20 +50,24 @@ require_once '../../components/navbar.php';
 
     <!-- Left Poster -->
     <div class="hero-poster-left">
-        <div class="poster-placeholder" style="height:300px;background:linear-gradient(160deg,#D8893D,#5C3518)">
-            <div class="logo-big">BEM</div>
-            <div class="event-title">FILOSOFT FESTIVAL<br>2026</div>
+            <img src="<?= $BASE ?>assets/img/bem/POSTER_FILOSOFI.jpeg" 
+                alt="Filosoft Festival 2026"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                onerror="this.style.display='none'">
+            <div class="logo-big" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; text-align:center; letter-spacing:.04em;">BEM</div>
+<div class="event-title" style="font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:700; color:rgba(255,255,255,.9); text-align:center; letter-spacing:.04em; line-height:1.5;">FILOSOFT FESTIVAL<br>2026</div>
         </div>
-        <div class="poster-label">Filosoft · Event Kampus</div>
     </div>
 
     <!-- Right Poster -->
     <div class="hero-poster-right">
-        <div class="poster-placeholder" style="height:260px;background:linear-gradient(160deg,#8C5A32,#2A1A08)">
-            <div class="logo-big" style="font-size:1.8rem">#FA8943</div>
-            <div class="event-title" style="font-size:.72rem">#925630</div>
+            <img src="<?= $BASE ?>assets/img/bem/POSTER_WARNA.jpeg" 
+                alt="FA8943"
+                style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                onerror="this.style.display='none'">   
+           <div class="logo-big" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; text-align:center; letter-spacing:.04em;">#FA8943</div>
+            <div class="event-title" style="font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:700; color:rgba(255,255,255,.9); text-align:center; letter-spacing:.04em;">#925630</div>
         </div>
-        <div class="poster-code">#BEM ITH 2026</div>
     </div>
 
     <!-- Center -->
@@ -295,116 +237,6 @@ require_once '../../components/navbar.php';
             </div>
             <?php endforeach; ?>
         </div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════
-     KEGIATAN LIVE (dari database)
-═══════════════════════════════════════ -->
-<section class="live-section" id="kegiatan-db">
-    <div class="container">
-        <div class="live-header" data-reveal>
-            <div>
-                <div class="eyebrow">Data Real · Database</div>
-                <h2 class="live-title">Kegiatan BEM ITH</h2>
-            </div>
-            <?php if (!empty($_SESSION['user_id'])): ?>
-            <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan" class="btn-live-add">
-                <i class="bi bi-plus-lg"></i> Tambah Kegiatan
-            </a>
-            <?php endif; ?>
-        </div>
-
-        <?php if (empty($kegiatan_db)): ?>
-        <div class="live-empty" data-reveal>
-            <div class="live-empty-icon"><i class="bi bi-calendar-x"></i></div>
-            <p class="live-empty-title">Belum ada kegiatan tercatat</p>
-            <p class="live-empty-sub">
-                <?php if (!empty($_SESSION['user_id'])): ?>
-                    Tambahkan kegiatan BEM melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan">Dashboard</a>.
-                <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan kegiatan.
-                <?php endif; ?>
-            </p>
-        </div>
-        <?php else: ?>
-        <div class="live-grid" data-reveal>
-            <?php foreach ($kegiatan_db as $k):
-                $status_class = strtolower(str_replace(' ', '-', $k['status'] ?? 'terjadwal'));
-            ?>
-            <div class="live-card">
-                <div class="live-card-top">
-                    <span class="live-status <?= e($status_class) ?>"><?= e($k['status'] ?? 'Terjadwal') ?></span>
-                    <span class="live-date"><i class="bi bi-calendar3"></i> <?= date('d M Y', strtotime($k['tanggal'])) ?></span>
-                </div>
-                <div class="live-card-body">
-                    <div class="live-card-jenis"><?= e($k['jenis_kegiatan']) ?></div>
-                    <h4 class="live-card-nama"><?= e($k['nama_kegiatan']) ?></h4>
-                    <?php if (!empty($k['deskripsi'])): ?>
-                    <p class="live-card-desc"><?= e(mb_substr($k['deskripsi'], 0, 80)) ?><?= mb_strlen($k['deskripsi']) > 80 ? '...' : '' ?></p>
-                    <?php endif; ?>
-                </div>
-                <div class="live-card-foot">
-                    <i class="bi bi-geo-alt"></i> <?= e($k['tempat']) ?>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════
-     ANGGOTA LIVE (dari database)
-═══════════════════════════════════════ -->
-<section class="live-section live-section-alt" id="anggota-db">
-    <div class="container">
-        <div class="live-header" data-reveal>
-            <div>
-                <div class="eyebrow">Data Real · Database</div>
-                <h2 class="live-title">Anggota BEM ITH</h2>
-            </div>
-            <?php if (!empty($_SESSION['user_id'])): ?>
-            <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota" class="btn-live-add">
-                <i class="bi bi-person-plus"></i> Tambah Anggota
-            </a>
-            <?php endif; ?>
-        </div>
-
-        <?php if (empty($anggota_db)): ?>
-        <div class="live-empty" data-reveal>
-            <div class="live-empty-icon"><i class="bi bi-person-slash"></i></div>
-            <p class="live-empty-title">Belum ada anggota terdaftar</p>
-            <p class="live-empty-sub">
-                <?php if (!empty($_SESSION['user_id'])): ?>
-                    Daftarkan anggota melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota">Dashboard</a>.
-                <?php else: ?>
-                    <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan anggota.
-                <?php endif; ?>
-            </p>
-        </div>
-        <?php else: ?>
-        <div class="anggota-grid" data-reveal>
-            <?php foreach ($anggota_db as $a):
-                $nm    = $a['nama'] ?? $a['nama_user'] ?? 'Anggota';
-                $jab   = $a['jabatan'] ?? $a['jabatan_user'] ?? 'Anggota';
-                $words = preg_split('/\s+/', trim($nm));
-                $init  = mb_strtoupper(mb_substr($words[0], 0, 1));
-                if (count($words) > 1) $init .= mb_strtoupper(mb_substr($words[1], 0, 1));
-            ?>
-            <div class="anggota-card">
-                <div class="anggota-avatar"><?= e($init) ?></div>
-                <div class="anggota-info">
-                    <div class="anggota-nama"><?= e($nm) ?></div>
-                    <div class="anggota-jabatan"><?= e($jab) ?></div>
-                    <?php if (!empty($a['angkatan'])): ?>
-                    <div class="anggota-angkatan">Angkatan <?= e($a['angkatan']) ?></div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
     </div>
 </section>
 

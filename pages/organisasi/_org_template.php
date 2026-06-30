@@ -24,45 +24,6 @@ if (!function_exists('tbl_col_exists')) {
     }
 }
 
-// ── Query kegiatan per organisasi ───────────────────────────────────
-$kegiatan_db = [];
-$like = '%' . $org_slug . '%';
-if (tbl_col_exists($conn, 'kegiatan', 'organisasi')) {
-    $stmt = $conn->prepare("SELECT * FROM kegiatan WHERE organisasi LIKE ? ORDER BY tanggal DESC LIMIT 6");
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $kegiatan_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-} else {
-    $r = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC LIMIT 6");
-    if ($r) $kegiatan_db = $r->fetch_all(MYSQLI_ASSOC);
-}
-
-// ── Query anggota per organisasi ────────────────────────────────────
-$anggota_db = [];
-if (tbl_col_exists($conn, 'anggota', 'organisasi')) {
-    $pk = get_user_pk($conn);
-    $stmt = $conn->prepare(
-        "SELECT a.*, u.nama AS nama_user, u.jabatan AS jabatan_user, u.angkatan
-         FROM anggota a LEFT JOIN users u ON a.user_id = u.$pk
-         WHERE a.organisasi LIKE ? ORDER BY a.tanggal_daftar DESC LIMIT 8"
-    );
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $anggota_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-} else {
-    $pk   = get_user_pk($conn);
-    $stmt = $conn->prepare(
-        "SELECT $pk AS id, nama, jabatan, organisasi, angkatan FROM users
-         WHERE organisasi LIKE ? AND status='Aktif' ORDER BY nama LIMIT 8"
-    );
-    $stmt->bind_param('s', $like);
-    $stmt->execute();
-    $anggota_db = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-}
-
 $page_css = ['bem.css'];
 $page_js  = ['bem.js'];
 $BASE     = BASE_URL;
@@ -77,9 +38,17 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-left">
         <?php if (!empty($poster_l_img)): ?>
+<<<<<<< HEAD
         <div class="poster-placeholder" style="height:300px;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_slug) ?>"
                  style="width:100%;height:100%;object-fit:cover;display:block">
+=======
+        <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>;padding:0;overflow:hidden">
+            <img src="<?= $BASE . e($poster_l_img) ?>" alt="<?= e($org_name) ?>"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="logo-big" style="display:none"><?= $org_logo_fallback ?></div>
+>>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
         </div>
         <?php else: ?>
         <div class="poster-placeholder" style="height:300px;background:<?= $poster_l_grad ?>">
@@ -92,9 +61,17 @@ require_once '../../components/navbar.php';
 
     <div class="hero-poster-right">
         <?php if (!empty($poster_r_img)): ?>
+<<<<<<< HEAD
         <div class="poster-placeholder" style="height:260px;padding:0;overflow:hidden">
             <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_slug) ?>"
                  style="width:100%;height:100%;object-fit:cover;display:block">
+=======
+        <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>;padding:0;overflow:hidden">
+            <img src="<?= $BASE . e($poster_r_img) ?>" alt="<?= e($org_name) ?>"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="logo-big" style="display:none;font-size:1.5rem"><?= $org_logo_fallback ?></div>
+>>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
         </div>
         <?php else: ?>
         <div class="poster-placeholder" style="height:260px;background:<?= $poster_r_grad ?>">
@@ -187,8 +164,16 @@ require_once '../../components/navbar.php';
     <div class="poster-card" data-reveal>
         <div class="poster-card-inner">
             <?php if (!empty($p['img'])): ?>
+<<<<<<< HEAD
             <img src="<?= $BASE . e($p['img']) ?>" alt="<?= e($p['title']) ?>"
                  style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
+=======
+            <div class="poster-placeholder" style="width:100%;height:100%;background:<?= $p['grad'] ?>;padding:0;overflow:hidden">
+                <img src="<?= $BASE . e($p['img']) ?>" alt="<?= e($p['title']) ?>"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                     onerror="this.style.display='none';this.parentElement.style.display='flex'">
+            </div>
+>>>>>>> cd9315e1ce04903fb06c21bd0e1715b5d7b72c88
             <?php else: ?>
             <div class="poster-placeholder" style="width:100%;height:100%;background:<?= $p['grad'] ?>">
                 <div class="logo-big"><?= $p['icon'] ?></div>
@@ -216,10 +201,20 @@ require_once '../../components/navbar.php';
         <?php foreach ($programs as $i => $p): ?>
         <div class="program-card" data-reveal style="animation-delay:<?= $i*.12 ?>s">
             <div class="program-img">
+                <?php if (!empty($p['img'])): ?>
+                <img src="<?= $BASE . e($p['img']) ?>" alt="<?= htmlspecialchars($p['title']) ?>"
+                     style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="program-img-placeholder" style="background:<?= $p['color'] ?>;display:none">
+                    <span style="font-size:2.5rem"><?= $p['icon'] ?></span>
+                    <span><?= htmlspecialchars($p['cat']) ?></span>
+                </div>
+                <?php else: ?>
                 <div class="program-img-placeholder" style="background:<?= $p['color'] ?>">
                     <span style="font-size:2.5rem"><?= $p['icon'] ?></span>
                     <span><?= htmlspecialchars($p['cat']) ?></span>
                 </div>
+                <?php endif; ?>
             </div>
             <div class="program-body">
                 <div class="program-cat"><?= htmlspecialchars($p['cat']) ?></div>
@@ -229,108 +224,6 @@ require_once '../../components/navbar.php';
         </div>
         <?php endforeach; ?>
     </div>
-</div>
-</section>
-
-<!-- KEGIATAN LIVE -->
-<section class="live-section" id="kegiatan-db">
-<div class="container">
-    <div class="live-header" data-reveal>
-        <div>
-            <div class="eyebrow">Data Real · Database</div>
-            <h2 class="live-title">Kegiatan <?= e($org_name) ?></h2>
-        </div>
-        <?php if (!empty($_SESSION['user_id'])): ?>
-        <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan" class="btn-live-add">
-            <i class="bi bi-plus-lg"></i> Tambah Kegiatan
-        </a>
-        <?php endif; ?>
-    </div>
-    <?php if (empty($kegiatan_db)): ?>
-    <div class="live-empty" data-reveal>
-        <div class="live-empty-icon"><i class="bi bi-calendar-x"></i></div>
-        <p class="live-empty-title">Belum ada kegiatan tercatat</p>
-        <p class="live-empty-sub">
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                Tambahkan melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=kegiatan">Dashboard</a>.
-            <?php else: ?>
-                <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan kegiatan.
-            <?php endif; ?>
-        </p>
-    </div>
-    <?php else: ?>
-    <div class="live-grid" data-reveal>
-        <?php foreach ($kegiatan_db as $k):
-            $sc = strtolower(str_replace(' ', '-', $k['status'] ?? 'terjadwal'));
-        ?>
-        <div class="live-card">
-            <div class="live-card-top">
-                <span class="live-status <?= e($sc) ?>"><?= e($k['status'] ?? 'Terjadwal') ?></span>
-                <span class="live-date"><i class="bi bi-calendar3"></i> <?= date('d M Y', strtotime($k['tanggal'])) ?></span>
-            </div>
-            <div class="live-card-body">
-                <div class="live-card-jenis"><?= e($k['jenis_kegiatan']) ?></div>
-                <h4 class="live-card-nama"><?= e($k['nama_kegiatan']) ?></h4>
-                <?php if (!empty($k['deskripsi'])): ?>
-                <p class="live-card-desc"><?= e(mb_substr($k['deskripsi'],0,80)) ?><?= mb_strlen($k['deskripsi'])>80?'...':'' ?></p>
-                <?php endif; ?>
-            </div>
-            <div class="live-card-foot"><i class="bi bi-geo-alt"></i> <?= e($k['tempat']) ?></div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
-</div>
-</section>
-
-<!-- ANGGOTA LIVE -->
-<section class="live-section live-section-alt" id="anggota-db">
-<div class="container">
-    <div class="live-header" data-reveal>
-        <div>
-            <div class="eyebrow">Data Real · Database</div>
-            <h2 class="live-title">Anggota <?= e($org_name) ?></h2>
-        </div>
-        <?php if (!empty($_SESSION['user_id'])): ?>
-        <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota" class="btn-live-add">
-            <i class="bi bi-person-plus"></i> Tambah Anggota
-        </a>
-        <?php endif; ?>
-    </div>
-    <?php if (empty($anggota_db)): ?>
-    <div class="live-empty" data-reveal>
-        <div class="live-empty-icon"><i class="bi bi-person-slash"></i></div>
-        <p class="live-empty-title">Belum ada anggota terdaftar</p>
-        <p class="live-empty-sub">
-            <?php if (!empty($_SESSION['user_id'])): ?>
-                Daftarkan melalui <a href="<?= BASE_URL ?>pages/dashboard/dashboard.php?tab=anggota">Dashboard</a>.
-            <?php else: ?>
-                <a href="<?= BASE_URL ?>pages/Sign In/Sign In.php">Sign In</a> untuk menambahkan anggota.
-            <?php endif; ?>
-        </p>
-    </div>
-    <?php else: ?>
-    <div class="anggota-grid" data-reveal>
-        <?php foreach ($anggota_db as $a):
-            $nm    = $a['nama'] ?? $a['nama_user'] ?? 'Anggota';
-            $jab   = $a['jabatan'] ?? $a['jabatan_user'] ?? 'Anggota';
-            $words = preg_split('/\s+/', trim($nm));
-            $init  = mb_strtoupper(mb_substr($words[0],0,1));
-            if (count($words)>1) $init .= mb_strtoupper(mb_substr($words[1],0,1));
-        ?>
-        <div class="anggota-card">
-            <div class="anggota-avatar"><?= e($init) ?></div>
-            <div class="anggota-info">
-                <div class="anggota-nama"><?= e($nm) ?></div>
-                <div class="anggota-jabatan"><?= e($jab) ?></div>
-                <?php if (!empty($a['angkatan'])): ?>
-                <div class="anggota-angkatan">Angkatan <?= e($a['angkatan']) ?></div>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php endforeach; ?>
-    </div>
-    <?php endif; ?>
 </div>
 </section>
 

@@ -31,10 +31,10 @@ $first_name = $words[0];
 // ── Active tab ─────────────────────────────────────────────────────
 $tab = $_GET['tab'] ?? 'dashboard';
 
-$allowed_tabs_all     = ['dashboard','profil','event'];
-$allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event'];
-$allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin'];
-$allowed_tabs_superadmin = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin'];
+$allowed_tabs_all     = ['dashboard','profil','event','pengaturan'];
+$allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','pengaturan'];
+$allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','pengaturan'];
+$allowed_tabs_superadmin = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin','pengaturan'];
 
 if ($is_super_admin && !in_array($tab, $allowed_tabs_superadmin)) $tab = 'dashboard';
 elseif ($is_admin && !in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
@@ -99,7 +99,7 @@ if (!empty($org_list_admin)) {
 }
 
 $page_title = 'Dashboard';
-$page_css   = ['dashboard.css'];
+$page_css   = ['dashboard.css','dashboard_enhanced.css'];
 require_once '../../components/header.php';
 ?>
 <style>
@@ -301,7 +301,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <?php endif; ?>
 
         <div class="nav-label">Akun</div>
-        <a href="?tab=profil" class="nav-item"><i class="bi bi-gear"></i><span>Pengaturan</span></a>
+        <a href="?tab=pengaturan" class="nav-item <?= $tab==='pengaturan'?'active':'' ?>"><i class="bi bi-gear"></i><span>Pengaturan</span></a>
     </nav>
     <div class="sidebar-footer">
         <div class="sidebar-user-mini">
@@ -518,6 +518,10 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
                 </div>
             </div>
             <?php endif; ?>
+        <?php if ($is_admin): ?>
+        <?php require_once __DIR__ . '/partials/admin_stat_strip.php'; ?>
+        <?php endif; ?>
+
         </div>
 
         <!-- ══════════════════════════
@@ -796,10 +800,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
              TAB: MANAJEMEN ORGANISASI (Admin)
         ══════════════════════════ -->
         <div class="tab-content <?=$tab==='org_admin'?'active':''?>">
-            <div class="section-header">
-                <h2>Manajemen Organisasi</h2>
-                <button class="btn-primary" onclick="document.getElementById('modalOrgTambah').classList.add('open')"><i class="bi bi-plus-lg"></i> Tambah Organisasi</button>
-            </div>
+            <?php require_once __DIR__ . '/partials/tab_org_admin.php'; ?>
             <div class="panel">
                 <?php if(empty($org_list_admin)):?>
                 <div class="empty-big">
@@ -863,115 +864,16 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
             <div class="alert-err"><i class="bi bi-exclamation-triangle-fill"></i> <?=e($sa_err)?></div>
             <?php endif; ?>
 
-            <div class="section-header">
-                <h2><i class="bi bi-shield-lock" style="color:var(--orange)"></i> Manajemen Akun</h2>
-                <button class="btn-primary" onclick="document.getElementById('modalBuatAkun').classList.add('open')"><i class="bi bi-person-plus"></i> Buat Akun Baru</button>
-            </div>
-
-            <!-- Stats ringkas -->
-            <?php
-            $total_users    = count($all_users_list);
-            $aktif_users    = count(array_filter($all_users_list, fn($u) => $u['status']==='Aktif'));
-            $nonaktif_users = $total_users - $aktif_users;
-            ?>
-            <div class="stats-row" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:4px">
-                <div class="stat-card" style="flex:1;min-width:120px;background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:14px 18px;text-align:center">
-                    <div style="font-size:1.6rem;font-weight:800;color:var(--orange)"><?=$total_users?></div>
-                    <div style="font-size:.72rem;color:var(--text-muted);font-weight:600">Total Akun</div>
-                </div>
-                <div class="stat-card" style="flex:1;min-width:120px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:12px;padding:14px 18px;text-align:center">
-                    <div style="font-size:1.6rem;font-weight:800;color:#2e7d32"><?=$aktif_users?></div>
-                    <div style="font-size:.72rem;color:#388e3c;font-weight:600">Akun Aktif</div>
-                </div>
-                <div class="stat-card" style="flex:1;min-width:120px;background:#fff0ee;border:1px solid #fbbcb8;border-radius:12px;padding:14px 18px;text-align:center">
-                    <div style="font-size:1.6rem;font-weight:800;color:#c0392b"><?=$nonaktif_users?></div>
-                    <div style="font-size:.72rem;color:#c0392b;font-weight:600">Nonaktif</div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <?php if(empty($all_users_list)):?>
-                <div class="empty-big">
-                    <div class="e-icon-big"><i class="bi bi-people"></i></div>
-                    <div class="e-title">Belum ada data akun</div>
-                </div>
-                <?php else:?>
-                <!-- Filter role -->
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center">
-                    <span style="font-size:.78rem;font-weight:700;color:var(--text-muted)">Filter:</span>
-                    <button class="sa-filter-btn active" data-filter="semua" onclick="filterAkun(this,'semua')">Semua</button>
-                    <button class="sa-filter-btn" data-filter="Super Admin" onclick="filterAkun(this,'Super Admin')">Super Admin</button>
-                    <button class="sa-filter-btn" data-filter="Admin" onclick="filterAkun(this,'Admin')">Admin</button>
-                    <button class="sa-filter-btn" data-filter="Pengurus" onclick="filterAkun(this,'Pengurus')">Pengurus</button>
-                    <button class="sa-filter-btn" data-filter="Anggota" onclick="filterAkun(this,'Anggota')">Anggota</button>
-                    <button class="sa-filter-btn" data-filter="Nonaktif" onclick="filterAkun(this,'Nonaktif')">Nonaktif</button>
-                </div>
-                <style>
-                .sa-filter-btn{background:var(--cream);border:1.5px solid var(--border);color:var(--text-muted);font-size:.72rem;font-weight:700;padding:5px 13px;border-radius:999px;cursor:pointer;transition:.2s;font-family:var(--font)}
-                .sa-filter-btn.active,.sa-filter-btn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
-                </style>
-                <div class="table-wrap">
-                    <table id="tblAkun">
-                        <thead><tr><th>#</th><th>Nama</th><th>NIM</th><th>Email</th><th>Role</th><th>Organisasi</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody>
-                        <?php foreach($all_users_list as $i=>$u):?>
-                        <tr data-role="<?=e($u['jabatan'])?>" data-status="<?=e($u['status'])?>">
-                            <td><?=$i+1?></td>
-                            <td style="font-weight:600"><?=e($u['nama'])?></td>
-                            <td style="font-size:.78rem;color:var(--text-muted)"><?=e($u['nim']??'-')?></td>
-                            <td style="font-size:.78rem"><?=e($u['email'])?></td>
-                            <td>
-                                <?php
-                                $role_colors = ['Super Admin'=>'#4a148c','Admin'=>'#1565c0','Pengurus'=>'#e65100','Anggota'=>'#2e7d32'];
-                                $rc = $role_colors[$u['jabatan']] ?? '#555';
-                                ?>
-                                <span style="background:<?=$rc?>22;color:<?=$rc?>;border:1px solid <?=$rc?>44;padding:3px 10px;border-radius:999px;font-size:.68rem;font-weight:700"><?=e($u['jabatan'])?></span>
-                            </td>
-                            <td style="font-size:.78rem"><?=e($u['organisasi']??'-')?></td>
-                            <td>
-                                <?php if($u['status']==='Aktif'):?>
-                                <span class="badge-aktif">Aktif</span>
-                                <?php else:?>
-                                <span class="badge-nonaktif">Nonaktif</span>
-                                <?php endif;?>
-                            </td>
-                            <td>
-                                <div style="display:flex;gap:6px;flex-wrap:wrap">
-                                    <!-- Edit -->
-                                    <button class="btn-sm-outline" onclick="openEditAkun(<?=htmlspecialchars(json_encode($u), ENT_QUOTES)?>)"><i class="bi bi-pencil"></i> Edit</button>
-                                    <!-- Reset Password -->
-                                    <button class="btn-sm-outline" style="color:#1565c0;border-color:#1565c0" onclick="openResetPw(<?=$u['id']?>, '<?=e($u['nama'])?>')"><i class="bi bi-key"></i> Reset PW</button>
-                                    <!-- Toggle Status -->
-                                    <?php if((int)$u['id'] !== $uid):?>
-                                    <?php if($u['status']==='Aktif'):?>
-                                    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php" style="display:inline" onsubmit="return confirm('Nonaktifkan akun <?=e($u['nama'])?>?')">
-                                        <input type="hidden" name="action" value="toggle_status_akun">
-                                        <input type="hidden" name="target_id" value="<?=$u['id']?>">
-                                        <input type="hidden" name="new_status" value="Nonaktif">
-                                        <button type="submit" class="btn-danger"><i class="bi bi-person-x"></i> Nonaktifkan</button>
-                                    </form>
-                                    <?php else:?>
-                                    <form method="POST" action="<?=BASE_URL?>proccess/superadmin_process.php" style="display:inline" onsubmit="return confirm('Aktifkan kembali akun <?=e($u['nama'])?>?')">
-                                        <input type="hidden" name="action" value="toggle_status_akun">
-                                        <input type="hidden" name="target_id" value="<?=$u['id']?>">
-                                        <input type="hidden" name="new_status" value="Aktif">
-                                        <button type="submit" class="btn-success"><i class="bi bi-person-check"></i> Aktifkan</button>
-                                    </form>
-                                    <?php endif;?>
-                                    <?php else:?>
-                                    <span style="font-size:.72rem;color:var(--text-muted);font-style:italic">Akun Anda</span>
-                                    <?php endif;?>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </div>
-                <?php endif;?>
-            </div>
+            <?php require_once __DIR__ . '/partials/tab_superadmin.php'; ?>
         </div>
         <?php endif; // end is_super_admin ?>
+
+        <!-- ══════════════════════════
+             TAB: PENGATURAN
+        ══════════════════════════ -->
+        <div class="tab-content <?=$tab==='pengaturan'?'active':''?>">
+            <?php require_once __DIR__ . '/partials/tab_pengaturan.php'; ?>
+        </div>
 
     </main>
 </div>

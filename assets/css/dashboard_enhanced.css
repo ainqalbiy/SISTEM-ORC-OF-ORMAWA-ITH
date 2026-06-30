@@ -1,0 +1,341 @@
+/* ================================================================
+   dashboard_enhanced.css — Tambahan tampilan ORC ORMAWA ITH
+   Mengikuti design system: Brown #7A3200 | Orange #C96511 | Cream #F6F1EB
+   TIDAK mengubah logika atau gaya yang sudah ada.
+================================================================ */
+
+/* ──────────────────────────────────────────────────────────
+   ADMIN STAT STRIP (Dashboard tab — tampil untuk Admin+)
+────────────────────────────────────────────────────────── */
+.admin-stat-strip {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.admin-stat-item {
+  flex: 1;
+  min-width: 130px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: default;
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.admin-stat-item:hover { box-shadow: var(--shadow-sm); border-color: var(--orange); }
+.admin-stat-icon {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+.admin-stat-icon.orange { background: rgba(201,101,17,.10); color: var(--orange); }
+.admin-stat-icon.blue   { background: #e3f0ff; color: #1565c0; }
+.admin-stat-icon.purple { background: #f3f0ff; color: #5e35b1; }
+.admin-stat-icon.green  { background: #e8f5e9; color: #2e7d32; }
+.admin-stat-text {}
+.admin-stat-num  { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); line-height: 1; }
+.admin-stat-lbl  { font-size: .7rem; font-weight: 600; color: var(--text-muted); margin-top: 3px; }
+
+/* ──────────────────────────────────────────────────────────
+   ROLE DISTRIBUTION CHART (Manajemen Akun)
+────────────────────────────────────────────────────────── */
+.sa-overview {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.sa-donut-wrap {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px 22px;
+  flex: 1;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.donut-svg { flex-shrink: 0; }
+.donut-legend { flex: 1; }
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: .78rem;
+}
+.donut-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.donut-legend-label { color: var(--text-mid); font-weight: 600; flex: 1; }
+.donut-legend-count { font-weight: 800; color: var(--text-dark); }
+
+.sa-activity-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 18px 22px;
+  flex: 1.4;
+  min-width: 240px;
+}
+.sa-activity-title {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.sa-activity-title i { color: var(--orange); }
+.sa-timeline { display: flex; flex-direction: column; gap: 10px; }
+.sa-timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  font-size: .78rem;
+}
+.sa-timeline-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(201,101,17,.15);
+}
+.sa-timeline-dot.green { background: #2e7d32; box-shadow: 0 0 0 3px rgba(46,125,50,.15); }
+.sa-timeline-dot.blue  { background: #1565c0; box-shadow: 0 0 0 3px rgba(21,101,192,.15); }
+.sa-timeline-dot.red   { background: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,.15); }
+.sa-timeline-text { color: var(--text-mid); line-height: 1.5; }
+.sa-timeline-text strong { color: var(--text-dark); font-weight: 700; }
+.sa-timeline-time { font-size: .68rem; color: var(--text-muted); display: block; margin-top: 1px; }
+
+/* Bar chart distribusi per org */
+.sa-org-bars {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 18px 22px;
+  flex: 1.2;
+  min-width: 200px;
+}
+.sa-bar-title {
+  font-size: .8rem; font-weight: 700; color: var(--text-mid);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 7px;
+}
+.sa-bar-title i { color: var(--orange); }
+.sa-bar-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; font-size: .75rem;
+}
+.sa-bar-label { min-width: 68px; color: var(--text-mid); font-weight: 600; font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sa-bar-track {
+  flex: 1; height: 8px; background: var(--cream);
+  border-radius: 999px; overflow: hidden;
+}
+.sa-bar-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--orange), var(--brown));
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+.sa-bar-count { min-width: 22px; text-align: right; color: var(--text-dark); font-weight: 700; font-size: .75rem; }
+
+/* ──────────────────────────────────────────────────────────
+   MANAJEMEN ORGANISASI — Card View
+────────────────────────────────────────────────────────── */
+.org-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.org-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow var(--transition), border-color var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.org-card:hover { box-shadow: var(--shadow-md); border-color: var(--beige-dk); }
+.org-card.nonaktif { opacity: .65; }
+.org-card-header { display: flex; align-items: center; gap: 13px; }
+.org-card-logo {
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  object-fit: contain;
+  background: var(--cream);
+  flex-shrink: 0;
+}
+.org-card-logo-ph {
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--beige-dk); font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.org-card-name { font-size: .95rem; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
+.org-card-slug { font-size: .7rem; color: var(--text-muted); margin-top: 2px; }
+.org-card-kategori {
+  font-size: .7rem; font-weight: 700;
+  color: var(--orange);
+  background: rgba(201,101,17,.09);
+  border: 1px solid rgba(201,101,17,.18);
+  padding: 2px 9px; border-radius: 999px;
+  display: inline-block; width: fit-content;
+}
+.org-card-status {
+  position: absolute;
+  top: 14px; right: 14px;
+}
+.org-card-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* View toggle: tabel / kartu */
+.view-toggle {
+  display: flex; gap: 6px; align-items: center;
+}
+.view-toggle-btn {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: .88rem;
+  transition: .18s;
+}
+.view-toggle-btn.active,
+.view-toggle-btn:hover {
+  background: var(--orange);
+  color: #fff;
+  border-color: var(--orange);
+}
+
+/* ──────────────────────────────────────────────────────────
+   TAB: PENGATURAN
+────────────────────────────────────────────────────────── */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.settings-card {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.settings-card:hover { box-shadow: var(--shadow-sm); }
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.settings-card-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: rgba(201,101,17,.10);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange); font-size: 1rem; flex-shrink: 0;
+}
+.settings-card-title { font-size: .9rem; font-weight: 800; color: var(--text-dark); }
+.settings-card-desc  { font-size: .72rem; color: var(--text-muted); margin-top: 1px; }
+.settings-card-body  { padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--cream);
+}
+.settings-row:last-child { border-bottom: none; padding-bottom: 0; }
+.settings-row-label { font-size: .8rem; font-weight: 600; color: var(--text-mid); }
+.settings-row-sub   { font-size: .7rem; color: var(--text-muted); margin-top: 2px; }
+
+/* Toggle switch */
+.toggle-switch { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: var(--border); border-radius: 999px;
+  transition: .2s;
+}
+.toggle-slider:before {
+  position: absolute; content: '';
+  height: 15px; width: 15px;
+  left: 3px; bottom: 3px;
+  background: white; border-radius: 50%;
+  transition: .2s;
+}
+.toggle-switch input:checked + .toggle-slider { background: var(--orange); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(17px); }
+
+/* Info badge */
+.info-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .72rem; font-weight: 700;
+  padding: 4px 11px; border-radius: 999px;
+  background: var(--cream); color: var(--text-mid);
+  border: 1px solid var(--border);
+}
+.info-badge.orange { background: rgba(201,101,17,.10); color: var(--orange); border-color: rgba(201,101,17,.20); }
+.info-badge.green  { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+.info-badge.blue   { background: #e3f0ff; color: #1565c0; border-color: #90caf9; }
+.info-badge.purple { background: #f3f0ff; color: #5e35b1; border-color: #d1c4e9; }
+
+/* Session item */
+.session-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  background: var(--cream);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+}
+.session-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: .95rem; flex-shrink: 0;
+}
+.session-name { font-size: .8rem; font-weight: 700; color: var(--text-dark); }
+.session-detail{ font-size: .68rem; color: var(--text-muted); }
+.session-current { font-size: .68rem; font-weight: 700; color: var(--orange); background: rgba(201,101,17,.09); padding: 2px 8px; border-radius: 999px; margin-left: auto; white-space: nowrap; }
+
+/* ──────────────────────────────────────────────────────────
+   RESPONSIVE
+────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .admin-stat-strip { gap: 8px; }
+  .admin-stat-item { min-width: 110px; padding: 12px 14px; }
+  .admin-stat-num  { font-size: 1.25rem; }
+  .sa-overview     { gap: 10px; }
+  .org-card-grid   { grid-template-columns: 1fr 1fr; }
+  .settings-grid   { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  .org-card-grid { grid-template-columns: 1fr; }
+}
