@@ -305,7 +305,11 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
     </nav>
     <div class="sidebar-footer">
         <div class="sidebar-user-mini">
-            <div class="sidebar-avatar"><?=e($initials)?></div>
+            <?php if (!empty($user['foto'])): ?>
+    <div class="sidebar-avatar" style="padding:0;overflow:hidden;"><img src="<?=BASE_URL?><?=e($user['foto'])?>" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+    <?php else: ?>
+    <div class="sidebar-avatar"><?=e($initials)?></div>
+    <?php endif; ?>
             <div>
                 <div class="sidebar-user-name"><?=e($user['nama'])?></div>
                 <div class="sidebar-user-role"><?=e($jabatan)?></div>
@@ -325,7 +329,11 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <div class="topbar-right">
             <div class="topbar-icon-btn"><i class="bi bi-bell"></i><?php if($nP>0):?><div class="notif-badge"></div><?php endif;?></div>
             <div class="topbar-profile">
-                <div class="topbar-avatar"><?=e($initials)?></div>
+                <?php if (!empty($user['foto'])): ?>
+        <div class="topbar-avatar" style="padding:0;overflow:hidden;"><img src="<?=BASE_URL?><?=e($user['foto'])?>" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+        <?php else: ?>
+        <div class="topbar-avatar"><?=e($initials)?></div>
+        <?php endif; ?>
                 <div>
                     <div class="topbar-name"><?=e($user['nama'])?></div>
                     <div class="topbar-role"><?=e($jabatan)?></div>
@@ -523,19 +531,33 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         <?php endif; ?>
 
         </div>
-
-        <!-- ══════════════════════════
+ 
+       <!-- ══════════════════════════
              TAB: PROFIL
         ══════════════════════════ -->
-        <div class="tab-content <?=$tab==='profil'?'active':''?>">
+       <div class="tab-content <?=$tab==='profil'?'active':''?>">
             <div class="section-header"><h2>Profil & Pengaturan Akun</h2></div>
             <div class="profile-card">
-                <div class="profile-avatar-big"><?=e($initials)?></div>
+                <?php if (!empty($user['foto'])): ?>
+                    <img src="<?=BASE_URL?><?=e($user['foto'])?>" alt="Foto Profil" class="profile-avatar-big" style="object-fit:cover;">
+                <?php else: ?>
+                    <div class="profile-avatar-big"><?=e($initials)?></div>
+                <?php endif; ?>
                 <div style="margin-bottom:20px">
                     <div style="font-size:1.2rem;font-weight:800;color:var(--text-dark)"><?=e($user['nama'])?></div>
                     <div style="font-size:.82rem;color:var(--text-muted)"><?=e($user['email'])?> · <?=e($jabatan)?></div>
                 </div>
-                <form action="<?=BASE_URL?>proccess/update_profile.php" method="POST">
+                <form action="<?=BASE_URL?>proccess/update_profile.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Foto Profil</label>
+                        <input type="file" name="foto" accept="image/jpeg,image/png,image/jpg">
+                        <?php if (!empty($user['foto'])): ?>
+                            <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-weight:400;font-size:.85rem;cursor:pointer;">
+                                <input type="checkbox" name="hapus_foto" value="1" style="width:auto;">
+                                Hapus foto profil (kembali ke avatar inisial)
+                            </label>
+                        <?php endif; ?>
+                    </div>
                     <div class="form-row">
                         <div class="form-group"><label>Nama Lengkap *</label><input type="text" name="nama" value="<?=e($user['nama'])?>" required></div>
                         <div class="form-group"><label>NIM</label><input type="text" value="<?=e($user['nim']??'')?>" disabled style="background:var(--cream);color:var(--text-muted)"></div>
