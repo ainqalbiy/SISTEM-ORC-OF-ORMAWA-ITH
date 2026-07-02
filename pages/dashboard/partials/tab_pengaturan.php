@@ -1,10 +1,4 @@
 <?php
-/**
- * partials/tab_pengaturan.php
- * Tab Pengaturan baru — terpisah dari tab Profil.
- * Berisi: ganti password, info sesi, preferensi tampilan, aksi akun.
- * TIDAK mengubah logika apapun. Password form tetap POST ke update_password.php.
- */
 ?>
 <div class="section-header">
     <h2><i class="bi bi-gear" style="color:var(--orange)"></i> Pengaturan Akun</h2>

@@ -1,13 +1,6 @@
 <?php
-/**
- * partials/admin_stat_strip.php
- * Tambahan stat strip untuk Admin & Super Admin di tab Dashboard.
- * Di-include SETELAH stats-grid yang sudah ada.
- * Tidak mengubah logika apapun — hanya menambah tampilan informatif.
- */
-if (!$is_admin) return; // hanya tampil untuk Admin ke atas
+if (!$is_admin) return; 
 
-// Hitung stat tambahan
 $total_org    = count($org_list_admin);
 $org_aktif    = count(array_filter($org_list_admin, fn($o) => ($o['status'] ?? 'aktif') === 'aktif'));
 $total_akun   = $is_super_admin ? count($all_users_list) : null;
@@ -23,7 +16,7 @@ $akun_aktif   = $is_super_admin ? count(array_filter($all_users_list, fn($u) => 
         </span>
     </div>
     <div class="admin-stat-strip">
-        <!-- Organisasi -->
+      
         <div class="admin-stat-item" onclick="location='?tab=org_admin'" style="cursor:pointer" title="Lihat Manajemen Organisasi">
             <div class="admin-stat-icon orange"><i class="bi bi-building"></i></div>
             <div class="admin-stat-text">
@@ -31,7 +24,7 @@ $akun_aktif   = $is_super_admin ? count(array_filter($all_users_list, fn($u) => 
                 <div class="admin-stat-lbl">Organisasi Terdaftar</div>
             </div>
         </div>
-        <!-- Aktif -->
+      
         <div class="admin-stat-item" title="Organisasi berstatus aktif">
             <div class="admin-stat-icon green"><i class="bi bi-check-circle"></i></div>
             <div class="admin-stat-text">
