@@ -297,7 +297,7 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
 
         <?php if ($is_admin): ?>
         <div class="nav-label">Admin</div>
-        <a href="?tab=org_admin"  class="nav-item <?= $tab==='org_admin'?'active':'' ?>"><i class="bi bi-building"></i><span>Manajemen Org.</span></a>
+        <a href="?tab=org_admin"  class="nav-item <?= $tab==='org_admin'?'active':'' ?>"><i class="bi bi-building"></i><span>Manajemen Organisasi</span></a>
         <?php endif; ?>
 
         <?php if ($is_admin): ?>
