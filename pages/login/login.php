@@ -1,8 +1,6 @@
 <?php
-// pages/Sign In/Sign In.php
 require_once '../../config/connection.php';
 
-// Jika sudah Sign In, redirect ke profile
 if (!empty($_SESSION['user_id'])) {
     header('Location: ' . BASE_URL . 'pages/dashboard/dashboard.php');
     exit;
@@ -42,7 +40,7 @@ if ($info === 'reg_disabled') {
 
   <div class="flex flex-col md:flex-row w-full max-w-5xl bg-white rounded-[40px] overflow-hidden shadow-2xl min-h-[620px]">
 
-    <!-- Panel Kiri -->
+
     <div class="w-full md:w-5/12 bg-gradient-to-br from-orange-500 to-orange-700 p-12 flex flex-col items-center justify-center text-white relative">
       <div class="mb-8 relative">
         <div class="w-44 h-36 border-4 border-orange-200/50 rounded-xl flex items-center justify-center bg-white/10 backdrop-blur-sm">
