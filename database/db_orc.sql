@@ -211,6 +211,3 @@ ALTER TABLE `event_organisasi`
   ADD CONSTRAINT `fk_event_user`      FOREIGN KEY (`user_id`)     REFERENCES `users`     (`id`)          ON DELETE CASCADE;
 
 COMMIT;
--- ============================================================
---  SELESAI — cukup import file ini saja via phpMyAdmin
--- ============================================================
