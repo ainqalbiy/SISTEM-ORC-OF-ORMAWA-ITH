@@ -1,9 +1,7 @@
 <?php
-// pages/profile/profile.php
 require_once '../../config/connection.php';
-require_login(); // Redirect ke login jika belum masuk
+require_login();
 
-// Ambil data user terbaru dari database
 $uid  = (int)$_SESSION['user_id'];
 $pk_col = get_user_pk($conn);
 $stmt = $conn->prepare("SELECT * FROM users WHERE `$pk_col` = ? LIMIT 1");
@@ -13,24 +11,20 @@ $user = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$user) {
-    // User tidak ditemukan — hapus session dan redirect
     session_destroy();
     header('Location: ' . BASE_URL . 'pages/login/login.php');
     exit;
 }
 
-// Dokumen milik user (dari DB, atau contoh jika kosong)
 $stmt_dok = $conn->prepare("SELECT * FROM dokumen WHERE user_id = ? ORDER BY tanggal_upload DESC LIMIT 10");
 $stmt_dok->bind_param('i', $uid);
 $stmt_dok->execute();
 $dokumen_rows = $stmt_dok->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt_dok->close();
 
-// Kegiatan (tampilkan 4 terbaru — karena kegiatan global, tidak per-user di versi ini)
 $stmt_keg = $conn->query("SELECT * FROM kegiatan ORDER BY tanggal DESC LIMIT 4");
 $kegiatan_rows = $stmt_keg ? $stmt_keg->fetch_all(MYSQLI_ASSOC) : [];
 
-// Pesan sukses update profil
 $success_msg = '';
 if (isset($_GET['updated']) && $_GET['updated'] === '1') {
     $success_msg = 'Profil berhasil diperbarui!';
@@ -63,7 +57,6 @@ if (isset($_GET['updated']) && $_GET['updated'] === '1') {
 
 <div class="container">
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="logo">
             <h1>ORC</h1>

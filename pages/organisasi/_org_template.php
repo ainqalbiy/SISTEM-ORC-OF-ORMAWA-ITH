@@ -1,19 +1,6 @@
 <?php
-/**
- * _org_template.php — Shared template generator untuk halaman organisasi
- * Dipanggil oleh hero.php, hcc.php, aratta.php, wirausaha.php
- * Variabel yang harus di-set sebelum include file ini:
- *   $org_slug, $org_name, $org_full, $org_year, $org_tagline,
- *   $org_about_1, $org_about_2, $org_tags, $org_vision,
- *   $org_logo_file, $org_logo_fallback,
- *   $org_collage, $org_posters, $programs,
- *   $hero_grad_l, $hero_grad_r,
- *   $poster_l_grad, $poster_l_label, $poster_r_grad, $poster_r_label,
- *   $contact_email, $current_page
- */
 require_once '../../config/connection.php';
 
-// ── DB Query helper ─────────────────────────────────────────────────
 if (!function_exists('tbl_col_exists')) {
     function tbl_col_exists(mysqli $conn, string $table, string $col): bool {
         $t = $conn->real_escape_string($table);

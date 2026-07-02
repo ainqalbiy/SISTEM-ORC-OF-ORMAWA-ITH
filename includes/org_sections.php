@@ -1,14 +1,8 @@
 <?php
-/**
- * includes/org_sections.php
- * Reusable HTML: Live Kegiatan + Anggota + Contact + Footer sections.
- * Variables needed: $org_label, $org_email, $kegiatan_db, $anggota_db
- */
 $org_label = $org_label ?? 'Organisasi';
 $org_email = $org_email ?? 'info@ith.ac.id';
 ?>
 
-<!-- KEGIATAN LIVE -->
 <section class="live-section" id="kegiatan-db">
     <div class="container">
         <div class="live-header" data-reveal>

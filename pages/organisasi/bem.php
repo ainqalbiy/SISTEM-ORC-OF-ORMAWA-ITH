@@ -1,5 +1,4 @@
 <?php
-// pages/organisasi/bem.php — BEM ITH 2026 Landing Page
 require_once '../../config/connection.php';
 
 $page_title   = 'BEM ITH 2026 — Organization Resource Center';
@@ -8,7 +7,7 @@ $page_js      = ['bem.js'];
 $current_page = 'bem';
 
 $BASE = BASE_URL;
-$org_slug = 'BEM'; // identifier untuk filter query
+$org_slug = 'BEM'; 
 
 $programs = [
     [
@@ -41,14 +40,11 @@ require_once '../../components/header.php';
 require_once '../../components/navbar.php';
 ?>
 
-<!-- ═══════════════════════════════════════
-     HERO SECTION
-═══════════════════════════════════════ -->
+
 <section class="bem-hero" id="home">
     <div class="bem-hero-bg"></div>
     <div class="bem-hero-grain"></div>
 
-    <!-- Left Poster -->
     <div class="hero-poster-left">
             <img src="<?= $BASE ?>assets/img/bem/POSTER_FILOSOFI.jpeg" 
                 alt="Filosoft Festival 2026"
@@ -59,7 +55,6 @@ require_once '../../components/navbar.php';
         </div>
     </div>
 
-    <!-- Right Poster -->
     <div class="hero-poster-right">
             <img src="<?= $BASE ?>assets/img/bem/POSTER_WARNA.jpeg" 
                 alt="FA8943"
@@ -70,7 +65,6 @@ require_once '../../components/navbar.php';
         </div>
     </div>
 
-    <!-- Center -->
     <div class="bem-hero-center">
         <div class="bem-hero-tag">BEM ITH 2026</div>
         <div class="bem-hero-logo-wrap">
@@ -89,14 +83,10 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     ABOUT SECTION
-═══════════════════════════════════════ -->
 <section class="about-section" id="about">
     <div class="container">
         <div class="about-grid">
 
-            <!-- Left: Logo + Text -->
             <div class="about-left" data-reveal-left>
                 <div class="about-logo-box">
                     <img src="<?= $BASE ?>assets/img/logo/logo-bem.jpeg" alt="Logo BEM ITH"
@@ -130,20 +120,16 @@ require_once '../../components/navbar.php';
                 </div>
             </div>
 
-           <!-- Right: Photo Collage -->
             <div class="about-right" data-reveal-right>
                 <div class="photo-collage">
-                    <!-- Card 1 — tall left -->
                     <div class="photo-card tall">
                         <img src="<?= $BASE ?>assets/img/bem/BEM 2.jpeg" alt="LKKM-TD 2025"
                             style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
-                    <!-- Card 2 — top right -->
                     <div class="photo-card">
                         <img src="<?= $BASE ?>assets/img/bem/BEM 3.jpeg" alt="Pelatihan KTI"
                             style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
                     </div>
-                    <!-- Card 3 — bottom right -->
                     <div class="photo-card">
                         <img src="<?= $BASE ?>assets/img/bem/BEM 4.jpeg" alt="Festival Seni ITH"
                             style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">
@@ -155,9 +141,6 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     VISION SECTION
-═══════════════════════════════════════ -->
 <section class="vision-section" id="vision">
     <div data-reveal>
         <div class="vision-eyebrow">Visi & Semangat</div>
@@ -168,9 +151,6 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     GALLERY / POSTER SECTION
-═══════════════════════════════════════ -->
 <section class="gallery-section" id="gallery">
     <div class="gallery-header" data-reveal>
         <div class="eyebrow" style="text-align:center">Galeri Kegiatan</div>
@@ -210,9 +190,6 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     PROGRAMS SECTION
-═══════════════════════════════════════ -->
 <section class="programs-section" id="programs">
     <div class="container">
         <div class="programs-header" data-reveal>
@@ -240,9 +217,6 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     CONTACT SECTION
-═══════════════════════════════════════ -->
 <section class="contact-section" id="contact">
     <div class="container">
         <div class="contact-inner" data-reveal>
@@ -283,9 +257,6 @@ require_once '../../components/navbar.php';
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════ -->
 <footer class="bem-footer">
     <div class="footer-socials">
         <a href="#" class="footer-social-btn" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
@@ -297,7 +268,7 @@ require_once '../../components/navbar.php';
 </footer>
 
 <script>
-// ── Scroll Reveal ────────────────────────────────────────
+
 const reveals = document.querySelectorAll('[data-reveal],[data-reveal-left],[data-reveal-right]');
 const io = new IntersectionObserver(entries => {
     entries.forEach((e, i) => {
@@ -310,7 +281,6 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.12 });
 reveals.forEach(el => io.observe(el));
 
-// ── Contact form feedback ────────────────────────────────
 function handleContact(e) {
     e.preventDefault();
     const fb = document.getElementById('contactFeedback');
@@ -320,7 +290,6 @@ function handleContact(e) {
     setTimeout(() => { fb.style.display = 'none'; }, 5000);
 }
 
-// ── Smooth scrolling ─────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
         const target = document.getElementById(a.getAttribute('href').slice(1));

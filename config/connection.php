@@ -1,11 +1,9 @@
 <?php
-// config/connection.php
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ── Database ──────────────────────────────────────────────────────
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
@@ -17,7 +15,6 @@ if ($conn->connect_error) {
 }
 $conn->set_charset("utf8mb4");
 
-// ── BASE_URL — cara paling reliable lintas setup XAMPP/Laragon/dll ─
 if (!defined('BASE_URL')) {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';

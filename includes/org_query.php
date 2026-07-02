@@ -1,13 +1,6 @@
 <?php
-/**
- * includes/org_query.php
- * Helper: query kegiatan & anggota per organisasi dari DB.
- * $org_key harus di-set sebelum include file ini.
- * Contoh: $org_key = 'HERO';
- */
 if (!isset($org_key)) $org_key = 'Umum';
 
-// Cek kolom organisasi
 function tbl_col_exists(mysqli $conn, string $table, string $col): bool {
     static $cache = [];
     $k = "$table.$col";
@@ -19,7 +12,6 @@ function tbl_col_exists(mysqli $conn, string $table, string $col): bool {
     return $cache[$k] = ($r && $r->fetch_assoc()['n'] > 0);
 }
 
-// ── Kegiatan ─────────────────────────────────────────────
 $kegiatan_db = [];
 $like = "%{$org_key}%";
 if (tbl_col_exists($conn, 'kegiatan', 'organisasi')) {
@@ -33,9 +25,7 @@ if (tbl_col_exists($conn, 'kegiatan', 'organisasi')) {
     if ($r) $kegiatan_db = $r->fetch_all(MYSQLI_ASSOC);
 }
 
-// ── Anggota ──────────────────────────────────────────────
 $anggota_db = [];
-// Deteksi PK users
 $pk_res = $conn->query("SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE
     WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='users' AND CONSTRAINT_NAME='PRIMARY' LIMIT 1");
 $pk = $pk_res ? ($pk_res->fetch_assoc()['COLUMN_NAME'] ?? 'id') : 'id';

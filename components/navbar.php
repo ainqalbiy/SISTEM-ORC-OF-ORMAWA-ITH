@@ -1,5 +1,4 @@
 <?php
-// components/navbar.php — Shared navbar, uses navbar.css
 $current_page = $current_page ?? '';
 $is_logged_in = !empty($_SESSION['user_id']);
 ?>

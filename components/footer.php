@@ -1,5 +1,4 @@
 <?php
-// components/footer.php — Footer HTML + script loader + tutup </body></html>
 $page_js = $page_js ?? [];
 ?>
 <footer class="footer" id="contact">

@@ -1,5 +1,4 @@
 <?php
-// pages/organisasi/organisasi.php — Daftar semua organisasi + search
 require_once '../../config/connection.php';
 
 $page_title   = 'Daftar Organisasi';
@@ -9,7 +8,6 @@ $current_page = '';
 $q        = trim($_GET['q']        ?? '');
 $kategori = trim($_GET['kategori'] ?? '');
 
-// Coba ambil organisasi dari DB (aktif saja, untuk pengguna umum)
 $semua_organisasi = [];
 $use_db = false;
 $org_tbl = $conn->query("SHOW TABLES LIKE 'organisasi'");

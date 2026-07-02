@@ -1,6 +1,4 @@
 <?php
-// components/sidebar.php — Sidebar navigasi halaman profile/dashboard
-// Gunakan: $sidebar_active = 'profil' | 'dashboard' | 'organisasi' | 'kegiatan' | 'dokumen' | 'pengaturan'
 $sidebar_active = $sidebar_active ?? 'profil';
 
 $menu_items = [

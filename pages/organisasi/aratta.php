@@ -1,5 +1,4 @@
 <?php
-// pages/organisasi/aratta.php — ARATTA ITH
 $current_page  = 'aratta';
 $page_title    = 'ARATTA ITH — UKM Seni Art & Talent';
 

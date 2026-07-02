@@ -1,5 +1,4 @@
 <?php
-// pages/organisasi/hcc.php — HCC ITH
 $current_page  = 'hcc';
 $page_title    = 'HCC ITH — Habibie Coding Club';
 

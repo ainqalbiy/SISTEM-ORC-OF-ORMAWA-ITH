@@ -1,5 +1,4 @@
 <?php
-// components/header.php — Global HTML head, always loads navbar.css
 $page_title = $page_title ?? 'ORC – ORMAWA ITH';
 $page_css   = $page_css   ?? [];
 ?>
