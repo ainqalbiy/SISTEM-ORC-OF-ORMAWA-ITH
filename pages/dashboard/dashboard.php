@@ -36,10 +36,15 @@ $allowed_tabs_pengurus = ['dashboard','profil','kegiatan','anggota','dokumen','p
 $allowed_tabs_admin   = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin','pengaturan'];
 $allowed_tabs_superadmin = ['dashboard','profil','kegiatan','anggota','dokumen','pengumuman','event','org_admin','superadmin','pengaturan'];
 
-if ($is_super_admin && !in_array($tab, $allowed_tabs_superadmin)) $tab = 'dashboard';
-elseif ($is_admin && !in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
-elseif ($is_pengurus && !in_array($tab, $allowed_tabs_pengurus)) $tab = 'dashboard';
-elseif (!$is_pengurus && !in_array($tab, $allowed_tabs_all)) $tab = 'dashboard';
+if ($is_super_admin) {
+    if (!in_array($tab, $allowed_tabs_superadmin)) $tab = 'dashboard';
+} elseif ($is_admin) {
+    if (!in_array($tab, $allowed_tabs_admin)) $tab = 'dashboard';
+} elseif ($is_pengurus) {
+    if (!in_array($tab, $allowed_tabs_pengurus)) $tab = 'dashboard';
+} else {
+    if (!in_array($tab, $allowed_tabs_all)) $tab = 'dashboard';
+}
 
 // ── Flash message ──────────────────────────────────────────────────
 $flash_ok  = urldecode($_GET['success'] ?? '');
@@ -823,50 +828,6 @@ tbody td { padding:11px 14px; color:var(--text-dark); vertical-align:middle; }
         ══════════════════════════ -->
         <div class="tab-content <?=$tab==='org_admin'?'active':''?>">
             <?php require_once __DIR__ . '/partials/tab_org_admin.php'; ?>
-            <div class="panel">
-                <?php if(empty($org_list_admin)):?>
-                <div class="empty-big">
-                    <div class="e-icon-big"><i class="bi bi-building"></i></div>
-                    <div class="e-title">Belum ada data organisasi di database</div>
-                    <div class="e-sub">Jalankan migration v3 terlebih dahulu.</div>
-                </div>
-                <?php else:?>
-                <div class="table-wrap">
-                    <table>
-                        <thead><tr><th>#</th><th>Logo</th><th>Nama</th><th>Slug</th><th>Kategori</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody>
-                        <?php foreach($org_list_admin as $i=>$org):?>
-                        <tr>
-                            <td><?=$i+1?></td>
-                            <td>
-                                <?php if(!empty($org['logo'])):?>
-                                <img src="<?=BASE_URL.e($org['logo'])?>" alt="logo" style="width:40px;height:40px;object-fit:contain;border-radius:8px;background:var(--cream)">
-                                <?php else:?><div style="width:40px;height:40px;border-radius:8px;background:var(--cream);display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><i class="bi bi-building"></i></div><?php endif;?>
-                            </td>
-                            <td style="font-weight:600"><?=e($org['nama'])?></td>
-                            <td><code><?=e($org['slug'])?></code></td>
-                            <td><?=e($org['kategori'])?></td>
-                            <td>
-                                <span class="badge-<?=e($org['status'])?>"><?=ucfirst(e($org['status']))?></span>
-                            </td>
-                            <td>
-                                <form method="POST" action="<?=BASE_URL?>proccess/organisasi_process.php" style="display:inline">
-                                    <input type="hidden" name="action" value="toggle_status">
-                                    <input type="hidden" name="id" value="<?=$org['id']?>">
-                                    <?php if($org['status']==='aktif'):?>
-                                    <button type="submit" class="btn-danger" onclick="return confirm('Nonaktifkan organisasi ini?')"><i class="bi bi-pause-circle"></i> Nonaktifkan</button>
-                                    <?php else:?>
-                                    <button type="submit" class="btn-success" onclick="return confirm('Aktifkan kembali organisasi ini?')"><i class="bi bi-play-circle"></i> Aktifkan</button>
-                                    <?php endif;?>
-                                </form>
-                            </td>
-                        </tr>
-                        <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </div>
-                <?php endif;?>
-            </div>
         </div>
         <?php endif; // end is_admin tabs ?>
 
